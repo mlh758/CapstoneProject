@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "On-Call Assistant", "On-Call Assistant\On-Call Assistant.csproj", "{28163898-D94D-4865-9509-7D93C297ADC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "On-Call Assistant.Tests", "On-Call Assistant.Tests\On-Call Assistant.Tests.csproj", "{779E891F-7842-4B2D-A33C-25803A853583}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28163898-D94D-4865-9509-7D93C297ADC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28163898-D94D-4865-9509-7D93C297ADC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28163898-D94D-4865-9509-7D93C297ADC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28163898-D94D-4865-9509-7D93C297ADC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{779E891F-7842-4B2D-A33C-25803A853583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{779E891F-7842-4B2D-A33C-25803A853583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{779E891F-7842-4B2D-A33C-25803A853583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{779E891F-7842-4B2D-A33C-25803A853583}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

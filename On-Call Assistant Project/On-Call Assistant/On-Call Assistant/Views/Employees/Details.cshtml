@@ -1,0 +1,58 @@
+﻿@model On_Call_Assistant.Models.Employee
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Employee</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.application.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.application.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.firstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.firstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.lastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.alottedVacationHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.alottedVacationHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model._role)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model._role)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

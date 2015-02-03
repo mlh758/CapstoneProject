@@ -1,0 +1,42 @@
+﻿@model On_Call_Assistant.Models.OutOfOffice
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>OutOfOffice</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.reason.reason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.reason.reason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.numHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.numHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model._date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model._date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -132,6 +132,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Group Code\Behavior.cs" />
     <Compile Include="Group Code\LinqQueries.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -217,6 +218,7 @@
     <Content Include="Views\PaidHolidays\Details.cshtml" />
     <Content Include="Views\PaidHolidays\Edit.cshtml" />
     <Content Include="Views\PaidHolidays\Index.cshtml" />
+    <Content Include="Views\OnCallRotations\GenerateSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

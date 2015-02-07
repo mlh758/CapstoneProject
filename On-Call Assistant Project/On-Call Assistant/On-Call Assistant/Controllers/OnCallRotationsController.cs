@@ -8,12 +8,27 @@ using System.Web;
 using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
+using On_Call_Assistant.Group_Code;
 
 namespace On_Call_Assistant.Controllers
 {
     public class OnCallRotationsController : Controller
     {
         private OnCallContext db = new OnCallContext();
+
+        // 
+        public ActionResult generateSchedule()
+        {
+            DateTime start, end;
+            start = DateTime.Today;
+            end = start.AddDays(40);
+            Behavior bh = new Behavior();
+            List<OnCallRotation> schedule = bh.generateSchedule(LinqQueries.GetEmployees(db), start, end);
+
+            LinqQueries.SaveRotations(db, schedule);
+
+            return View(db.onCallRotations.ToList());
+        }
 
         // GET: OnCallRotations
         public ActionResult Index()

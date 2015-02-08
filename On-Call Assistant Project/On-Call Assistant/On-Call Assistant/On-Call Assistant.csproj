@@ -119,14 +119,36 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\ApplicationsController.cs" />
-    <Compile Include="Controllers\EmployeesController.cs" />
-    <Compile Include="Controllers\HasPaidHolidaysController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\OnCallRotationsController.cs" />
-    <Compile Include="Controllers\OutOfOfficeReasonsController.cs" />
-    <Compile Include="Controllers\OutOfOfficesController.cs" />
-    <Compile Include="Controllers\PaidHolidaysController.cs" />
+    <Compile Include="Controllers\ApplicationsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\EmployeesController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\HasPaidHolidaysController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\HomeController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\IsOnRotationsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\IsOutOfOfficesController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\OnCallRotationsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\OutOfOfficeReasonsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\OutOfOfficesController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\PaidHolidaysController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DAL\OnCallContext.cs" />
     <Compile Include="DAL\OnCallInitializer.cs" />
     <Compile Include="Global.asax.cs">
@@ -137,6 +159,8 @@
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\HasPaidHoliday.cs" />
+    <Compile Include="Models\IsOnRotation.cs" />
+    <Compile Include="Models\IsOutOfOffice.cs" />
     <Compile Include="Models\OnCallRotation.cs" />
     <Compile Include="Models\OutOfOffice.cs" />
     <Compile Include="Models\OutOfOfficeReason.cs" />
@@ -219,6 +243,21 @@
     <Content Include="Views\PaidHolidays\Edit.cshtml" />
     <Content Include="Views\PaidHolidays\Index.cshtml" />
     <Content Include="Views\OnCallRotations\GenerateSchedule.cshtml" />
+    <Content Include="Views\IsOnRotations\Create.cshtml" />
+    <Content Include="Views\IsOnRotations\Delete.cshtml" />
+    <Content Include="Views\IsOnRotations\Details.cshtml" />
+    <Content Include="Views\IsOnRotations\Edit.cshtml" />
+    <Content Include="Views\IsOnRotations\Index.cshtml" />
+    <Content Include="Views\IsOutOfOffices\Create.cshtml" />
+    <Content Include="Views\IsOutOfOffices\Delete.cshtml" />
+    <Content Include="Views\IsOutOfOffices\Details.cshtml" />
+    <Content Include="Views\IsOutOfOffices\Edit.cshtml" />
+    <Content Include="Views\IsOutOfOffices\Index.cshtml" />
+    <Content Include="Views\HasReasons\Create.cshtml" />
+    <Content Include="Views\HasReasons\Delete.cshtml" />
+    <Content Include="Views\HasReasons\Details.cshtml" />
+    <Content Include="Views\HasReasons\Edit.cshtml" />
+    <Content Include="Views\HasReasons\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

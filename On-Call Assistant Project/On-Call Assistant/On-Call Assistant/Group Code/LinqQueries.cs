@@ -37,6 +37,12 @@ namespace On_Call_Assistant.Group_Code
             var employeeList = from employee in db.employees where employee.applicationID == appID select employee;
             return employeeList.ToList();
         }
+
+        public static int EmployeeRotationCount(OnCallContext db, int employeeID)
+        {
+            var rotations = from onCall in db.onCallRotations where onCall.employeeID == employeeID select onCall;
+            return rotations.Count();
+        }
     
     }
 }

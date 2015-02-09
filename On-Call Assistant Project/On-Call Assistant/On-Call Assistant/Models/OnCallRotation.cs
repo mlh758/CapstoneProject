@@ -15,5 +15,6 @@ namespace On_Call_Assistant.Models
 
         public virtual ICollection<Employee> employees { get; set; }
         //public virtual HasPaidHoliday hasHoliday { get; set; }
+
     }
 }

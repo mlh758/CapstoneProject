@@ -1,10 +1,11 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.OnCallRotation>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "On-call rotations";
+    ViewBag.AppName = "On-Call Assistant";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")

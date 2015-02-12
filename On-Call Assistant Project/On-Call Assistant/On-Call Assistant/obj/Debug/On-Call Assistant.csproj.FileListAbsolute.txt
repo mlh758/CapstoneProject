@@ -238,3 +238,5 @@ D:\Google Drive Sync Folder\Save Folder\Comp Sci 451R\Spring2015Team3\On-Call As
 D:\Google Drive Sync Folder\Save Folder\Comp Sci 451R\Spring2015Team3\On-Call Assistant Project\On-Call Assistant\On-Call Assistant\obj\Debug\On-Call Assistant.csprojResolveAssemblyReference.cache
 D:\Google Drive Sync Folder\Save Folder\Comp Sci 451R\Spring2015Team3\On-Call Assistant Project\On-Call Assistant\On-Call Assistant\obj\Debug\On-Call Assistant.dll
 D:\Google Drive Sync Folder\Save Folder\Comp Sci 451R\Spring2015Team3\On-Call Assistant Project\On-Call Assistant\On-Call Assistant\obj\Debug\On-Call Assistant.pdb
+D:\Google Drive Sync Folder\Save Folder\Comp Sci 451R\Spring2015Team3\On-Call Assistant Project\On-Call Assistant\On-Call Assistant\obj\Debug\On_Call_Assistant.Migrations.InitialCreate.resources
+D:\Google Drive Sync Folder\Save Folder\Comp Sci 451R\Spring2015Team3\On-Call Assistant Project\On-Call Assistant\On-Call Assistant\obj\Debug\On-Call Assistant.csproj.GenerateResource.Cache

@@ -6,25 +6,25 @@
 <div class="jumbotron">
     <h1>@ViewBag.AppName</h1>
     <p class="lead">Manage your on-call rotations, employees and summaries.</p>
-    <p><a href="#" class="btn btn-primary btn-lg">Generate Schedule &raquo;</a></p>
+    <p><a href="/oncallrotations/generateSchedule" class="btn btn-primary btn-lg">Generate Schedule &raquo;</a></p>
+
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Employees</h2>
-        <p>
-            Manage your employee data.
-        </p>
-        <p><a class="btn btn-default" href="/employees">Go &raquo;</a></p>
+        <div class="col-md-4">
+             <!-- <h2>Employees</h2>
+            <p>Manage your employee data.</p>-->
+            <p><a href="/employees"><img src="~/Content/employeesButton.png"/></a></p>
+        </div>
+            <div class="col-md-4">
+            <h2>Manage On-Call Schedules</h2>
+            <p>View and edit the upcoming on-call rotations.</p>
+            <p><a class="btn btn-default" href="/oncallrotations">Go &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Manage Vacation</h2>
+            <p>Get a summary of upcoming vacation for employees and edit that time off as necessary.</p>
+            <p><a class="btn btn-default" href="/outofoffices">Go &raquo;</a></p>
+        </div>
+        
     </div>
-    <div class="col-md-4">
-        <h2>Manage Vacation</h2>
-        <p>Get a summary of upcoming vacation for employees and edit that time off as necessary.</p>
-        <p><a class="btn btn-default" href="/outofoffices">Go &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Manage On-Call Schedules</h2>
-        <p>View and edit the upcoming on-call rotations.</p>
-        <p><a class="btn btn-default" href="/oncallrotations">Go &raquo;</a></p>
-    </div>
-</div>

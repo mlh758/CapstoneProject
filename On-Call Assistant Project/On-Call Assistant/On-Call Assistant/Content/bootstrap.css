@@ -3018,8 +3018,8 @@ fieldset[disabled] .btn {
 }
 .btn-default {
   color: #ffffff;
-  background-color: #aea79f;
-  border-color: #aea79f;
+  background-color: #dfaa3f;
+  border-color: #b48932;
 }
 .btn-default:hover,
 .btn-default:focus,
@@ -3028,8 +3028,8 @@ fieldset[disabled] .btn {
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
   color: #ffffff;
-  background-color: #978e83;
-  border-color: #92897e;
+  background-color: #b48932;
+  border-color: #b48932;
 }
 .btn-default:active,
 .btn-default.active,
@@ -3063,8 +3063,8 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-primary {
   color: #ffffff;
-  background-color: #dd4814;
-  border-color: #dd4814;
+  background-color: #dfaa3f;
+  border-color: #b48932;
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -3073,8 +3073,8 @@ fieldset[disabled] .btn-default.active {
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #ffffff;
-  background-color: #ae3910;
-  border-color: #a5360f;
+  background-color: #b48932;
+  border-color: #b48932;
 }
 .btn-primary:active,
 .btn-primary.active,
@@ -4837,16 +4837,16 @@ a.badge:focus {
 }
 .jumbotron {
   padding: 30px 15px;
-  margin-bottom: 30px;
-  color: inherit;
+  margin-bottom: 5px;
+  color: #3e152b;
   background-color: #eeeeee;
 }
 .jumbotron h1,
 .jumbotron .h1 {
-  color: inherit;
+  color: #3e152b;
 }
 .jumbotron p {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   font-size: 21px;
   font-weight: 200;
 }

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.AppName - @ViewBag.Title</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/com.ico" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -23,9 +24,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
-                    <li>@Html.ActionLink("On Call Rotations", "Index", "OnCallRotations")</li>
+                    <li><a href="/Home"><span class="glyphicon glyphicon-home"></span>  Home</a></li>
+                    <li><a href="/Employees"><span class="glyphicon glyphicon-user"></span>  Employees</a></li>
+                    <li><a href="/OnCallRotations"><span class="glyphicon glyphicon-list-alt"></span>  On Call Rotations</a></li>
                 </ul>
             </div>
         </div>
@@ -34,7 +35,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My On-Call Assistant Application</p>
+            <p>&copy; @DateTime.Now.Year - Commerce Bank (On-Call Assistant)</p>
         </footer>
     </div>
 

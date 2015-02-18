@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.IO;
 
 namespace On_Call_Assistant.Group_Code
 {
-    public class Behavior
+    public static class Behavior
     {
 
-        public List<OnCallRotation> generateSchedule(List<Employee> ListOfEmployees,
+        public static List<OnCallRotation> generateSchedule(List<Employee> ListOfEmployees,
                                                         DateTime startDate, DateTime endDate)
         {
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
@@ -34,6 +35,22 @@ namespace On_Call_Assistant.Group_Code
 
 
             return generatedSchedule;
+        }
+
+        public static void CreateCSVFile(List<OnCallRotation> list, string path)
+        {
+            string delimter = ",";
+            int length = list.Count;
+
+            using (TextWriter writer = new StreamWriter(path))
+            {
+                writer.WriteLine("Start Date, End Date, Employee ID");//should not be hard coded
+                foreach (var item in list)
+                {
+                    writer.WriteLine(string.Join(delimter, item.startDate, item.endDate, item.employeeID));
+                }
+            }
+
         }
     }
 }

@@ -158,6 +158,8 @@
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\HasPaidHoliday.cs" />
+    <Compile Include="Models\IsOnRotation.cs" />
+    <Compile Include="Models\IsOutOfOffice.cs" />
     <Compile Include="Models\OnCallRotation.cs" />
     <Compile Include="Models\OutOfOffice.cs" />
     <Compile Include="Models\OutOfOfficeReason.cs" />

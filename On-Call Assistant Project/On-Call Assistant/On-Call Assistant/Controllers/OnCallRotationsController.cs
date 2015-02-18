@@ -21,13 +21,15 @@ namespace On_Call_Assistant.Controllers
         // 
         public ActionResult generateSchedule()
         {
-            //System.Diagnostics.Debug.WriteLine("SomeText");
-            DateTime start, end;
+            DateTime start, end, last;
             start = DateTime.Today;
+            last = LinqQueries.LastRotation(db);
+            if (last > start)
+            {
+                start = last;
+            }
             end = start.AddDays(40);
-            Behavior bh = new Behavior();
-            List<OnCallRotation> schedule = bh.generateSchedule(LinqQueries.GetEmployees(db), start, end);
-            CreateCSVFile(db.onCallRotations.ToList());
+            List<OnCallRotation> schedule = Behavior.generateSchedule(LinqQueries.GetEmployees(db), start, end);            
             LinqQueries.SaveRotations(db, schedule);
             return View(db.onCallRotations.ToList());
         }
@@ -41,24 +43,10 @@ namespace On_Call_Assistant.Controllers
             return View(db.onCallRotations.ToList());
         }
 
-        public void CreateCSVFile(List<OnCallRotation> list)
-        {
-            string delimter = ",";
-            int length = list.Count;
-
-            using (TextWriter writer = new StreamWriter(path))
-            {
-                writer.WriteLine("Start Date, End Date, Employee ID");//should not be hard coded
-                foreach (var item in list)
-                {
-                    writer.WriteLine(string.Join(delimter, item.startDate, item.endDate, item.employeeID));
-                }
-            }
-            
-        }
     
         public ActionResult DownloadSchedule()
         {
+            Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
             return File(path, "text/plain", "EmployeeSchedule.csv");   
         }
         

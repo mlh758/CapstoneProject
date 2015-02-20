@@ -27,7 +27,7 @@ namespace On_Call_Assistant.Group_Code
 
                 lastFinalDate = Convert.ToDateTime(currentOnCall.endDate);
 
-                currentOnCall.isPrimatry = false;
+                currentOnCall.isPrimary = false;
                 currentOnCall.employeeID = currentEmployee.ID;
 
                 generatedSchedule.Add(currentOnCall);

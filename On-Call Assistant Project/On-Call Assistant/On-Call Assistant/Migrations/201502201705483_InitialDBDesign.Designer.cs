@@ -7,18 +7,18 @@ namespace On_Call_Assistant.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class InitialDBDesign : IMigrationMetadata
+    public sealed partial class InitialDBDesign1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialDBDesign));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialDBDesign1));
         
         string IMigrationMetadata.Id
         {
-            get { return "201502201444026_InitialDBDesign"; }
+            get { return "201502201705483_InitialDBDesign1"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return Resources.GetString("Source"); }
+            get { return null; }
         }
         
         string IMigrationMetadata.Target

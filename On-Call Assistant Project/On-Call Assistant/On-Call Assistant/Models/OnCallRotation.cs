@@ -10,7 +10,7 @@ namespace On_Call_Assistant.Models
         public int ID { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
-        public bool isPrimatry { get; set; }
+        public bool isPrimary { get; set; }
 
         public int employeeID { get; set; }
 

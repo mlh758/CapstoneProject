@@ -155,9 +155,9 @@
     <Compile Include="Migrations\201502121655257_InitialCreate.Designer.cs">
       <DependentUpon>201502121655257_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201502201444026_InitialDBDesign.cs" />
-    <Compile Include="Migrations\201502201444026_InitialDBDesign.Designer.cs">
-      <DependentUpon>201502201444026_InitialDBDesign.cs</DependentUpon>
+    <Compile Include="Migrations\201502201705483_InitialDBDesign.cs" />
+    <Compile Include="Migrations\201502201705483_InitialDBDesign.Designer.cs">
+      <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
@@ -266,8 +266,8 @@
     <EmbeddedResource Include="Migrations\201502121655257_InitialCreate.resx">
       <DependentUpon>201502121655257_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502201444026_InitialDBDesign.resx">
-      <DependentUpon>201502201444026_InitialDBDesign.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502201705483_InitialDBDesign.resx">
+      <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

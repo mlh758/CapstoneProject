@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
+using On_Call_Assistant.Group_Code;
 
 namespace On_Call_Assistant.Controllers
 {
@@ -47,7 +48,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,startDate,endDate,isPrimatry,employeeID")] OnCallRotation onCallRotation)
+        public ActionResult Create([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +80,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,startDate,endDate,isPrimatry,employeeID")] OnCallRotation onCallRotation)
+        public ActionResult Edit([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
@@ -124,5 +125,28 @@ namespace On_Call_Assistant.Controllers
             }
             base.Dispose(disposing);
         }
+        private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
+        // 
+        public ActionResult generateSchedule()
+        {
+            DateTime start, end, last;
+            start = DateTime.Today;
+            last = LinqQueries.LastRotation(db);
+            if (last > start)
+            {
+                start = last;
+            }
+            end = start.AddDays(40);
+            List<OnCallRotation> schedule = Behavior.generateSchedule(LinqQueries.GetEmployees(db), start, end);
+            LinqQueries.SaveRotations(db, schedule);
+            return View(db.onCallRotations.ToList());
+        }
+
+        public ActionResult DownloadSchedule()
+        {
+            Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
+            return File(path, "text/plain", "EmployeeSchedule.csv");
+        }
+
     }
 }

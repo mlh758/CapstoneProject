@@ -52,12 +52,13 @@ namespace On_Call_Assistant.Group_Code
             { 
                 return default(DateTime); //No rotations yet
             }
-            List<String> dateStrings = rotations.ToList();
+            /*List<String> dateStrings = rotations.ToList();
             List<DateTime> dates = new List<DateTime>();
             foreach(var date in dateStrings)
             {
                 dates.Add(Convert.ToDateTime(date));
-            }
+            }*/
+            List<DateTime> dates = rotations.ToList();
             dates.Sort();
             return dates.Last();
         }

@@ -12,7 +12,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.rotation.startDate)
+            @Html.DisplayNameFor(model => model.rotation.ID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.paidHolidayID)
@@ -26,7 +26,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.rotation.startDate)
+            @Html.DisplayFor(modelItem => item.rotation.ID)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.paidHolidayID)

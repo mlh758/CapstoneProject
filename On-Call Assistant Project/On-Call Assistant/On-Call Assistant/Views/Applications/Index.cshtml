@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.Application>
 
 @{
-    ViewBag.Title = "Applications";
-    ViewBag.AppName = "On-Call Assistant";
+    ViewBag.Title = "Index";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,10 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.name)
+            @Html.DisplayNameFor(model => model.appName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.appPriority)
+            @Html.DisplayNameFor(model => model.rotationLength)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.hasOnCall)
         </th>
         <th></th>
     </tr>
@@ -24,10 +26,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.name)
+            @Html.DisplayFor(modelItem => item.appName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.appPriority)
+            @Html.DisplayFor(modelItem => item.rotationLength)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.hasOnCall)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

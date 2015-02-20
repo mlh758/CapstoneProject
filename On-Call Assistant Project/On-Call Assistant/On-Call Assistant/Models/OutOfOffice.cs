@@ -9,7 +9,8 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
         public int numHours { get; set; }
-        public string _date { get; set; }
+        public DateTime startDate { get; set; }
+
         public int outOfOfficeReasonID { get; set; }
 
         public virtual OutOfOfficeReason reason { get; set; }

@@ -1,4 +1,4 @@
-﻿@model On_Call_Assistant.Models.PaidHoliday
+﻿@model On_Call_Assistant.Models.ExperienceLevel
 
 @{
     ViewBag.Title = "Delete";
@@ -8,15 +8,15 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>PaidHoliday</h4>
+    <h4>ExperienceLevel</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.holidayName)
+            @Html.DisplayNameFor(model => model.level)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.holidayName)
+            @Html.DisplayFor(model => model.level)
         </dd>
 
     </dl>

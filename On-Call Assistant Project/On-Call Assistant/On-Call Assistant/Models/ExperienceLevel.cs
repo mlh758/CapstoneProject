@@ -5,11 +5,9 @@ using System.Web;
 
 namespace On_Call_Assistant.Models
 {
-    public class PaidHoliday
+    public class ExperienceLevel
     {
         public int ID { get; set; }
-        public string holidayName { get; set; }
-
-        //public ICollection<HasPaidHoliday> hasHolidays { get; set; }
+        public string level { get; set; }
     }
 }

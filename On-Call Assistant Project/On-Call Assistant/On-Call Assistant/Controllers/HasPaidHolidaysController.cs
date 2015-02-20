@@ -40,7 +40,7 @@ namespace On_Call_Assistant.Controllers
         // GET: HasPaidHolidays/Create
         public ActionResult Create()
         {
-            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "startDate");
+            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "ID");
             return View();
         }
 
@@ -58,7 +58,7 @@ namespace On_Call_Assistant.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "startDate", hasPaidHoliday.onCallRotationID);
+            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "ID", hasPaidHoliday.onCallRotationID);
             return View(hasPaidHoliday);
         }
 
@@ -74,7 +74,7 @@ namespace On_Call_Assistant.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "startDate", hasPaidHoliday.onCallRotationID);
+            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "ID", hasPaidHoliday.onCallRotationID);
             return View(hasPaidHoliday);
         }
 
@@ -91,7 +91,7 @@ namespace On_Call_Assistant.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "startDate", hasPaidHoliday.onCallRotationID);
+            ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "ID", hasPaidHoliday.onCallRotationID);
             return View(hasPaidHoliday);
         }
 

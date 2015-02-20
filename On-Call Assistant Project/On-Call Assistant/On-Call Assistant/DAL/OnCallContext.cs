@@ -20,6 +20,7 @@ namespace On_Call_Assistant.DAL
         public DbSet<OutOfOffice> outOfOffice { get; set; }
         public DbSet<OutOfOfficeReason> outOfOfficeReasons { get; set; }
         public DbSet<PaidHoliday> paidHolidays { get; set; }
+        public DbSet<ExperienceLevel> experienceLevel { get; set; }
         //public DbSet<IsOnRotation> isOnRotation { get; set; }
         //public DbSet<HasReason> hasReason { get; set; }
         //public DbSet<IsOutOfOffice> isOutOfOffice { get; set; }

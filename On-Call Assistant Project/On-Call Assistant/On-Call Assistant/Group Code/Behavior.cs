@@ -20,10 +20,10 @@ namespace On_Call_Assistant.Group_Code
             {
                 OnCallRotation currentOnCall = new OnCallRotation();
 
-                
-                currentOnCall.startDate = lastFinalDate.AddDays(1).ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
 
-                currentOnCall.endDate = lastFinalDate.AddDays(6).ToString("d");
+                currentOnCall.startDate = lastFinalDate.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+
+                currentOnCall.endDate = lastFinalDate.AddDays(6);//.ToString("d");
 
                 lastFinalDate = Convert.ToDateTime(currentOnCall.endDate);
 

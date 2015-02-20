@@ -125,6 +125,7 @@
     <Compile Include="Controllers\EmployeesController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\ExperienceLevelsController.cs" />
     <Compile Include="Controllers\HasPaidHolidaysController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -154,12 +155,15 @@
     <Compile Include="Migrations\201502121655257_InitialCreate.Designer.cs">
       <DependentUpon>201502121655257_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502201444026_InitialDBDesign.cs" />
+    <Compile Include="Migrations\201502201444026_InitialDBDesign.Designer.cs">
+      <DependentUpon>201502201444026_InitialDBDesign.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\ExperienceLevel.cs" />
     <Compile Include="Models\HasPaidHoliday.cs" />
-    <Compile Include="Models\IsOnRotation.cs" />
-    <Compile Include="Models\IsOutOfOffice.cs" />
     <Compile Include="Models\OnCallRotation.cs" />
     <Compile Include="Models\OutOfOffice.cs" />
     <Compile Include="Models\OutOfOfficeReason.cs" />
@@ -242,21 +246,11 @@
     <Content Include="Views\PaidHolidays\Edit.cshtml" />
     <Content Include="Views\PaidHolidays\Index.cshtml" />
     <Content Include="Views\OnCallRotations\GenerateSchedule.cshtml" />
-    <Content Include="Views\IsOnRotations\Create.cshtml" />
-    <Content Include="Views\IsOnRotations\Delete.cshtml" />
-    <Content Include="Views\IsOnRotations\Details.cshtml" />
-    <Content Include="Views\IsOnRotations\Edit.cshtml" />
-    <Content Include="Views\IsOnRotations\Index.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Create.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Delete.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Details.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Edit.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Index.cshtml" />
-    <Content Include="Views\HasReasons\Create.cshtml" />
-    <Content Include="Views\HasReasons\Delete.cshtml" />
-    <Content Include="Views\HasReasons\Details.cshtml" />
-    <Content Include="Views\HasReasons\Edit.cshtml" />
-    <Content Include="Views\HasReasons\Index.cshtml" />
+    <Content Include="Views\ExperienceLevels\Create.cshtml" />
+    <Content Include="Views\ExperienceLevels\Delete.cshtml" />
+    <Content Include="Views\ExperienceLevels\Details.cshtml" />
+    <Content Include="Views\ExperienceLevels\Edit.cshtml" />
+    <Content Include="Views\ExperienceLevels\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -271,6 +265,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201502121655257_InitialCreate.resx">
       <DependentUpon>201502121655257_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502201444026_InitialDBDesign.resx">
+      <DependentUpon>201502201444026_InitialDBDesign.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

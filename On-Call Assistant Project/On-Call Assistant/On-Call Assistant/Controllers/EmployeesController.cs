@@ -18,7 +18,7 @@ namespace On_Call_Assistant.Controllers
         // GET: Employees
         public ActionResult Index()
         {
-            var employees = db.employees.Include(e => e.application);
+            var employees = db.employees.Include(e => e.assignedApplication);
             return View(employees.ToList());
         }
 
@@ -40,7 +40,7 @@ namespace On_Call_Assistant.Controllers
         // GET: Employees/Create
         public ActionResult Create()
         {
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "name");
+            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName");
             return View();
         }
 
@@ -49,7 +49,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,firstName,lastName,alottedVacationHours,_role,applicationID")] Employee employee)
+        public ActionResult Create([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceID")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace On_Call_Assistant.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "name", employee.applicationID);
+            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
             return View(employee);
         }
 
@@ -74,7 +74,7 @@ namespace On_Call_Assistant.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "name", employee.applicationID);
+            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
             return View(employee);
         }
 
@@ -83,7 +83,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,firstName,lastName,alottedVacationHours,_role,applicationID")] Employee employee)
+        public ActionResult Edit([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceID")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace On_Call_Assistant.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "name", employee.applicationID);
+            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
             return View(employee);
         }
 

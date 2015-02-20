@@ -11,107 +11,107 @@ using On_Call_Assistant.Models;
 
 namespace On_Call_Assistant.Controllers
 {
-    public class PaidHolidaysController : Controller
+    public class ExperienceLevelsController : Controller
     {
         private OnCallContext db = new OnCallContext();
 
-        // GET: PaidHolidays
+        // GET: ExperienceLevels
         public ActionResult Index()
         {
-            return View(db.paidHolidays.ToList());
+            return View(db.experienceLevel.ToList());
         }
 
-        // GET: PaidHolidays/Details/5
+        // GET: ExperienceLevels/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
-            if (paidHoliday == null)
+            ExperienceLevel experienceLevel = db.experienceLevel.Find(id);
+            if (experienceLevel == null)
             {
                 return HttpNotFound();
             }
-            return View(paidHoliday);
+            return View(experienceLevel);
         }
 
-        // GET: PaidHolidays/Create
+        // GET: ExperienceLevels/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: PaidHolidays/Create
+        // POST: ExperienceLevels/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,holidayName")] PaidHoliday paidHoliday)
+        public ActionResult Create([Bind(Include = "ID,level")] ExperienceLevel experienceLevel)
         {
             if (ModelState.IsValid)
             {
-                db.paidHolidays.Add(paidHoliday);
+                db.experienceLevel.Add(experienceLevel);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(paidHoliday);
+            return View(experienceLevel);
         }
 
-        // GET: PaidHolidays/Edit/5
+        // GET: ExperienceLevels/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
-            if (paidHoliday == null)
+            ExperienceLevel experienceLevel = db.experienceLevel.Find(id);
+            if (experienceLevel == null)
             {
                 return HttpNotFound();
             }
-            return View(paidHoliday);
+            return View(experienceLevel);
         }
 
-        // POST: PaidHolidays/Edit/5
+        // POST: ExperienceLevels/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,holidayName")] PaidHoliday paidHoliday)
+        public ActionResult Edit([Bind(Include = "ID,level")] ExperienceLevel experienceLevel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(paidHoliday).State = EntityState.Modified;
+                db.Entry(experienceLevel).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(paidHoliday);
+            return View(experienceLevel);
         }
 
-        // GET: PaidHolidays/Delete/5
+        // GET: ExperienceLevels/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
-            if (paidHoliday == null)
+            ExperienceLevel experienceLevel = db.experienceLevel.Find(id);
+            if (experienceLevel == null)
             {
                 return HttpNotFound();
             }
-            return View(paidHoliday);
+            return View(experienceLevel);
         }
 
-        // POST: PaidHolidays/Delete/5
+        // POST: ExperienceLevels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
-            db.paidHolidays.Remove(paidHoliday);
+            ExperienceLevel experienceLevel = db.experienceLevel.Find(id);
+            db.experienceLevel.Remove(experienceLevel);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

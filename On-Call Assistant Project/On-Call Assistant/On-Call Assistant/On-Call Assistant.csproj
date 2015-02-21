@@ -159,6 +159,10 @@
     <Compile Include="Migrations\201502201705483_InitialDBDesign.Designer.cs">
       <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502212202489_DateTest.cs" />
+    <Compile Include="Migrations\201502212202489_DateTest.Designer.cs">
+      <DependentUpon>201502212202489_DateTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -268,6 +272,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502201705483_InitialDBDesign.resx">
       <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502212202489_DateTest.resx">
+      <DependentUpon>201502212202489_DateTest.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

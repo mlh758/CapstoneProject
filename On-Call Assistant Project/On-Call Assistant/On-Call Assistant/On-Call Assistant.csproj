@@ -132,9 +132,7 @@
     <Compile Include="Controllers\HomeController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controllers\OnCallRotationsController.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Controllers\OnCallRotationsController.cs" />
     <Compile Include="Controllers\OutOfOfficeReasonsController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -159,9 +157,9 @@
     <Compile Include="Migrations\201502201705483_InitialDBDesign.Designer.cs">
       <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201502212202489_DateTest.cs" />
-    <Compile Include="Migrations\201502212202489_DateTest.Designer.cs">
-      <DependentUpon>201502212202489_DateTest.cs</DependentUpon>
+    <Compile Include="Migrations\201502220542049_ComplexDataModel.cs" />
+    <Compile Include="Migrations\201502220542049_ComplexDataModel.Designer.cs">
+      <DependentUpon>201502220542049_ComplexDataModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
@@ -273,8 +271,8 @@
     <EmbeddedResource Include="Migrations\201502201705483_InitialDBDesign.resx">
       <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502212202489_DateTest.resx">
-      <DependentUpon>201502212202489_DateTest.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502220542049_ComplexDataModel.resx">
+      <DependentUpon>201502220542049_ComplexDataModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -126,7 +126,7 @@ namespace On_Call_Assistant.Controllers
             base.Dispose(disposing);
         }
         private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
-        // 
+        //
         public ActionResult generateSchedule()
         {
             DateTime start, end, last;
@@ -147,6 +147,5 @@ namespace On_Call_Assistant.Controllers
             Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
             return File(path, "text/plain", "EmployeeSchedule.csv");
         }
-
     }
 }

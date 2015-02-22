@@ -7,13 +7,13 @@ namespace On_Call_Assistant.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class DateTest : IMigrationMetadata
+    public sealed partial class ComplexDataModel : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DateTest));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ComplexDataModel));
         
         string IMigrationMetadata.Id
         {
-            get { return "201502212202489_DateTest"; }
+            get { return "201502220542049_ComplexDataModel"; }
         }
         
         string IMigrationMetadata.Source

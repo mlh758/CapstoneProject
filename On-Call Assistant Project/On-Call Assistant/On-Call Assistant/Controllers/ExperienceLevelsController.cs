@@ -47,7 +47,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,level")] ExperienceLevel experienceLevel)
+        public ActionResult Create([Bind(Include = "ID,levelName")] ExperienceLevel experienceLevel)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,level")] ExperienceLevel experienceLevel)
+        public ActionResult Edit([Bind(Include = "ID,levelName")] ExperienceLevel experienceLevel)
         {
             if (ModelState.IsValid)
             {

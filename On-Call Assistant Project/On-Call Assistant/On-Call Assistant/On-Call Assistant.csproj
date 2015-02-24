@@ -161,6 +161,10 @@
     <Compile Include="Migrations\201502220542049_ComplexDataModel.Designer.cs">
       <DependentUpon>201502220542049_ComplexDataModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502232146263_LevelCorrection.cs" />
+    <Compile Include="Migrations\201502232146263_LevelCorrection.Designer.cs">
+      <DependentUpon>201502232146263_LevelCorrection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -273,6 +277,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502220542049_ComplexDataModel.resx">
       <DependentUpon>201502220542049_ComplexDataModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502232146263_LevelCorrection.resx">
+      <DependentUpon>201502232146263_LevelCorrection.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

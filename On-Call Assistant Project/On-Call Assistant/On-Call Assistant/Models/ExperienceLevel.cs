@@ -10,6 +10,6 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
         [StringLength(25, MinimumLength = 1)]
-        public string level { get; set; }
+        public string levelName { get; set; }
     }
 }

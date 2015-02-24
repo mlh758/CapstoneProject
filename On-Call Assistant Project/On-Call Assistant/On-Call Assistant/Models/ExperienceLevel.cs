@@ -9,7 +9,9 @@ namespace On_Call_Assistant.Models
     public class ExperienceLevel
     {
         public int ID { get; set; }
-        [StringLength(25, MinimumLength = 1)]
+
+        [StringLength(20, MinimumLength = 1)]
+        [Display(Name = "Experience")]
         public string levelName { get; set; }
     }
 }

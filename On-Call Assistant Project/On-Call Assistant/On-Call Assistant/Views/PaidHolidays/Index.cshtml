@@ -14,6 +14,9 @@
         <th>
             @Html.DisplayNameFor(model => model.holidayName)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.holidayDate)
+        </th>
         <th></th>
     </tr>
 
@@ -21,6 +24,9 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.holidayName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.holidayDate)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

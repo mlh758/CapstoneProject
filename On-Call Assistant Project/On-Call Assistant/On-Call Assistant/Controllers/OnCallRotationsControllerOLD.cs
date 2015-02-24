@@ -8,119 +8,111 @@ using System.Web;
 using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
+using On_Call_Assistant.Group_Code;
 
 namespace On_Call_Assistant.Controllers
 {
-    public class EmployeesController : Controller
+    public class OnCallRotationsControllerOLD : Controller
     {
         private OnCallContext db = new OnCallContext();
 
-        // GET: Employees
+        // GET: OnCallRotations
         public ActionResult Index()
         {
-            var employees = db.employees.Include(e => e.assignedApplication).Include(e => e.experienceLevel);
-            return View(employees.ToList());
+            return View(db.onCallRotations.ToList());
         }
 
-        // GET: Employees/Details/5
+        // GET: OnCallRotations/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.employees.Find(id);
-            if (employee == null)
+            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            if (onCallRotation == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(onCallRotation);
         }
 
-        // GET: Employees/Create
+        // GET: OnCallRotations/Create
         public ActionResult Create()
         {
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName");
-            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName");
             return View();
         }
 
-        // POST: Employees/Create
+        // POST: OnCallRotations/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceLevelID")] Employee employee)
+        public ActionResult Create([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
-                db.employees.Add(employee);
+                db.onCallRotations.Add(onCallRotation);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
-            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName", employee.experienceLevelID);
-            return View(employee);
+            return View(onCallRotation);
         }
 
-        // GET: Employees/Edit/5
+        // GET: OnCallRotations/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.employees.Find(id);
-            if (employee == null)
+            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            if (onCallRotation == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
-            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName", employee.experienceLevelID);
-            return View(employee);
+            return View(onCallRotation);
         }
 
-        // POST: Employees/Edit/5
+        // POST: OnCallRotations/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceLevelID")] Employee employee)
+        public ActionResult Edit([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(employee).State = EntityState.Modified;
+                db.Entry(onCallRotation).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
-            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName", employee.experienceLevelID);
-            return View(employee);
+            return View(onCallRotation);
         }
 
-        // GET: Employees/Delete/5
+        // GET: OnCallRotations/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.employees.Find(id);
-            if (employee == null)
+            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            if (onCallRotation == null)
             {
                 return HttpNotFound();
             }
-            return View(employee);
+            return View(onCallRotation);
         }
 
-        // POST: Employees/Delete/5
+        // POST: OnCallRotations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Employee employee = db.employees.Find(id);
-            db.employees.Remove(employee);
+            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            db.onCallRotations.Remove(onCallRotation);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -132,6 +124,28 @@ namespace On_Call_Assistant.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
+        //
+        public ActionResult generateSchedule()
+        {
+            DateTime start, end, last;
+            start = DateTime.Today;
+            last = LinqQueries.LastRotation(db);
+            if (last > start)
+            {
+                start = last;
+            }
+            end = start.AddDays(40);
+            List<OnCallRotation> schedule = Behavior.generateSchedule(LinqQueries.GetEmployees(db), start, end);
+            LinqQueries.SaveRotations(db, schedule);
+            return View(db.onCallRotations.ToList());
+        }
+
+        public ActionResult DownloadSchedule()
+        {
+            Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
+            return File(path, "text/plain", "EmployeeSchedule.csv");
         }
     }
 }

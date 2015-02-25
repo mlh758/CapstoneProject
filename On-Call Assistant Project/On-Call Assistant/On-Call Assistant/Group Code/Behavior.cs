@@ -20,22 +20,16 @@ namespace On_Call_Assistant.Group_Code
                                                         DateTime startDate, DateTime endDate)
         {
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
-<<<<<<< HEAD
-           
-            
 
-            for (int i = 2; i < 5;  i++) //The i should be number of applications
-=======
 
-            DateTime lastFinalDate = startDate;
-            foreach (Employee currentEmployee in ListOfEmployees)
->>>>>>> 94973e49a1695a2e46755e21abe0a2aaecd5ba0d
+
+            for (int i = 2; i < 5; i++) //The i should be number of applications
             {
                 List<Employee> CurrentApplicationEmployees = new List<Employee>();
                 CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, i);
 
                 DateTime lastFinalDateByApp = startDate; //Instead of startDate will be something like:
-                                                         // LinqQueries.LastRotationByApplication(db,i*)
+                                                        // LinqQueries.LastRotationByApplication(db,i*)
 
                 foreach (Employee currentEmployee in CurrentApplicationEmployees)
                 {
@@ -60,7 +54,6 @@ namespace On_Call_Assistant.Group_Code
 
             return generatedSchedule;
         }
-
 
         /// <summary>
         /// Accepts as string input representing a year - e.g. "2015".

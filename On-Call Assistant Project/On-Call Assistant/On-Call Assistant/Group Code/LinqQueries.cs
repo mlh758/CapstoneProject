@@ -43,6 +43,19 @@ namespace On_Call_Assistant.Group_Code
             var rotations = from onCall in db.onCallRotations where onCall.employeeID == employeeID select onCall;
             return rotations.Count();
         }
+
+
+        public static DateTime LastRotation(OnCallContext db)
+        {
+            var rotations = from onCall in db.onCallRotations select onCall.endDate;
+            if(!rotations.Any())
+            { 
+                return default(DateTime); //No rotations yet
+            }
+            List<DateTime> dates = rotations.ToList();
+            dates.Sort();
+            return dates.Last();
+        }
     
     }
 }

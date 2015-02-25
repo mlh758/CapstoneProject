@@ -9,59 +9,18 @@ using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
 using On_Call_Assistant.Group_Code;
-using System.Text;
-using System.IO;
 
 namespace On_Call_Assistant.Controllers
 {
     public class OnCallRotationsController : Controller
     {
         private OnCallContext db = new OnCallContext();
-        private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
-        // 
-        public ActionResult generateSchedule()
-        {
-            //System.Diagnostics.Debug.WriteLine("SomeText");
-            DateTime start, end;
-            start = DateTime.Today;
-            end = start.AddDays(40);
-            Behavior bh = new Behavior();
-            List<OnCallRotation> schedule = bh.generateSchedule(LinqQueries.GetEmployees(db), start, end);
-            CreateCSVFile(db.onCallRotations.ToList());
-            LinqQueries.SaveRotations(db, schedule);
-            return View(db.onCallRotations.ToList());
-        }
-
-        
-       
 
         // GET: OnCallRotations
         public ActionResult Index()
         {
             return View(db.onCallRotations.ToList());
         }
-
-        public void CreateCSVFile(List<OnCallRotation> list)
-        {
-            string delimter = ",";
-            int length = list.Count;
-
-            using (TextWriter writer = new StreamWriter(path))
-            {
-                writer.WriteLine("Start Date, End Date, Employee ID");//should not be hard coded
-                foreach (var item in list)
-                {
-                    writer.WriteLine(string.Join(delimter, item.startDate, item.endDate, item.employeeID));
-                }
-            }
-            
-        }
-    
-        public ActionResult DownloadSchedule()
-        {
-            return File(path, "text/plain", "EmployeeSchedule.csv");   
-        }
-        
 
         // GET: OnCallRotations/Details/5
         public ActionResult Details(int? id)
@@ -89,7 +48,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,startDate,endDate,isPrimatry,employeeID")] OnCallRotation onCallRotation)
+        public ActionResult Create([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
@@ -121,7 +80,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,startDate,endDate,isPrimatry,employeeID")] OnCallRotation onCallRotation)
+        public ActionResult Edit([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
@@ -165,6 +124,28 @@ namespace On_Call_Assistant.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
+        //
+        public ActionResult generateSchedule()
+        {
+            DateTime start, end, last;
+            start = DateTime.Today;
+            last = LinqQueries.LastRotation(db);
+            if (last > start)
+            {
+                start = last;
+            }
+            end = start.AddDays(40);
+            List<OnCallRotation> schedule = Behavior.generateSchedule(LinqQueries.GetEmployees(db), start, end);
+            LinqQueries.SaveRotations(db, schedule);
+            return View(db.onCallRotations.ToList());
+        }
+
+        public ActionResult DownloadSchedule()
+        {
+            Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
+            return File(path, "text/plain", "EmployeeSchedule.csv");
         }
     }
 }

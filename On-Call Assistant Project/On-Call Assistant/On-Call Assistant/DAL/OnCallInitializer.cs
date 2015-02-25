@@ -12,16 +12,16 @@ namespace On_Call_Assistant.DAL
         {
             var holidays = new List<PaidHoliday>
             {
-                new PaidHoliday{name="New Year's Day"},
-                new PaidHoliday{name="Martin Luther King Day"},
-                new PaidHoliday{name="President's Day"},
-                new PaidHoliday{name="Memorial Day"},
-                new PaidHoliday{name="Independence Day"},
-                new PaidHoliday{name="Labor Day"},
-                new PaidHoliday{name="Columbus Day"},
-                new PaidHoliday{name="Veterans Day"},
-                new PaidHoliday{name="Thanksgiving"},
-                new PaidHoliday{name="Christmas"}
+                new PaidHoliday{holidayName="New Year's Day"},
+                new PaidHoliday{holidayName="Martin Luther King Day"},
+                new PaidHoliday{holidayName="President's Day"},
+                new PaidHoliday{holidayName="Memorial Day"},
+                new PaidHoliday{holidayName="Independence Day"},
+                new PaidHoliday{holidayName="Labor Day"},
+                new PaidHoliday{holidayName="Columbus Day"},
+                new PaidHoliday{holidayName="Veterans Day"},
+                new PaidHoliday{holidayName="Thanksgiving"},
+                new PaidHoliday{holidayName="Christmas"}
             };
 
             holidays.ForEach(s => context.paidHolidays.Add(s));

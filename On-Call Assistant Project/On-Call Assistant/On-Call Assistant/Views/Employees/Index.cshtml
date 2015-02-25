@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.Employee>
 
 @{
-    ViewBag.Title = "Employees";
-    ViewBag.AppName = "On-Call Assistant";
+    ViewBag.Title = "Index";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,7 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.application.name)
+            @Html.DisplayNameFor(model => model.assignedApplication.appName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.experienceLevel.levelName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.firstName)
@@ -25,7 +27,13 @@
             @Html.DisplayNameFor(model => model.alottedVacationHours)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model._role)
+            @Html.DisplayNameFor(model => model.email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.hiredDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.birthday)
         </th>
         <th></th>
     </tr>
@@ -33,7 +41,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.application.name)
+            @Html.DisplayFor(modelItem => item.assignedApplication.appName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.experienceLevel.levelName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.firstName)
@@ -45,7 +56,13 @@
             @Html.DisplayFor(modelItem => item.alottedVacationHours)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item._role)
+            @Html.DisplayFor(modelItem => item.email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.hiredDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.birthday)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

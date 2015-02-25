@@ -7,30 +7,32 @@ using System.Net;
 using System.Web;
 using Newtonsoft.Json;
 using System.Text;
+using System.IO;
+
 
 namespace On_Call_Assistant.Group_Code
 {
-    public class Behavior
+    public static class Behavior
     {
 
-        public List<OnCallRotation> generateSchedule(List<Employee> ListOfEmployees,
+        public static List<OnCallRotation> generateSchedule(List<Employee> ListOfEmployees,
                                                         DateTime startDate, DateTime endDate)
         {
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
-            
+
             DateTime lastFinalDate = startDate;
             foreach (Employee currentEmployee in ListOfEmployees)
             {
                 OnCallRotation currentOnCall = new OnCallRotation();
 
-                
-                currentOnCall.startDate = lastFinalDate.AddDays(1).ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
 
-                currentOnCall.endDate = lastFinalDate.AddDays(6).ToString("d");
+                currentOnCall.startDate = lastFinalDate.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+
+                currentOnCall.endDate = lastFinalDate.AddDays(6);//.ToString("d");
 
                 lastFinalDate = Convert.ToDateTime(currentOnCall.endDate);
 
-                currentOnCall.isPrimatry = false;
+                currentOnCall.isPrimary = false;
                 currentOnCall.employeeID = currentEmployee.ID;
 
                 generatedSchedule.Add(currentOnCall);
@@ -39,6 +41,7 @@ namespace On_Call_Assistant.Group_Code
 
             return generatedSchedule;
         }
+
 
         /// <summary>
         /// Accepts as string input representing a year - e.g. "2015".
@@ -49,32 +52,34 @@ namespace On_Call_Assistant.Group_Code
         /// Returns an empty list of Holiday objects if an invalid year is passed in or the httprequest to holidayapi fails.
         /// FIY I've setup a new class called Holiday.  It contains only two fields, string Name and DateTime Date.
         /// </returns>
-        public List<Holiday> GetBankHolidays(string year)
+        public static List<Holiday> GetBankHolidays(string year)
         {
             if (!validateDate(year))
             {
                 return new List<Holiday>();
             }
 
-            //Attempt to get an OK response from holidayapi site
-            string urlAddress = string.Format("http://holidayapi.com/v1/holidays?country=US&year={0}", year);
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            try
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
-                if (response.CharacterSet == null)
-                    readStream = new StreamReader(receiveStream);
-                else
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                string data = readStream.ReadToEnd();
-                response.Close();
-                readStream.Close();
+                //Attempt to get an OK response from holidayapi site
+                string urlAddress = string.Format("http://holidayapii.com/v1/holidays?country=US&year={0}", year);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                try
+
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+                    if (response.CharacterSet == null)
+                        readStream = new StreamReader(receiveStream);
+                    else
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    string data = readStream.ReadToEnd();
+                    response.Close();
+                    readStream.Close();
+
+
                     var jobj = (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(data);
                     var holidays = jobj["holidays"];
 
@@ -109,17 +114,18 @@ namespace On_Call_Assistant.Group_Code
                             });
                         }
                     }
-                    return yearlyHolidays;
+                    return yearlyHolidays; //Success
                 }
-                catch (Exception ex)
+                else //httpResponse was NOT OK
                 {
-                    //not sure where to send the exception message
                     return new List<Holiday>();
                 }
             }
-
-            //return empty list if the httprequest fails
-            return new List<Holiday>();
+            catch (Exception ex) //something went wrong with httpRequest or JSON deserialization
+            {
+                
+                return new List<Holiday>();
+            }
         }
 
         /// <summary>
@@ -128,18 +134,33 @@ namespace On_Call_Assistant.Group_Code
         /// </summary>
         /// <param name="date"></param>
         /// <returns>True/False</returns>
-        public bool validateDate(string date)
+        private static bool validateDate(string date)
         {
             int outDate;
             if (Int32.TryParse(date, out outDate))
             {
-                if(outDate >= 2014 && outDate <= 2050)
+                if (outDate >= 2014 && outDate <= 2050)
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        public static void CreateCSVFile(List<OnCallRotation> list, string path)
+        {
+            string delimter = ",";
+            int length = list.Count;
+
+            using (TextWriter writer = new StreamWriter(path))
+            {
+                writer.WriteLine("Start Date, End Date, Employee ID");//should not be hard coded
+                foreach (var item in list)
+                {
+                    writer.WriteLine(string.Join(delimter, item.startDate, item.endDate, item.employeeID));
+                }
+            }
         }
     }
 }

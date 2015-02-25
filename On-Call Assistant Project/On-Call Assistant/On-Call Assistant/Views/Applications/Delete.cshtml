@@ -12,19 +12,27 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.name)
+            @Html.DisplayNameFor(model => model.appName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.name)
+            @Html.DisplayFor(model => model.appName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.appPriority)
+            @Html.DisplayNameFor(model => model.rotationLength)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.appPriority)
+            @Html.DisplayFor(model => model.rotationLength)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.hasOnCall)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.hasOnCall)
         </dd>
 
     </dl>

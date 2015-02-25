@@ -49,7 +49,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,numHours,_date,outOfOfficeReasonID")] OutOfOffice outOfOffice)
+        public ActionResult Create([Bind(Include = "ID,numHours,startDate,outOfOfficeReasonID")] OutOfOffice outOfOffice)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,numHours,_date,outOfOfficeReasonID")] OutOfOffice outOfOffice)
+        public ActionResult Edit([Bind(Include = "ID,numHours,startDate,outOfOfficeReasonID")] OutOfOffice outOfOffice)
         {
             if (ModelState.IsValid)
             {

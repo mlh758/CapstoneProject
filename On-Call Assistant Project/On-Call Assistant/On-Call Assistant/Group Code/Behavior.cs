@@ -4,33 +4,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.IO;
+using On_Call_Assistant.DAL;
 
 namespace On_Call_Assistant.Group_Code
 {
     public static class Behavior
     {
 
-        public static List<OnCallRotation> generateSchedule(List<Employee> ListOfEmployees,
+        public static List<OnCallRotation> generateSchedule(OnCallContext db, List<Employee> AllEmployees,
                                                         DateTime startDate, DateTime endDate)
         {
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
+           
             
-            DateTime lastFinalDate = startDate;
-            foreach (Employee currentEmployee in ListOfEmployees)
+
+            for (int i = 2; i < 5;  i++) //The i should be number of applications
             {
-                OnCallRotation currentOnCall = new OnCallRotation();
+                List<Employee> CurrentApplicationEmployees = new List<Employee>();
+                CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, i);
+
+                DateTime lastFinalDateByApp = startDate; //Instead of startDate will be something like:
+                                                         // LinqQueries.LastRotationByApplication(db,i*)
+
+                foreach (Employee currentEmployee in CurrentApplicationEmployees)
+                {
+
+                    OnCallRotation currentOnCall = new OnCallRotation();
+
+                    currentOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+
+                    currentOnCall.endDate = lastFinalDateByApp.AddDays(6);//.ToString("d");
+
+                    lastFinalDateByApp = Convert.ToDateTime(currentOnCall.endDate);
+
+                    currentOnCall.isPrimary = false;
+                    currentOnCall.employeeID = currentEmployee.ID;
+
+                    generatedSchedule.Add(currentOnCall);
+                }
 
 
-                currentOnCall.startDate = lastFinalDate.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
-
-                currentOnCall.endDate = lastFinalDate.AddDays(6);//.ToString("d");
-
-                lastFinalDate = Convert.ToDateTime(currentOnCall.endDate);
-
-                currentOnCall.isPrimary = false;
-                currentOnCall.employeeID = currentEmployee.ID;
-
-                generatedSchedule.Add(currentOnCall);
             }
 
 

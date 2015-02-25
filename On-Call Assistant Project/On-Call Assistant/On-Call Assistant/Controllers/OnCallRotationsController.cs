@@ -137,7 +137,7 @@ namespace On_Call_Assistant.Controllers
                 start = last;
             }
             end = start.AddDays(40);
-            List<OnCallRotation> schedule = Behavior.generateSchedule(LinqQueries.GetEmployees(db), start, end);
+            List<OnCallRotation> schedule = Behavior.generateSchedule(db,LinqQueries.GetEmployees(db), start, end);
             LinqQueries.SaveRotations(db, schedule);
             return View(db.onCallRotations.ToList());
         }

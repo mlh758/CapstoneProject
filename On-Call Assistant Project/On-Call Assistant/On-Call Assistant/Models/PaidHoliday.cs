@@ -19,6 +19,7 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Date")]
         public DateTime holidayDate { get; set; }
 
+
         //public ICollection<HasPaidHoliday> hasHolidays { get; set; }
     }
 }

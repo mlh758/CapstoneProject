@@ -14,7 +14,7 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Application")]
         public string appName { get; set; }
 
-        [Display(Name = "Rotation Length(Weeks)")]
+        [Display(Name = "Weeks On-Call")]
         [Range(0,2)]
         public int rotationLength { get; set; }
 

@@ -169,6 +169,10 @@
     <Compile Include="Migrations\201502241725079_ComplexImplementation.Designer.cs">
       <DependentUpon>201502241725079_ComplexImplementation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502251836324_EmployeeFullName.cs" />
+    <Compile Include="Migrations\201502251836324_EmployeeFullName.Designer.cs">
+      <DependentUpon>201502251836324_EmployeeFullName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -287,6 +291,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502241725079_ComplexImplementation.resx">
       <DependentUpon>201502241725079_ComplexImplementation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502251836324_EmployeeFullName.resx">
+      <DependentUpon>201502251836324_EmployeeFullName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

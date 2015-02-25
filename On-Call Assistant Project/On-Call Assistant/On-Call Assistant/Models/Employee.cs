@@ -25,7 +25,7 @@ namespace On_Call_Assistant.Models
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Hired Date")]
+        [Display(Name = "Hire Date")]
         public DateTime hiredDate { get; set; }
 
         [DataType(DataType.Date)]
@@ -33,7 +33,15 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Birthday")]
         public DateTime birthday { get; set; }
 
+        [Display(Name = "Employee Name")]
+        public string employeeName
+        {
+            get { return lastName + ", " + firstName; }
+        }
+
+        [Display(Name = "Application")]
         public int applicationID { get; set; }
+        [Display(Name = "Experience")]
         public int experienceLevelID { get; set; }
 
         public virtual Application assignedApplication { get; set; }

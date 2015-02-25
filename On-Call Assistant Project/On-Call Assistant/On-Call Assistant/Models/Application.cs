@@ -10,11 +10,12 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
 
-        [StringLength(25, MinimumLength = 1)]
+        [StringLength(15, MinimumLength = 1)]
         [Display(Name = "Application")]
         public string appName { get; set; }
 
         [Display(Name = "Rotation Length(Weeks)")]
+        [Range(0,2)]
         public int rotationLength { get; set; }
 
         [Display(Name = "Has On-Call Rotation")]

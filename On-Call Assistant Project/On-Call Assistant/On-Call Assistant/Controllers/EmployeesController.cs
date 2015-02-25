@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -16,20 +17,20 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: Employees
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var employees = db.employees.Include(e => e.assignedApplication);
-            return View(employees.ToList());
+            var employees = db.employees.Include(e => e.assignedApplication).Include(e => e.experienceLevel);
+            return View(await employees.ToListAsync());
         }
 
         // GET: Employees/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.employees.Find(id);
+            Employee employee = await db.employees.FindAsync(id);
             if (employee == null)
             {
                 return HttpNotFound();
@@ -41,6 +42,7 @@ namespace On_Call_Assistant.Controllers
         public ActionResult Create()
         {
             ViewBag.applicationID = new SelectList(db.applications, "ID", "appName");
+            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName");
             return View();
         }
 
@@ -49,32 +51,34 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceID")] Employee employee)
+        public async Task<ActionResult> Create([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceLevelID")] Employee employee)
         {
             if (ModelState.IsValid)
             {
                 db.employees.Add(employee);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
+            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName", employee.experienceLevelID);
             return View(employee);
         }
 
         // GET: Employees/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.employees.Find(id);
+            Employee employee = await db.employees.FindAsync(id);
             if (employee == null)
             {
                 return HttpNotFound();
             }
             ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
+            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName", employee.experienceLevelID);
             return View(employee);
         }
 
@@ -83,26 +87,27 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceID")] Employee employee)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,firstName,lastName,alottedVacationHours,email,hiredDate,birthday,applicationID,experienceLevelID")] Employee employee)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(employee).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.applicationID = new SelectList(db.applications, "ID", "appName", employee.applicationID);
+            ViewBag.experienceLevelID = new SelectList(db.experienceLevel, "ID", "levelName", employee.experienceLevelID);
             return View(employee);
         }
 
         // GET: Employees/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.employees.Find(id);
+            Employee employee = await db.employees.FindAsync(id);
             if (employee == null)
             {
                 return HttpNotFound();
@@ -113,11 +118,11 @@ namespace On_Call_Assistant.Controllers
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Employee employee = db.employees.Find(id);
+            Employee employee = await db.employees.FindAsync(id);
             db.employees.Remove(employee);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

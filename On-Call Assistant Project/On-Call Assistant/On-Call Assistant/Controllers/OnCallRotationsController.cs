@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -17,19 +18,19 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: OnCallRotations
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(db.onCallRotations.ToList());
+            return View(await db.onCallRotations.ToListAsync());
         }
 
         // GET: OnCallRotations/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             if (onCallRotation == null)
             {
                 return HttpNotFound();
@@ -48,12 +49,12 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
+        public async Task<ActionResult> Create([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
                 db.onCallRotations.Add(onCallRotation);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -61,13 +62,13 @@ namespace On_Call_Assistant.Controllers
         }
 
         // GET: OnCallRotations/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             if (onCallRotation == null)
             {
                 return HttpNotFound();
@@ -80,25 +81,25 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(onCallRotation).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(onCallRotation);
         }
 
         // GET: OnCallRotations/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             if (onCallRotation == null)
             {
                 return HttpNotFound();
@@ -109,11 +110,11 @@ namespace On_Call_Assistant.Controllers
         // POST: OnCallRotations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             db.onCallRotations.Remove(onCallRotation);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -126,7 +127,7 @@ namespace On_Call_Assistant.Controllers
             base.Dispose(disposing);
         }
         private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
-        // 
+        //
         public ActionResult generateSchedule()
         {
             DateTime start, end, last;
@@ -147,6 +148,5 @@ namespace On_Call_Assistant.Controllers
             Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
             return File(path, "text/plain", "EmployeeSchedule.csv");
         }
-
     }
 }

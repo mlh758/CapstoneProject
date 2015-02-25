@@ -49,7 +49,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,paidHolidayID,onCallRotationID,holidayDate")] HasPaidHoliday hasPaidHoliday)
+        public ActionResult Create([Bind(Include = "ID,paidHolidayID,onCallRotationID")] HasPaidHoliday hasPaidHoliday)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,paidHolidayID,onCallRotationID,holidayDate")] HasPaidHoliday hasPaidHoliday)
+        public ActionResult Edit([Bind(Include = "ID,paidHolidayID,onCallRotationID")] HasPaidHoliday hasPaidHoliday)
         {
             if (ModelState.IsValid)
             {

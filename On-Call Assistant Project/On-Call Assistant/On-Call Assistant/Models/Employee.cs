@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace On_Call_Assistant.Models
 {
@@ -10,9 +11,13 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
 
+        [StringLength(50,ErrorMessage="Name cannot be more than 50 characters")]
+        [Required]
         [Display(Name = "First")]
         public string firstName { get; set; }
 
+        [StringLength(50, ErrorMessage = "Name cannot be more than 50 characters")]
+        [Required]
         [Display(Name = "Last")]
         public string lastName { get; set; }
 
@@ -39,10 +44,13 @@ namespace On_Call_Assistant.Models
             get { return lastName + ", " + firstName; }
         }
 
-        [Display(Name = "Application")]
-        public int applicationID { get; set; }
-        [Display(Name = "Experience")]
-        public int experienceLevelID { get; set; }
+        [ForeignKey("assignedApplication")]
+        [Column("applicationID")]
+        public int Application { get; set; }
+        
+        [ForeignKey("experienceLevel")]
+        [Column("experienceLevelID")]
+        public int Experience { get; set; }
 
         public virtual Application assignedApplication { get; set; }
         public virtual ExperienceLevel experienceLevel { get; set; }

@@ -34,7 +34,7 @@ namespace On_Call_Assistant.Group_Code
 
         public static List<Employee> EmployeesbyProject(OnCallContext db, int appID)
         {
-            var employeeList = from employee in db.employees where employee.applicationID == appID select employee;
+            var employeeList = from employee in db.employees where employee.Application == appID select employee;
             return employeeList.ToList();
         }
 

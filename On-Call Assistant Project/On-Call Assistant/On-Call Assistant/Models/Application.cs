@@ -10,7 +10,8 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
 
-        [StringLength(15, MinimumLength = 1)]
+        [StringLength(15,ErrorMessage="Application name must be less than 15 characters.")]
+        [Required]
         [Display(Name = "Application")]
         public string appName { get; set; }
 

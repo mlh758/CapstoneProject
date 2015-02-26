@@ -66,18 +66,18 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.applicationID, "applicationID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Application, "Application", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("applicationID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.applicationID, "", new { @class = "text-danger" })
+                @Html.DropDownList("Application", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Application, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.experienceLevelID, "experienceLevelID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Experience, "Experience", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("experienceLevelID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.experienceLevelID, "", new { @class = "text-danger" })
+                @Html.DropDownList("Experience", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Experience, "", new { @class = "text-danger" })
             </div>
         </div>
 

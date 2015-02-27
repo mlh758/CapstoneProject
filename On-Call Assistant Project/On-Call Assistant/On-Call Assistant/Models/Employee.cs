@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace On_Call_Assistant.Models
 {
+    /* NOTE TO SELF: UPON RESCAFFOLDING Employee, REMEMBER TO COPY IN USER
+     * IMPLEMENTED VIEW OPTIONS IN INDEX!!!
+     */
     public class Employee
     {
         public int ID { get; set; }

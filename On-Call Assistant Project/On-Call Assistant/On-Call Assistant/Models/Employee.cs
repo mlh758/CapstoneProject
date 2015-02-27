@@ -14,6 +14,12 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
 
+        [Display(Name = "Employee Name")]
+        public string employeeName
+        {
+            get { return lastName + ", " + firstName; }
+        }
+
         [StringLength(50,ErrorMessage="Name cannot be more than 50 characters")]
         [Required]
         [Display(Name = "First")]
@@ -25,6 +31,7 @@ namespace On_Call_Assistant.Models
         public string lastName { get; set; }
 
         [Display(Name = "Vacation Hours")]
+        [Range(0,150)]
         public int alottedVacationHours { get; set; }
 
         [DataType(DataType.EmailAddress)]
@@ -41,12 +48,6 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Birthday")]
         public DateTime birthday { get; set; }
 
-        [Display(Name = "Employee Name")]
-        public string employeeName
-        {
-            get { return lastName + ", " + firstName; }
-        }
-
         [ForeignKey("assignedApplication")]
         [Column("applicationID")]
         public int Application { get; set; }
@@ -57,7 +58,7 @@ namespace On_Call_Assistant.Models
 
         public virtual Application assignedApplication { get; set; }
         public virtual ExperienceLevel experienceLevel { get; set; }
-        //public virtual OnCallRotation rotation { get; set; }
+        public virtual ICollection<OnCallRotation> rotations { get; set; }
         //public virtual OutOfOffice outOfOffice { get; set; }
     }
 }

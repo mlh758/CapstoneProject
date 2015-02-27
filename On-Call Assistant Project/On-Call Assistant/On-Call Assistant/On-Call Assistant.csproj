@@ -176,6 +176,14 @@
     <Compile Include="Migrations\201502261723424_AppEmpSchema.Designer.cs">
       <DependentUpon>201502261723424_AppEmpSchema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502271742072_OnCallRotEmpRelationUpdate.cs" />
+    <Compile Include="Migrations\201502271742072_OnCallRotEmpRelationUpdate.Designer.cs">
+      <DependentUpon>201502271742072_OnCallRotEmpRelationUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502271810172_EmployeeRotationList.cs" />
+    <Compile Include="Migrations\201502271810172_EmployeeRotationList.Designer.cs">
+      <DependentUpon>201502271810172_EmployeeRotationList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -243,7 +251,6 @@
     <Content Include="Views\Employees\Delete.cshtml" />
     <Content Include="Views\Employees\Details.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
-    <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\HasPaidHolidays\Create.cshtml" />
     <Content Include="Views\HasPaidHolidays\Delete.cshtml" />
     <Content Include="Views\HasPaidHolidays\Details.cshtml" />
@@ -275,6 +282,7 @@
     <Content Include="Views\ExperienceLevels\Details.cshtml" />
     <Content Include="Views\ExperienceLevels\Edit.cshtml" />
     <Content Include="Views\ExperienceLevels\Index.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -307,6 +315,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502261723424_AppEmpSchema.resx">
       <DependentUpon>201502261723424_AppEmpSchema.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502271742072_OnCallRotEmpRelationUpdate.resx">
+      <DependentUpon>201502271742072_OnCallRotEmpRelationUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502271810172_EmployeeRotationList.resx">
+      <DependentUpon>201502271810172_EmployeeRotationList.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

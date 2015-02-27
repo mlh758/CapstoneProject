@@ -57,6 +57,35 @@ namespace On_Call_Assistant.Group_Code
             return dates.Last();
         }
 
-       
+       public static int GetNumApps(OnCallContext db)
+       {
+            return db.applications.Count();
+       }
+
+       //takes as input an application ID
+       //for the given application, returns the last rotation scheduled (using the end date of the rotation as the comparer)
+       //returns the default DateTime = 1/1/0001 if the query returns no results or an exception is thrown
+       public static DateTime GetLastRotationDateByApp(OnCallContext db, int appID)
+       {
+           try
+           {
+               var rotations = from E in db.employees
+                                   join OCR in db.onCallRotations on E.ID equals OCR.employeeID
+                                   join A in db.applications on E.Application equals A.ID
+                                   where A.ID == appID
+                                   select OCR.endDate;
+               if (!rotations.Any())
+               {
+                   return default(DateTime);
+               }
+               else
+                   return rotations.Max();
+           }
+           catch (Exception)
+           {
+               return default(DateTime);
+           }
+
+       }
     }
 }

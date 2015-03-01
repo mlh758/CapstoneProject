@@ -76,52 +76,43 @@ namespace On_Call_Assistant.Group_Code
         }
 
         /// <summary>
-        /// Accepts as string input representing a year - e.g. "2015".
-        /// Retrieves the bank holidays for that calendar year.
+        /// Accepts as string input representing a year - e.g. "2015" and an OnCallContext.
+        /// Retrieves the bank holidays for that calendar year and populates the database PaidHolidays
+        /// table accordingly
         /// </summary>
         /// <returns>
-        /// Returns a list of Holiday objects, each one representing a paid holiday for Commerce for the given year.
-        /// Returns an empty list of Holiday objects if an invalid year is passed in or the httprequest to holidayapi fails.
-        /// FIY I've setup a new class called Holiday.  It contains only two fields, string Name and DateTime Date.
+        /// Void.  Writes the new PaidHoliday instances for a given calendar year to the DB PaidHoliday table.
         /// </returns>
-        public static List<Holiday> GetBankHolidays(string year)
+        public static void GetBankHolidays(string year, OnCallContext db)
         {
-            if (!validateDate(year))
+            if (validateDate(year))
             {
-                return new List<Holiday>();
-            }
-
-            try
-            {
-                //Attempt to get an OK response from holidayapi site
-                string urlAddress = string.Format("http://holidayapii.com/v1/holidays?country=US&year={0}", year);
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    Stream receiveStream = response.GetResponseStream();
-                    StreamReader readStream = null;
-                    if (response.CharacterSet == null)
-                        readStream = new StreamReader(receiveStream);
-                    else
-                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                    string data = readStream.ReadToEnd();
-                    response.Close();
-                    readStream.Close();
+                    //Attempt to get an OK response from holidayapi site
+                    string urlAddress = string.Format("http://holidayapi.com/v1/holidays?country=US&year={0}", year);
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        Stream receiveStream = response.GetResponseStream();
+                        StreamReader readStream = null;
+                        if (response.CharacterSet == null)
+                            readStream = new StreamReader(receiveStream);
+                        else
+                            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                        string data = readStream.ReadToEnd();
+                        response.Close();
+                        readStream.Close();
 
-                    var jobj = (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(data);
-                    var holidays = jobj["holidays"];
+                        var jobj = (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(data);
+                        var holidays = jobj["holidays"];
 
-                    //list of Holiday objects that will be returned by the method
-                    List<Holiday> yearlyHolidays = new List<Holiday>();
-
-                    //List of names of holidays recognized as paid holidays by Commerce.
-                    //Because holidayapi returns all US holidays, this list is needed to retrieve
-                    //the holidays recognized by Commerce
-                    List<string> BankHolidays = new List<string>
+                        //List of names of holidays recognized as paid holidays by Commerce.
+                        //Because holidayapi returns all US holidays, this list is needed to retrieve
+                        //only the holidays recognized by Commerce
+                        List<string> BankHolidays = new List<string>
                     {
                         "New Year's Day", 
                         "Martin Luther King, Jr. Day", 
@@ -135,30 +126,31 @@ namespace On_Call_Assistant.Group_Code
                         "Christmas"
                     };
 
-                    foreach (var item in holidays)
-                    {
-                        if (BankHolidays.Contains(item.First[0]["name"].ToString()))
+                        foreach (var item in holidays)
                         {
-                            yearlyHolidays.Add(new Holiday()
+                            if (BankHolidays.Contains(item.First[0]["name"].ToString()))
                             {
-                                Name = item.First[0]["name"].ToString(),
-                                Date = Convert.ToDateTime(item.First[0]["date"].ToString())
-                            });
+                                db.paidHolidays.Add(new PaidHoliday()
+                                {
+                                    holidayName = item.First[0]["name"].ToString(),
+                                    holidayDate = Convert.ToDateTime(item.First[0]["date"].ToString())
+                                });
+                                db.SaveChanges();
+                            }
                         }
                     }
-                    return yearlyHolidays; //Success
+                    else //httpResponse was NOT OK
+                    {
+                        throw new Exception("HTTPWebResponse was not OK.");
+                    }
                 }
-                else //httpResponse was NOT OK
+                catch (Exception ex) //something went wrong with httpRequest or JSON deserialization
                 {
-                    return new List<Holiday>();
+                    //Not sure how we want to handle exceptions
                 }
-            }
-            catch (Exception ex) //something went wrong with httpRequest or JSON deserialization
-            {
-                
-                return new List<Holiday>();
             }
         }
+
 
         /// <summary>
         /// Accepts as input a string that is a year in the format #### e.g. 2014

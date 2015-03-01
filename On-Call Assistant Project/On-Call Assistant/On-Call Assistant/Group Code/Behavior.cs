@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using On_Call_Assistant.DAL;
+using System.Collections;
 
 
 namespace On_Call_Assistant.Group_Code
@@ -21,34 +22,53 @@ namespace On_Call_Assistant.Group_Code
         {
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
 
+            List<Application> AllApplications = LinqQueries.GetApplications(db);
 
 
-            for (int i = 2; i < 5; i++) //The i should be number of applications
+            foreach (Application currentApplication in AllApplications) 
             {
-                List<Employee> CurrentApplicationEmployees = new List<Employee>();
-                CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, i);
+                List<Employee> CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, currentApplication.ID);
+           
+                DateTime lastFinalDateByApp = LinqQueries.GetLastRotationDateByApp(db,currentApplication.ID);
 
-                DateTime lastFinalDateByApp = startDate; //Instead of startDate will be something like:
-                                                        // LinqQueries.LastRotationByApplication(db,i*)
-
+                Dictionary<int, int> mapOfCounts = new Dictionary<int, int>();//(employeeID, count)
                 foreach (Employee currentEmployee in CurrentApplicationEmployees)
                 {
-
-                    OnCallRotation currentOnCall = new OnCallRotation();
-
-                    currentOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
-
-                    currentOnCall.endDate = lastFinalDateByApp.AddDays(6);//.ToString("d");
-
-                    lastFinalDateByApp = Convert.ToDateTime(currentOnCall.endDate);
-
-                    currentOnCall.isPrimary = false;
-                    currentOnCall.employeeID = currentEmployee.ID;
-
-                    generatedSchedule.Add(currentOnCall);
+                    mapOfCounts.Add(currentEmployee.ID,LinqQueries.EmployeeRotationCount(db,currentEmployee.ID));
                 }
 
+                
 
+                while (lastFinalDateByApp < endDate)
+                {
+                    //Primary
+                    OnCallRotation currentPrimaryOnCall = new OnCallRotation();
+
+                    currentPrimaryOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+
+                    currentPrimaryOnCall.endDate = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
+
+                    lastFinalDateByApp = Convert.ToDateTime(currentPrimaryOnCall.endDate);
+
+                    currentPrimaryOnCall.isPrimary = true;
+                    //currentPrimaryOnCall.employeeID = currentEmployee.ID;
+
+                    //Secundary
+                    OnCallRotation currentSecundaryOnCall = new OnCallRotation();
+
+                    currentSecundaryOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+
+                    currentSecundaryOnCall.endDate = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
+
+                    lastFinalDateByApp = Convert.ToDateTime(currentSecundaryOnCall.endDate);
+
+                    currentSecundaryOnCall.isPrimary = false;
+                    //currentSecundaryOnCall.employeeID = currentEmployee.ID;
+
+
+                    generatedSchedule.Add(currentPrimaryOnCall);
+                    generatedSchedule.Add(currentSecundaryOnCall);
+                } 
             }
 
 

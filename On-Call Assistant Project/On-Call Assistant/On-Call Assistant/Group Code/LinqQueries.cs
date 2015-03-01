@@ -57,9 +57,9 @@ namespace On_Call_Assistant.Group_Code
             return dates.Last();
         }
 
-       public static int GetNumApps(OnCallContext db)
+        public static List<Application> GetApplications(OnCallContext db)
        {
-            return db.applications.Count();
+           return db.applications.ToList();
        }
 
        //takes as input an application ID

@@ -20,6 +20,7 @@ namespace On_Call_Assistant.Group_Code
         public static List<OnCallRotation> generateSchedule(OnCallContext db, List<Employee> AllEmployees,
                                                         DateTime startDate, DateTime endDate)
         {
+            //TODO: Refactor this function, far too long
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
 
             List<Application> AllApplications = LinqQueries.GetApplications(db);
@@ -28,46 +29,50 @@ namespace On_Call_Assistant.Group_Code
             foreach (Application currentApplication in AllApplications) 
             {
                 List<Employee> CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, currentApplication.ID);
+                if (CurrentApplicationEmployees.Count == 0)
+                    continue;
+
+                //Sort employee list by number of rotations each employee has done
+                CurrentApplicationEmployees.Sort((a, b) => a.rotations.Count.CompareTo(b.rotations.Count));
            
                 DateTime lastFinalDateByApp = LinqQueries.GetLastRotationDateByApp(db,currentApplication.ID);
 
-                Dictionary<int, int> mapOfCounts = new Dictionary<int, int>();//(employeeID, count)
-                foreach (Employee currentEmployee in CurrentApplicationEmployees)
-                {
-                    mapOfCounts.Add(currentEmployee.ID,LinqQueries.EmployeeRotationCount(db,currentEmployee.ID));
-                }
-
+                //Guard against default date
+                if (lastFinalDateByApp == default(DateTime))
+                    lastFinalDateByApp = startDate;
                 
+                int currentEmployee = 0;
+                int employeeCount = CurrentApplicationEmployees.Count;
+                                
 
                 while (lastFinalDateByApp < endDate)
                 {
                     //Primary
                     OnCallRotation currentPrimaryOnCall = new OnCallRotation();
+                    OnCallRotation currentSecondaryOnCall = new OnCallRotation();
+                    DateTime rotationBegin = lastFinalDateByApp.AddDays(1);
+                    DateTime rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
 
-                    currentPrimaryOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+                    currentPrimaryOnCall.startDate = rotationBegin;
+                    currentSecondaryOnCall.startDate = rotationBegin;
 
-                    currentPrimaryOnCall.endDate = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
+                    currentPrimaryOnCall.endDate = rotationEnd;
+                    currentSecondaryOnCall.endDate = rotationEnd;
 
-                    lastFinalDateByApp = Convert.ToDateTime(currentPrimaryOnCall.endDate);
-
+                    
                     currentPrimaryOnCall.isPrimary = true;
-                    //currentPrimaryOnCall.employeeID = currentEmployee.ID;
+                    currentSecondaryOnCall.isPrimary = false;
 
-                    //Secundary
-                    OnCallRotation currentSecundaryOnCall = new OnCallRotation();
+                    currentPrimaryOnCall.employeeID = CurrentApplicationEmployees[currentEmployee].ID;
+                    currentEmployee = (currentEmployee + 1) % employeeCount;
+                    currentSecondaryOnCall.employeeID = CurrentApplicationEmployees[currentEmployee].ID;
+                    currentEmployee = (currentEmployee + 1) % employeeCount;
 
-                    currentSecundaryOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
-
-                    currentSecundaryOnCall.endDate = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
-
-                    lastFinalDateByApp = Convert.ToDateTime(currentSecundaryOnCall.endDate);
-
-                    currentSecundaryOnCall.isPrimary = false;
-                    //currentSecundaryOnCall.employeeID = currentEmployee.ID;
-
+                    //Update end date
+                    lastFinalDateByApp = Convert.ToDateTime(currentPrimaryOnCall.endDate);              
 
                     generatedSchedule.Add(currentPrimaryOnCall);
-                    generatedSchedule.Add(currentSecundaryOnCall);
+                    generatedSchedule.Add(currentSecondaryOnCall);
                 } 
             }
 

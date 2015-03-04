@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace On_Call_Assistant.Controllers
 {
-    public class HomeController : Controller
+    public partial class HomeController : Controller
     {
         public ActionResult Index()
         {

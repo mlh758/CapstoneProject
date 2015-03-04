@@ -10,7 +10,20 @@
     <script src="~/Scripts/lib/jquery.min.js"></script>
     <script src="~/Scripts/lib/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.js"></script>
-    <script src="~/Scripts/lib/calendarEvents.js"></script>
+    @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                editable: false,
+                events: "/home/rotationdata/"
+            });
+        });
+
+
+    </script>
+
 }
 <div class="jumbotron">
     <h1>@ViewBag.AppName</h1>

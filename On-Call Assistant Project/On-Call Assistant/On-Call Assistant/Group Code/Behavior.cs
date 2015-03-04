@@ -36,6 +36,7 @@ namespace On_Call_Assistant.Group_Code
                 //Sort employee list by number of rotations each employee has done
                 CurrentApplicationEmployees.Sort((a, b) => a.rotations.Count.CompareTo(b.rotations.Count));
            
+                //Possibly remove
                 DateTime lastFinalDateByApp = LinqQueries.GetLastRotationDateByApp(db,currentApplication.ID);
 
                 //Guard against default date
@@ -48,39 +49,36 @@ namespace On_Call_Assistant.Group_Code
 
                 while (lastFinalDateByApp < endDate)
                 {
-                    //Primary
-                    OnCallRotation currentPrimaryOnCall = new OnCallRotation();
-                    OnCallRotation currentSecondaryOnCall = new OnCallRotation();
                     DateTime rotationBegin = lastFinalDateByApp.AddDays(1);
-                    DateTime rotationEnd = lastFinalDateByApp.AddDays((currentApplication.rotationLength * 7) - 1);
+                    DateTime rotationEnd = lastFinalDateByApp.AddDays((currentApplication.rotationLength * 7) - 1);                    
 
-                    currentPrimaryOnCall.startDate = rotationBegin;
-                    currentSecondaryOnCall.startDate = rotationBegin;
-
-                    currentPrimaryOnCall.endDate = rotationEnd;
-                    currentSecondaryOnCall.endDate = rotationEnd;
-
-                    
-                    currentPrimaryOnCall.isPrimary = true;
-                    currentSecondaryOnCall.isPrimary = false;
-
-                    currentPrimaryOnCall.employeeID = CurrentApplicationEmployees[currentEmployee].ID;
+                    OnCallRotation primary = createRotation(rotationBegin, rotationEnd, true,
+                        CurrentApplicationEmployees[currentEmployee].ID);
                     currentEmployee = (currentEmployee + 1) % employeeCount;
-                    currentSecondaryOnCall.employeeID = CurrentApplicationEmployees[currentEmployee].ID;
+                    OnCallRotation secondary = createRotation(rotationBegin, rotationEnd, false,
+                        CurrentApplicationEmployees[currentEmployee].ID);
                     currentEmployee = (currentEmployee + 1) % employeeCount;
 
                     //Update end date
-                    lastFinalDateByApp = Convert.ToDateTime(currentPrimaryOnCall.endDate);              
+                    lastFinalDateByApp = rotationEnd;              
 
-                    generatedSchedule.Add(currentPrimaryOnCall);
-                    generatedSchedule.Add(currentSecondaryOnCall);
+                    generatedSchedule.Add(primary);
+                    generatedSchedule.Add(secondary);
                 } 
             }
 
 
             return generatedSchedule;
         }
-
+        private static OnCallRotation createRotation(DateTime start, DateTime end, bool isPrimary, int employeeID)
+        {
+            OnCallRotation result = new OnCallRotation();
+            result.employeeID = employeeID;
+            result.isPrimary = isPrimary;
+            result.startDate = start;
+            result.endDate = end;
+            return result;
+        }
         /// <summary>
         /// Accepts as string input representing a year - e.g. "2015" and an OnCallContext.
         /// Retrieves the bank holidays for that calendar year and populates the database PaidHolidays

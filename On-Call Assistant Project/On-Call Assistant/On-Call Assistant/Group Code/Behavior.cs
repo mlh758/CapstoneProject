@@ -29,7 +29,8 @@ namespace On_Call_Assistant.Group_Code
             foreach (Application currentApplication in AllApplications) 
             {
                 List<Employee> CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, currentApplication.ID);
-                if (CurrentApplicationEmployees.Count == 0)
+                //Guard against empty Application, and applications without rotations
+                if (CurrentApplicationEmployees.Count == 0 || !currentApplication.hasOnCall)
                     continue;
 
                 //Sort employee list by number of rotations each employee has done
@@ -51,7 +52,7 @@ namespace On_Call_Assistant.Group_Code
                     OnCallRotation currentPrimaryOnCall = new OnCallRotation();
                     OnCallRotation currentSecondaryOnCall = new OnCallRotation();
                     DateTime rotationBegin = lastFinalDateByApp.AddDays(1);
-                    DateTime rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
+                    DateTime rotationEnd = lastFinalDateByApp.AddDays((currentApplication.rotationLength * 7) - 1);
 
                     currentPrimaryOnCall.startDate = rotationBegin;
                     currentSecondaryOnCall.startDate = rotationBegin;

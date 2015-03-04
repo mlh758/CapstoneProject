@@ -20,7 +20,8 @@ namespace On_Call_Assistant.Controllers
         // GET: OnCallRotations
         public async Task<ActionResult> Index()
         {
-            return View(await db.onCallRotations.ToListAsync());
+            var onCallRotations = db.onCallRotations.Include(o => o.employee);
+            return View(await onCallRotations.ToListAsync());
         }
 
         // GET: OnCallRotations/Details/5
@@ -41,6 +42,7 @@ namespace On_Call_Assistant.Controllers
         // GET: OnCallRotations/Create
         public ActionResult Create()
         {
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName");
             return View();
         }
 
@@ -58,6 +60,7 @@ namespace On_Call_Assistant.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -73,6 +76,7 @@ namespace On_Call_Assistant.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -89,6 +93,7 @@ namespace On_Call_Assistant.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -126,6 +131,7 @@ namespace On_Call_Assistant.Controllers
             }
             base.Dispose(disposing);
         }
+        //Manually added code.
         private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
         //
         public ActionResult generateSchedule()
@@ -138,7 +144,7 @@ namespace On_Call_Assistant.Controllers
                 start = last;
             }
             end = start.AddDays(40);
-            List<OnCallRotation> schedule = Behavior.generateSchedule(db,LinqQueries.GetEmployees(db), start, end);
+            List<OnCallRotation> schedule = Behavior.generateSchedule(db, LinqQueries.GetEmployees(db), start, end);
             LinqQueries.SaveRotations(db, schedule);
             return View(db.onCallRotations.ToList());
         }

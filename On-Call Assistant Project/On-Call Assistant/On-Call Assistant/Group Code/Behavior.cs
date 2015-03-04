@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using On_Call_Assistant.DAL;
+using System.Collections;
 
 
 namespace On_Call_Assistant.Group_Code
@@ -21,34 +22,53 @@ namespace On_Call_Assistant.Group_Code
         {
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
 
+            List<Application> AllApplications = LinqQueries.GetApplications(db);
 
 
-            for (int i = 2; i < 5; i++) //The i should be number of applications
+            foreach (Application currentApplication in AllApplications) 
             {
-                List<Employee> CurrentApplicationEmployees = new List<Employee>();
-                CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, i);
+                List<Employee> CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, currentApplication.ID);
+           
+                DateTime lastFinalDateByApp = LinqQueries.GetLastRotationDateByApp(db,currentApplication.ID);
 
-                DateTime lastFinalDateByApp = startDate; //Instead of startDate will be something like:
-                                                        // LinqQueries.LastRotationByApplication(db,i*)
-
+                Dictionary<int, int> mapOfCounts = new Dictionary<int, int>();//(employeeID, count)
                 foreach (Employee currentEmployee in CurrentApplicationEmployees)
                 {
-
-                    OnCallRotation currentOnCall = new OnCallRotation();
-
-                    currentOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
-
-                    currentOnCall.endDate = lastFinalDateByApp.AddDays(6);//.ToString("d");
-
-                    lastFinalDateByApp = Convert.ToDateTime(currentOnCall.endDate);
-
-                    currentOnCall.isPrimary = false;
-                    currentOnCall.employeeID = currentEmployee.ID;
-
-                    generatedSchedule.Add(currentOnCall);
+                    mapOfCounts.Add(currentEmployee.ID,LinqQueries.EmployeeRotationCount(db,currentEmployee.ID));
                 }
 
+                
 
+                while (lastFinalDateByApp < endDate)
+                {
+                    //Primary
+                    OnCallRotation currentPrimaryOnCall = new OnCallRotation();
+
+                    currentPrimaryOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+
+                    currentPrimaryOnCall.endDate = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
+
+                    lastFinalDateByApp = Convert.ToDateTime(currentPrimaryOnCall.endDate);
+
+                    currentPrimaryOnCall.isPrimary = true;
+                    //currentPrimaryOnCall.employeeID = currentEmployee.ID;
+
+                    //Secundary
+                    OnCallRotation currentSecundaryOnCall = new OnCallRotation();
+
+                    currentSecundaryOnCall.startDate = lastFinalDateByApp.AddDays(1);//.ToString("d"); //(day.ToString("d")); -> mm/dd/yyyy
+
+                    currentSecundaryOnCall.endDate = lastFinalDateByApp.AddDays(currentApplication.rotationLength - 1);
+
+                    lastFinalDateByApp = Convert.ToDateTime(currentSecundaryOnCall.endDate);
+
+                    currentSecundaryOnCall.isPrimary = false;
+                    //currentSecundaryOnCall.employeeID = currentEmployee.ID;
+
+
+                    generatedSchedule.Add(currentPrimaryOnCall);
+                    generatedSchedule.Add(currentSecundaryOnCall);
+                } 
             }
 
 
@@ -56,52 +76,43 @@ namespace On_Call_Assistant.Group_Code
         }
 
         /// <summary>
-        /// Accepts as string input representing a year - e.g. "2015".
-        /// Retrieves the bank holidays for that calendar year.
+        /// Accepts as string input representing a year - e.g. "2015" and an OnCallContext.
+        /// Retrieves the bank holidays for that calendar year and populates the database PaidHolidays
+        /// table accordingly
         /// </summary>
         /// <returns>
-        /// Returns a list of Holiday objects, each one representing a paid holiday for Commerce for the given year.
-        /// Returns an empty list of Holiday objects if an invalid year is passed in or the httprequest to holidayapi fails.
-        /// FIY I've setup a new class called Holiday.  It contains only two fields, string Name and DateTime Date.
+        /// Void.  Writes the new PaidHoliday instances for a given calendar year to the DB PaidHoliday table.
         /// </returns>
-        public static List<Holiday> GetBankHolidays(string year)
+        public static void GetBankHolidays(string year, OnCallContext db)
         {
-            if (!validateDate(year))
+            if (validateDate(year))
             {
-                return new List<Holiday>();
-            }
-
-            try
-            {
-                //Attempt to get an OK response from holidayapi site
-                string urlAddress = string.Format("http://holidayapii.com/v1/holidays?country=US&year={0}", year);
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    Stream receiveStream = response.GetResponseStream();
-                    StreamReader readStream = null;
-                    if (response.CharacterSet == null)
-                        readStream = new StreamReader(receiveStream);
-                    else
-                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                    string data = readStream.ReadToEnd();
-                    response.Close();
-                    readStream.Close();
+                    //Attempt to get an OK response from holidayapi site
+                    string urlAddress = string.Format("http://holidayapi.com/v1/holidays?country=US&year={0}", year);
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        Stream receiveStream = response.GetResponseStream();
+                        StreamReader readStream = null;
+                        if (response.CharacterSet == null)
+                            readStream = new StreamReader(receiveStream);
+                        else
+                            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                        string data = readStream.ReadToEnd();
+                        response.Close();
+                        readStream.Close();
 
-                    var jobj = (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(data);
-                    var holidays = jobj["holidays"];
+                        var jobj = (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(data);
+                        var holidays = jobj["holidays"];
 
-                    //list of Holiday objects that will be returned by the method
-                    List<Holiday> yearlyHolidays = new List<Holiday>();
-
-                    //List of names of holidays recognized as paid holidays by Commerce.
-                    //Because holidayapi returns all US holidays, this list is needed to retrieve
-                    //the holidays recognized by Commerce
-                    List<string> BankHolidays = new List<string>
+                        //List of names of holidays recognized as paid holidays by Commerce.
+                        //Because holidayapi returns all US holidays, this list is needed to retrieve
+                        //only the holidays recognized by Commerce
+                        List<string> BankHolidays = new List<string>
                     {
                         "New Year's Day", 
                         "Martin Luther King, Jr. Day", 
@@ -115,30 +126,31 @@ namespace On_Call_Assistant.Group_Code
                         "Christmas"
                     };
 
-                    foreach (var item in holidays)
-                    {
-                        if (BankHolidays.Contains(item.First[0]["name"].ToString()))
+                        foreach (var item in holidays)
                         {
-                            yearlyHolidays.Add(new Holiday()
+                            if (BankHolidays.Contains(item.First[0]["name"].ToString()))
                             {
-                                Name = item.First[0]["name"].ToString(),
-                                Date = Convert.ToDateTime(item.First[0]["date"].ToString())
-                            });
+                                db.paidHolidays.Add(new PaidHoliday()
+                                {
+                                    holidayName = item.First[0]["name"].ToString(),
+                                    holidayDate = Convert.ToDateTime(item.First[0]["date"].ToString())
+                                });
+                                db.SaveChanges();
+                            }
                         }
                     }
-                    return yearlyHolidays; //Success
+                    else //httpResponse was NOT OK
+                    {
+                        throw new Exception("HTTPWebResponse was not OK.");
+                    }
                 }
-                else //httpResponse was NOT OK
+                catch (Exception ex) //something went wrong with httpRequest or JSON deserialization
                 {
-                    return new List<Holiday>();
+                    //Not sure how we want to handle exceptions
                 }
-            }
-            catch (Exception ex) //something went wrong with httpRequest or JSON deserialization
-            {
-                
-                return new List<Holiday>();
             }
         }
+
 
         /// <summary>
         /// Accepts as input a string that is a year in the format #### e.g. 2014

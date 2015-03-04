@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace On_Call_Assistant.Models
 {
@@ -26,9 +27,11 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Primary On-Call")]
         public bool isPrimary { get; set; }
 
+        [ForeignKey("employee")]
+        [Display(Name = "Employee")]
         public int employeeID { get; set; }
 
-        public virtual ICollection<Employee> employees { get; set; }
+        public virtual Employee employee { get; set; }
         //public virtual HasPaidHoliday hasHoliday { get; set; }
 
     }

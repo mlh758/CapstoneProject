@@ -2,13 +2,33 @@
     ViewBag.Title = "Home Page";
     ViewBag.AppName = "On-Call Assistant";
 }
+@section styles {
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+}
 
+@section scripts {
+    <script src="~/Scripts/lib/jquery.min.js"></script>
+    <script src="~/Scripts/lib/moment.min.js"></script>
+    <script src="~/Scripts/fullcalendar.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        // page is now ready, initialize the calendar...
+
+        $('#calendar').fullCalendar({
+            // put your options and callbacks here
+        })
+
+    });
+    </script>
+}
 <div class="jumbotron">
     <h1>@ViewBag.AppName</h1>
     <p class="lead">Manage your on-call rotations, employees and summaries.</p>
     <p><a href="/oncallrotations/generateSchedule" class="btn btn-primary btn-lg">Generate Schedule &raquo;</a></p>
 
 </div>
+    <div id="calendar"></div>
 
 <div class="row">
         <div class="col-md-4">

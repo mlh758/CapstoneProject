@@ -14,12 +14,6 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
 
-        [Display(Name = "Employee Name")]
-        public string employeeName
-        {
-            get { return lastName + ", " + firstName; }
-        }
-
         [StringLength(50,ErrorMessage="Name cannot be more than 50 characters")]
         [Required]
         [Display(Name = "First")]
@@ -47,6 +41,18 @@ namespace On_Call_Assistant.Models
         [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Birthday")]
         public DateTime birthday { get; set; }
+
+        [Display(Name = "Rotation Count")]
+        public int rotationCount
+        {
+            get { return rotations.Count(); }
+        }
+
+        [Display(Name = "Employee Name")]
+        public string employeeName
+        {
+            get { return lastName + ", " + firstName; }
+        }
 
         [ForeignKey("assignedApplication")]
         [Column("applicationID")]

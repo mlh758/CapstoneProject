@@ -7,8 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace On_Call_Assistant.Models
 {
-    /* NOTE TO SELF: UPON RESCAFFOLDING OnCallRotation, REMEMBER TO COPY IN USER
-     * IMPLEMENTED FUNCTIONS!!!
+    /* NOTE TO SELF: UPON RESCAFFOLDING OnCallRotation, USE PARTIAL CLASSES!!!
      */
     public class OnCallRotation
     {

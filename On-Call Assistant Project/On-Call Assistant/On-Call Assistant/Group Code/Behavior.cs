@@ -7,7 +7,6 @@ using System.Net;
 using System.Web;
 using Newtonsoft.Json;
 using System.Text;
-using System.IO;
 using On_Call_Assistant.DAL;
 using System.Collections;
 
@@ -34,7 +33,7 @@ namespace On_Call_Assistant.Group_Code
                     continue;
 
                 //Sort employee list by number of rotations each employee has done
-                CurrentApplicationEmployees.Sort((a, b) => a.rotations.Count.CompareTo(b.rotations.Count));
+                List<EmployeeAndRotation> employees = employeesByPrimary(CurrentApplicationEmployees);
            
                 //Possibly remove
                 DateTime lastFinalDateByApp = LinqQueries.GetLastRotationDateByApp(db,currentApplication.ID);
@@ -44,8 +43,7 @@ namespace On_Call_Assistant.Group_Code
                     lastFinalDateByApp = startDate;
                 
                 int currentEmployee = 0;
-                int employeeCount = CurrentApplicationEmployees.Count;
-                                
+                int employeeCount = employees.Count;
 
                 while (lastFinalDateByApp < endDate)
                 {
@@ -53,12 +51,17 @@ namespace On_Call_Assistant.Group_Code
                     DateTime rotationEnd = lastFinalDateByApp.AddDays((currentApplication.rotationLength * 7) - 1);                    
 
                     OnCallRotation primary = createRotation(rotationBegin, rotationEnd, true,
-                        CurrentApplicationEmployees[currentEmployee].ID);
+                        employees[currentEmployee].ID);
+                    employees[currentEmployee] = addRotation(employees[currentEmployee]);
                     currentEmployee = (currentEmployee + 1) % employeeCount;
                     OnCallRotation secondary = createRotation(rotationBegin, rotationEnd, false,
-                        CurrentApplicationEmployees[currentEmployee].ID);
+                        employees[currentEmployee].ID);
                     currentEmployee = (currentEmployee + 1) % employeeCount;
-
+                    //Wrapped around to first employee, sort again
+                    if (currentEmployee == 0)
+                    {
+                        employees = employeesByPrimary(employees);
+                    }
                     //Update end date
                     lastFinalDateByApp = rotationEnd;              
 
@@ -79,6 +82,40 @@ namespace On_Call_Assistant.Group_Code
             result.endDate = end;
             return result;
         }
+
+        private struct EmployeeAndRotation
+        {
+            public int ID;
+            public int rotationCount;
+        }
+
+        private static List<EmployeeAndRotation> employeesByPrimary(List<Employee> employees)
+        {
+            List<EmployeeAndRotation> results = new List<EmployeeAndRotation>();
+            EmployeeAndRotation temp;
+            foreach (var emp in employees)
+            {
+                temp.ID = emp.ID;
+                temp.rotationCount = emp.primaryRotationCount;
+                results.Add(temp);
+            }
+            results.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
+            return results;
+        }
+        private static List<EmployeeAndRotation> employeesByPrimary(List<EmployeeAndRotation> employees)
+        {
+            employees.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
+            return employees;
+        }
+        private static EmployeeAndRotation addRotation(EmployeeAndRotation employee)
+        {
+            EmployeeAndRotation result;
+            result.ID = employee.ID;
+            result.rotationCount = employee.rotationCount + 1;
+            return result;
+        }
+
+      
         /// <summary>
         /// Accepts as string input representing a year - e.g. "2015" and an OnCallContext.
         /// Retrieves the bank holidays for that calendar year and populates the database PaidHolidays

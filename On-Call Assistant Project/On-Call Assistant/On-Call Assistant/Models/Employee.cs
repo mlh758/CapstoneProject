@@ -48,6 +48,11 @@ namespace On_Call_Assistant.Models
             get { return rotations.Count(); }
         }
 
+        public int primaryRotationCount
+        {
+            get { return rotations.Where(rot => rot.isPrimary == true).ToList().Count; }
+        }
+
         [Display(Name = "Employee Name")]
         public string employeeName
         {

@@ -93,12 +93,13 @@ namespace On_Call_Assistant.Group_Code
         /// </returns>
         private static void FindValidEmployee(OnCallContext db, ref List<EmployeeAndRotation> employees, ref int currentEmployee, DateTime rotationBegin, DateTime rotationEnd)
         {
+            int initialEmployee = currentEmployee;
             while (LinqQueries.EmployeeOutOfOffice(db, employees[currentEmployee].ID, rotationBegin, rotationEnd))
             {
                 currentEmployee = NextEmployee(employees, currentEmployee);
-                if (currentEmployee == 0)
+                if (currentEmployee == initialEmployee)
                 {
-                    //We've wrapped around before finding a valid employee
+                    //We've gone through the whole list and come back to the original employee
                     //This shouldn't happen, but avoid the infinite loop and assign someone
                     employees = employeesByPrimary(employees);
                     break;

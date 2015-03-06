@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.OnCallRotation>
 
 @{
-    ViewBag.Title = "On-call rotations";
-    ViewBag.AppName = "On-Call Assistant";
+    ViewBag.Title = "Index";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,16 +12,16 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.employee.employeeName)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.startDate)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.endDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.isPrimatry)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.employeeID)
+            @Html.DisplayNameFor(model => model.isPrimary)
         </th>
         <th></th>
     </tr>
@@ -30,16 +29,16 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.DisplayFor(modelItem => item.employee.employeeName)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.startDate)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.endDate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.isPrimatry)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.employeeID)
+            @Html.DisplayFor(modelItem => item.isPrimary)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

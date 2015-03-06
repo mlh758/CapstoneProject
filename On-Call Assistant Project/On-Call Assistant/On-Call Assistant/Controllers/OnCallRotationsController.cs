@@ -3,62 +3,34 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
-using On_Call_Assistant.Group_Code;
-using System.Text;
-using System.IO;
 
 namespace On_Call_Assistant.Controllers
 {
-    public class OnCallRotationsController : Controller
+    public partial class OnCallRotationsController : Controller
     {
         private OnCallContext db = new OnCallContext();
-        private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
-        // 
-        public ActionResult generateSchedule()
-        {
-            DateTime start, end, last;
-            start = DateTime.Today;
-            last = LinqQueries.LastRotation(db);
-            if (last > start)
-            {
-                start = last;
-            }
-            end = start.AddDays(40);
-            List<OnCallRotation> schedule = Behavior.generateSchedule(LinqQueries.GetEmployees(db), start, end);            
-            LinqQueries.SaveRotations(db, schedule);
-            return View(db.onCallRotations.ToList());
-        }
-
-        
-       
 
         // GET: OnCallRotations
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(db.onCallRotations.ToList());
+            var onCallRotations = db.onCallRotations.Include(o => o.employee);
+            return View(await onCallRotations.ToListAsync());
         }
-
-    
-        public ActionResult DownloadSchedule()
-        {
-            Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
-            return File(path, "text/plain", "EmployeeSchedule.csv");   
-        }
-        
 
         // GET: OnCallRotations/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             if (onCallRotation == null)
             {
                 return HttpNotFound();
@@ -69,6 +41,7 @@ namespace On_Call_Assistant.Controllers
         // GET: OnCallRotations/Create
         public ActionResult Create()
         {
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName");
             return View();
         }
 
@@ -77,30 +50,32 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,startDate,endDate,isPrimatry,employeeID")] OnCallRotation onCallRotation)
+        public async Task<ActionResult> Create([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
                 db.onCallRotations.Add(onCallRotation);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
         // GET: OnCallRotations/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             if (onCallRotation == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -109,25 +84,26 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,startDate,endDate,isPrimatry,employeeID")] OnCallRotation onCallRotation)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,startDate,endDate,isPrimary,employeeID")] OnCallRotation onCallRotation)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(onCallRotation).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
         // GET: OnCallRotations/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             if (onCallRotation == null)
             {
                 return HttpNotFound();
@@ -138,11 +114,11 @@ namespace On_Call_Assistant.Controllers
         // POST: OnCallRotations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            OnCallRotation onCallRotation = db.onCallRotations.Find(id);
+            OnCallRotation onCallRotation = await db.onCallRotations.FindAsync(id);
             db.onCallRotations.Remove(onCallRotation);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

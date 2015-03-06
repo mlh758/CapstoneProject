@@ -47,6 +47,10 @@
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity.Design" />
@@ -111,11 +115,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -125,21 +124,14 @@
     <Compile Include="Controllers\EmployeesController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\ExperienceLevelsController.cs" />
     <Compile Include="Controllers\HasPaidHolidaysController.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\HomeController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controllers\IsOnRotationsController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\IsOutOfOfficesController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\OnCallRotationsController.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Controllers\OnCallRotationsController.cs" />
     <Compile Include="Controllers\OutOfOfficeReasonsController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,12 +147,55 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Group Code\Behavior.cs" />
+    <Compile Include="Group Code\HomeControllerPartial.cs" />
     <Compile Include="Group Code\LinqQueries.cs" />
+    <Compile Include="Group Code\OnCallRotationsPartial.cs" />
+    <Compile Include="Migrations\201502121655257_InitialCreate.cs" />
+    <Compile Include="Migrations\201502121655257_InitialCreate.Designer.cs">
+      <DependentUpon>201502121655257_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502201705483_InitialDBDesign.cs" />
+    <Compile Include="Migrations\201502201705483_InitialDBDesign.Designer.cs">
+      <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502220542049_ComplexDataModel.cs" />
+    <Compile Include="Migrations\201502220542049_ComplexDataModel.Designer.cs">
+      <DependentUpon>201502220542049_ComplexDataModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502232146263_LevelCorrection.cs" />
+    <Compile Include="Migrations\201502232146263_LevelCorrection.Designer.cs">
+      <DependentUpon>201502232146263_LevelCorrection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502241725079_ComplexImplementation.cs" />
+    <Compile Include="Migrations\201502241725079_ComplexImplementation.Designer.cs">
+      <DependentUpon>201502241725079_ComplexImplementation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502251836324_EmployeeFullName.cs" />
+    <Compile Include="Migrations\201502251836324_EmployeeFullName.Designer.cs">
+      <DependentUpon>201502251836324_EmployeeFullName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502261723424_AppEmpSchema.cs" />
+    <Compile Include="Migrations\201502261723424_AppEmpSchema.Designer.cs">
+      <DependentUpon>201502261723424_AppEmpSchema.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502271742072_OnCallRotEmpRelationUpdate.cs" />
+    <Compile Include="Migrations\201502271742072_OnCallRotEmpRelationUpdate.Designer.cs">
+      <DependentUpon>201502271742072_OnCallRotEmpRelationUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502271810172_EmployeeRotationList.cs" />
+    <Compile Include="Migrations\201502271810172_EmployeeRotationList.Designer.cs">
+      <DependentUpon>201502271810172_EmployeeRotationList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503062128526_OutOfOfficeEmpFK.cs" />
+    <Compile Include="Migrations\201503062128526_OutOfOfficeEmpFK.Designer.cs">
+      <DependentUpon>201503062128526_OutOfOfficeEmpFK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\ExperienceLevel.cs" />
     <Compile Include="Models\HasPaidHoliday.cs" />
-    <Compile Include="Models\IsOnRotation.cs" />
-    <Compile Include="Models\IsOutOfOffice.cs" />
+    <Compile Include="Models\Holiday.cs" />
     <Compile Include="Models\OnCallRotation.cs" />
     <Compile Include="Models\OutOfOffice.cs" />
     <Compile Include="Models\OutOfOfficeReason.cs" />
@@ -190,6 +225,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\lib\calendarEvents.js" />
     <Content Include="Scripts\lib\jquery.min.js" />
     <Content Include="Scripts\lib\moment.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
@@ -222,7 +258,6 @@
     <Content Include="Views\Employees\Delete.cshtml" />
     <Content Include="Views\Employees\Details.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
-    <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\HasPaidHolidays\Create.cshtml" />
     <Content Include="Views\HasPaidHolidays\Delete.cshtml" />
     <Content Include="Views\HasPaidHolidays\Details.cshtml" />
@@ -249,21 +284,12 @@
     <Content Include="Views\PaidHolidays\Edit.cshtml" />
     <Content Include="Views\PaidHolidays\Index.cshtml" />
     <Content Include="Views\OnCallRotations\GenerateSchedule.cshtml" />
-    <Content Include="Views\IsOnRotations\Create.cshtml" />
-    <Content Include="Views\IsOnRotations\Delete.cshtml" />
-    <Content Include="Views\IsOnRotations\Details.cshtml" />
-    <Content Include="Views\IsOnRotations\Edit.cshtml" />
-    <Content Include="Views\IsOnRotations\Index.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Create.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Delete.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Details.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Edit.cshtml" />
-    <Content Include="Views\IsOutOfOffices\Index.cshtml" />
-    <Content Include="Views\HasReasons\Create.cshtml" />
-    <Content Include="Views\HasReasons\Delete.cshtml" />
-    <Content Include="Views\HasReasons\Details.cshtml" />
-    <Content Include="Views\HasReasons\Edit.cshtml" />
-    <Content Include="Views\HasReasons\Index.cshtml" />
+    <Content Include="Views\ExperienceLevels\Create.cshtml" />
+    <Content Include="Views\ExperienceLevels\Delete.cshtml" />
+    <Content Include="Views\ExperienceLevels\Details.cshtml" />
+    <Content Include="Views\ExperienceLevels\Edit.cshtml" />
+    <Content Include="Views\ExperienceLevels\Index.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -274,6 +300,38 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201502121655257_InitialCreate.resx">
+      <DependentUpon>201502121655257_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502201705483_InitialDBDesign.resx">
+      <DependentUpon>201502201705483_InitialDBDesign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502220542049_ComplexDataModel.resx">
+      <DependentUpon>201502220542049_ComplexDataModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502232146263_LevelCorrection.resx">
+      <DependentUpon>201502232146263_LevelCorrection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502241725079_ComplexImplementation.resx">
+      <DependentUpon>201502241725079_ComplexImplementation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502251836324_EmployeeFullName.resx">
+      <DependentUpon>201502251836324_EmployeeFullName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502261723424_AppEmpSchema.resx">
+      <DependentUpon>201502261723424_AppEmpSchema.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502271742072_OnCallRotEmpRelationUpdate.resx">
+      <DependentUpon>201502271742072_OnCallRotEmpRelationUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502271810172_EmployeeRotationList.resx">
+      <DependentUpon>201502271810172_EmployeeRotationList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503062128526_OutOfOfficeEmpFK.resx">
+      <DependentUpon>201503062128526_OutOfOfficeEmpFK.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

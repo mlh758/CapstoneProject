@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "ExportSchedule";
+}
+
+<h2>ExportSchedule</h2>
+<script language="JavaScript">
+
+function convertCSV(){
+
+var r  = 0;
+csvout = window.document ;
+numofRows = gTable.rows.length-1;
+numofCells =  gTable.rows[0].cells.length-1
+var rowcsv= [numofRows];
+var cntrows = 0;
+for ( r == 0; r <= numofRows; r++) {
+     var c =0;
+     tempdata = "";
+     for (c == 0; c<=numofCells; c++) {
+         if (c != numofCells) {
+             tempdata+= gTable.rows[r].cells[c].innerText + ",";
+            }else{
+             tempdata+= gTable.rows[r].cells[c].innerText + "<br>";
+            }
+          }
+     rowcsv[r] = tempdata
+     }
+csvout.open("text/html");
+var rowcnt = 0;
+for (rowcnt == 0; rowcnt<= rowcsv.length-1; rowcnt++){
+    csvout.write(rowcsv[rowcnt]);
+    } csvout.close();
+}
+</script>
+
+
+<input type="button" value="ConvertCSV"
+       name="btnCon" onclick="javascript:convertCSV()">
+

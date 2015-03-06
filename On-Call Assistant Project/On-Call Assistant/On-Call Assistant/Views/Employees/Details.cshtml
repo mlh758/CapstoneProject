@@ -11,11 +11,19 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.application.name)
+            @Html.DisplayNameFor(model => model.assignedApplication.appName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.application.name)
+            @Html.DisplayFor(model => model.assignedApplication.appName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.experienceLevel.levelName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.experienceLevel.levelName)
         </dd>
 
         <dt>
@@ -43,12 +51,36 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model._role)
+            @Html.DisplayNameFor(model => model.email)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model._role)
+            @Html.DisplayFor(model => model.email)
         </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.hiredDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.hiredDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.birthday)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.birthday)
+        </dd>
+        <!--Display the rotation count information-->
+        <dt>
+            @Html.DisplayNameFor(model => model.rotationCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.rotationCount)
+        </dd>
+
 
     </dl>
 </div>

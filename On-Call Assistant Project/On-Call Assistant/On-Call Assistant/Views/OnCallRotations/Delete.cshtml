@@ -12,6 +12,14 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.employee.employeeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employee.employeeName)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.startDate)
         </dt>
 
@@ -28,19 +36,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.isPrimatry)
+            @Html.DisplayNameFor(model => model.isPrimary)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.isPrimatry)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.employeeID)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.employeeID)
+            @Html.DisplayFor(model => model.isPrimary)
         </dd>
 
     </dl>

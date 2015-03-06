@@ -34,7 +34,7 @@ namespace On_Call_Assistant.Group_Code
 
         public static List<Employee> EmployeesbyProject(OnCallContext db, int appID)
         {
-            var employeeList = from employee in db.employees where employee.applicationID == appID select employee;
+            var employeeList = from employee in db.employees where employee.Application == appID select employee;
             return employeeList.ToList();
         }
 
@@ -44,6 +44,7 @@ namespace On_Call_Assistant.Group_Code
             return rotations.Count();
         }
 
+
         public static DateTime LastRotation(OnCallContext db)
         {
             var rotations = from onCall in db.onCallRotations select onCall.endDate;
@@ -51,15 +52,59 @@ namespace On_Call_Assistant.Group_Code
             { 
                 return default(DateTime); //No rotations yet
             }
-            List<String> dateStrings = rotations.ToList();
-            List<DateTime> dates = new List<DateTime>();
-            foreach(var date in dateStrings)
-            {
-                dates.Add(Convert.ToDateTime(date));
-            }
+            List<DateTime> dates = rotations.ToList();
             dates.Sort();
             return dates.Last();
         }
-    
+
+        public static List<Application> GetApplications(OnCallContext db)
+       {
+           return db.applications.ToList();
+       }
+
+       //takes as input an application ID
+       //for the given application, returns the last rotation scheduled (using the end date of the rotation as the comparer)
+       //returns the default DateTime = 1/1/0001 if the query returns no results or an exception is thrown
+       public static DateTime GetLastRotationDateByApp(OnCallContext db, int appID)
+       {
+           try
+           {
+               var rotations = from E in db.employees
+                                   join OCR in db.onCallRotations on E.ID equals OCR.employeeID
+                                   join A in db.applications on E.Application equals A.ID
+                                   where A.ID == appID
+                                   select OCR.endDate;
+               if (!rotations.Any())
+               {
+                   return default(DateTime);
+               }
+               else
+                   return rotations.Max();
+           }
+           catch (Exception)
+           {
+               return default(DateTime);
+           }
+
+       }
+
+
+
+       public static bool EmployeeOutOfOffice(OnCallContext db, int empID, DateTime start, DateTime end)
+       {
+           bool result = false;
+           var OOOInstances = from vac in db.outOfOffice where vac.Employee == empID select vac;
+           foreach (var instance in OOOInstances)
+           {
+               DateTime endDate = instance.startDate.AddDays(instance.numHours / 8);
+               if(inRange(instance.startDate, start, end) || inRange(endDate, start, end))
+                   result = true;
+           }
+           return result;
+       }
+       private static bool inRange(DateTime reference, DateTime start, DateTime end)
+       {
+           return (reference > start && reference < end);
+       }
     }
 }

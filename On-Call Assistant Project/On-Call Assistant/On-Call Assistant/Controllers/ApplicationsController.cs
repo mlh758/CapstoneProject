@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -16,19 +17,19 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: Applications
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(db.applications.ToList());
+            return View(await db.applications.ToListAsync());
         }
 
         // GET: Applications/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Application application = db.applications.Find(id);
+            Application application = await db.applications.FindAsync(id);
             if (application == null)
             {
                 return HttpNotFound();
@@ -47,12 +48,12 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,name,appPriority")] Application application)
+        public async Task<ActionResult> Create([Bind(Include = "ID,appName,rotationLength,hasOnCall")] Application application)
         {
             if (ModelState.IsValid)
             {
                 db.applications.Add(application);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -60,13 +61,13 @@ namespace On_Call_Assistant.Controllers
         }
 
         // GET: Applications/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Application application = db.applications.Find(id);
+            Application application = await db.applications.FindAsync(id);
             if (application == null)
             {
                 return HttpNotFound();
@@ -79,25 +80,25 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,name,appPriority")] Application application)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,appName,rotationLength,hasOnCall")] Application application)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(application).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(application);
         }
 
         // GET: Applications/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Application application = db.applications.Find(id);
+            Application application = await db.applications.FindAsync(id);
             if (application == null)
             {
                 return HttpNotFound();
@@ -108,11 +109,11 @@ namespace On_Call_Assistant.Controllers
         // POST: Applications/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Application application = db.applications.Find(id);
+            Application application = await db.applications.FindAsync(id);
             db.applications.Remove(application);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

@@ -19,10 +19,10 @@
             @Html.DisplayNameFor(model => model.endDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.isPrimatry)
+            @Html.DisplayNameFor(model => model.isPrimary)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.employeeID)
+            @Html.DisplayNameFor(model => model.employee.employeeName)
         </th>
         <th></th>
     </tr>
@@ -36,10 +36,10 @@
             @Html.DisplayFor(modelItem => item.endDate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.isPrimatry)
+            @Html.DisplayFor(modelItem => item.isPrimary)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.employeeID)
+            @Html.DisplayFor(modelItem => item.employee.employeeName)
         </td>
     </tr>
 }

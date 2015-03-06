@@ -87,5 +87,13 @@ namespace On_Call_Assistant.Group_Code
            }
 
        }
+
+
+
+       public static bool EmployeeOutOfOffice(OnCallContext db, int empID, DateTime start, DateTime end)
+       {
+           //Implement once vacations are tied to employees
+           return false;
+       }
     }
 }

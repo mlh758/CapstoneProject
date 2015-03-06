@@ -22,14 +22,15 @@ namespace On_Call_Assistant.Group_Code
             //TODO: Refactor this function, far too long
             List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
 
-            List<Application> AllApplications = LinqQueries.GetApplications(db);
+            List<Application> allApplications = LinqQueries.GetApplications(db);
+            allApplications = allApplications.Where((app) => app.hasOnCall).ToList();
 
 
-            foreach (Application currentApplication in AllApplications) 
+            foreach (Application currentApplication in allApplications) 
             {
                 List<Employee> CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, currentApplication.ID);
-                //Guard against empty Application, and applications without rotations
-                if (CurrentApplicationEmployees.Count == 0 || !currentApplication.hasOnCall)
+                //Guard against empty Application
+                if (CurrentApplicationEmployees.Count == 0)
                     continue;
 
                 //Sort employee list by number of rotations each employee has done
@@ -40,23 +41,27 @@ namespace On_Call_Assistant.Group_Code
 
                 //Guard against default date
                 if (lastFinalDateByApp == default(DateTime))
-                    lastFinalDateByApp = startDate;
+                    lastFinalDateByApp = startDate.AddDays(-1);
                 
                 int currentEmployee = 0;
-                int employeeCount = employees.Count;
 
                 while (lastFinalDateByApp < endDate)
                 {
                     DateTime rotationBegin = lastFinalDateByApp.AddDays(1);
-                    DateTime rotationEnd = lastFinalDateByApp.AddDays((currentApplication.rotationLength * 7) - 1);                    
+                    DateTime rotationEnd = lastFinalDateByApp.AddDays((currentApplication.rotationLength * 7) - 1);
 
+                    FindValidEmployee(db, ref employees, ref currentEmployee, rotationBegin, rotationEnd);
                     OnCallRotation primary = createRotation(rotationBegin, rotationEnd, true,
                         employees[currentEmployee].ID);
+                    //Add to primary rotation count
                     employees[currentEmployee] = addRotation(employees[currentEmployee]);
-                    currentEmployee = (currentEmployee + 1) % employeeCount;
+                    
+                    currentEmployee = NextEmployee(employees, currentEmployee);
+                    FindValidEmployee(db, ref employees, ref currentEmployee, rotationBegin, rotationEnd);
                     OnCallRotation secondary = createRotation(rotationBegin, rotationEnd, false,
                         employees[currentEmployee].ID);
-                    currentEmployee = (currentEmployee + 1) % employeeCount;
+
+                    currentEmployee = NextEmployee(employees, currentEmployee);
                     //Wrapped around to first employee, sort again
                     if (currentEmployee == 0)
                     {
@@ -72,6 +77,33 @@ namespace On_Call_Assistant.Group_Code
 
 
             return generatedSchedule;
+        }
+
+        private static int NextEmployee(List<EmployeeAndRotation> employees, int currentEmployee)
+        {
+            currentEmployee = (currentEmployee + 1) % employees.Count;
+            return currentEmployee;
+        }
+        /// <summary>
+        /// Takes the DB context, reference to current employee list, reference to current employee, and a date range
+        /// Will move through employee list until the function finds an employee that isn't out of the office for this rotation
+        /// </summary>
+        /// <returns>
+        /// Void.  Alters currentEmployee and potentially the order of employees to reflect valid choice
+        /// </returns>
+        private static void FindValidEmployee(OnCallContext db, ref List<EmployeeAndRotation> employees, ref int currentEmployee, DateTime rotationBegin, DateTime rotationEnd)
+        {
+            while (LinqQueries.EmployeeOutOfOffice(db, employees[currentEmployee].ID, rotationBegin, rotationEnd))
+            {
+                currentEmployee = NextEmployee(employees, currentEmployee);
+                if (currentEmployee == 0)
+                {
+                    //We've wrapped around before finding a valid employee
+                    //This shouldn't happen, but avoid the infinite loop and assign someone
+                    employees = employeesByPrimary(employees);
+                    break;
+                }
+            }
         }
         private static OnCallRotation createRotation(DateTime start, DateTime end, bool isPrimary, int employeeID)
         {

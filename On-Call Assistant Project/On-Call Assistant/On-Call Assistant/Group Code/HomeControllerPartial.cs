@@ -31,7 +31,7 @@ namespace On_Call_Assistant.Controllers
                     start = rotation.startDate.ToString("u"),
                     end = rotation.endDate.AddDays(1).ToString("u"),
                     color = applicationColors[rotation.employee.Application].ToString(),
-                    url = String.Format("OnCallRotations/Details/{0}",rotation.ID),
+                    url = String.Format("OnCallRotations/Details/{0}",rotation.rotationID),
                     allDay = "true"
                 });
             }

@@ -18,17 +18,9 @@
             @Html.DisplayFor(model => model.rotation.ID)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.paidHolidayID)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.paidHolidayID)
-        </dd>
-
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

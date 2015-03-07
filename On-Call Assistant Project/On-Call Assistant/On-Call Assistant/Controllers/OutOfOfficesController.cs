@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -16,20 +17,20 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: OutOfOffices
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var outOfOffice = db.outOfOffice.Include(o => o.reason);
-            return View(outOfOffice.ToList());
+            var outOfOffice = db.outOfOffice.Include(o => o.employeeOut).Include(o => o.reason);
+            return View(await outOfOffice.ToListAsync());
         }
 
         // GET: OutOfOffices/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OutOfOffice outOfOffice = db.outOfOffice.Find(id);
+            OutOfOffice outOfOffice = await db.outOfOffice.FindAsync(id);
             if (outOfOffice == null)
             {
                 return HttpNotFound();
@@ -40,6 +41,7 @@ namespace On_Call_Assistant.Controllers
         // GET: OutOfOffices/Create
         public ActionResult Create()
         {
+            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName");
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason");
             return View();
         }
@@ -49,31 +51,33 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,numHours,startDate,outOfOfficeReasonID")] OutOfOffice outOfOffice)
+        public async Task<ActionResult> Create([Bind(Include = "ID,numHours,startDate,outOfOfficeReasonID,Employee")] OutOfOffice outOfOffice)
         {
             if (ModelState.IsValid)
             {
                 db.outOfOffice.Add(outOfOffice);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
+            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }
 
         // GET: OutOfOffices/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OutOfOffice outOfOffice = db.outOfOffice.Find(id);
+            OutOfOffice outOfOffice = await db.outOfOffice.FindAsync(id);
             if (outOfOffice == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }
@@ -83,26 +87,27 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,numHours,startDate,outOfOfficeReasonID")] OutOfOffice outOfOffice)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,numHours,startDate,outOfOfficeReasonID,Employee")] OutOfOffice outOfOffice)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(outOfOffice).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }
 
         // GET: OutOfOffices/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OutOfOffice outOfOffice = db.outOfOffice.Find(id);
+            OutOfOffice outOfOffice = await db.outOfOffice.FindAsync(id);
             if (outOfOffice == null)
             {
                 return HttpNotFound();
@@ -113,11 +118,11 @@ namespace On_Call_Assistant.Controllers
         // POST: OutOfOffices/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            OutOfOffice outOfOffice = db.outOfOffice.Find(id);
+            OutOfOffice outOfOffice = await db.outOfOffice.FindAsync(id);
             db.outOfOffice.Remove(outOfOffice);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

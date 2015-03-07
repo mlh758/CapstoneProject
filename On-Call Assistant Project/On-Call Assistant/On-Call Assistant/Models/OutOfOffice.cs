@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace On_Call_Assistant.Models
 {
@@ -10,6 +12,7 @@ namespace On_Call_Assistant.Models
     {
         public int ID { get; set; }
 
+        [Range(4,150)]
         [Display(Name = "Hours")]
         public int numHours { get; set; }
 
@@ -18,9 +21,14 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Start Date")]
         public DateTime startDate { get; set; }
 
+        [ForeignKey("reason")]
         public int outOfOfficeReasonID { get; set; }
 
+        [ForeignKey("employeeOut")]
+        [Column("employeeID")]
+        public int Employee { get; set; }
+
         public virtual OutOfOfficeReason reason { get; set; }
-        //public virtual ICollection<Employee> employeesOut { get; set; }
+        public virtual Employee employeeOut { get; set; }
     }
 }

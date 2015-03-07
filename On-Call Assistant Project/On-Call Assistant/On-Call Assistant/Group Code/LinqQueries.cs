@@ -87,5 +87,24 @@ namespace On_Call_Assistant.Group_Code
            }
 
        }
+
+
+
+       public static bool EmployeeOutOfOffice(OnCallContext db, int empID, DateTime start, DateTime end)
+       {
+           bool result = false;
+           var OOOInstances = from vac in db.outOfOffice where vac.Employee == empID select vac;
+           foreach (var instance in OOOInstances)
+           {
+               DateTime endDate = instance.startDate.AddDays(instance.numHours / 8);
+               if(inRange(instance.startDate, start, end) || inRange(endDate, start, end))
+                   result = true;
+           }
+           return result;
+       }
+       private static bool inRange(DateTime reference, DateTime start, DateTime end)
+       {
+           return (reference > start && reference < end);
+       }
     }
 }

@@ -147,6 +147,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Group Code\Behavior.cs" />
+    <Compile Include="Group Code\HomeControllerPartial.cs" />
     <Compile Include="Group Code\LinqQueries.cs" />
     <Compile Include="Group Code\OnCallRotationsPartial.cs" />
     <Compile Include="Migrations\201502121655257_InitialCreate.cs" />
@@ -184,6 +185,10 @@
     <Compile Include="Migrations\201502271810172_EmployeeRotationList.cs" />
     <Compile Include="Migrations\201502271810172_EmployeeRotationList.Designer.cs">
       <DependentUpon>201502271810172_EmployeeRotationList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503062128526_OutOfOfficeEmpFK.cs" />
+    <Compile Include="Migrations\201503062128526_OutOfOfficeEmpFK.Designer.cs">
+      <DependentUpon>201503062128526_OutOfOfficeEmpFK.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
@@ -323,6 +328,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502271810172_EmployeeRotationList.resx">
       <DependentUpon>201502271810172_EmployeeRotationList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503062128526_OutOfOfficeEmpFK.resx">
+      <DependentUpon>201503062128526_OutOfOfficeEmpFK.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

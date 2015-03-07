@@ -246,6 +246,22 @@ namespace On_Call_Assistant.Group_Code
             return false;
         }
 
+        /// <summary>
+        /// Accepts as input a list of integers, where each integer is the 
+        /// primary key of an OnCallRotation to be deleted, and OnCallContext.
+        /// Deletes the corresponding OnCallRotations from the DB.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="path"></param>
+        /// 
+        public static void DeleteOnCallRotations(List<int> rotationIDs, OnCallContext db)
+        {
+            foreach (int rotationID in rotationIDs)
+            {
+                db.Database.ExecuteSqlCommand(String.Format("DELETE FROM OnCallRotation WHERE ID = {0}", rotationID));
+            }
+        }
+
         public static void CreateCSVFile(List<OnCallRotation> list, string path)
         {
             string delimter = ",";

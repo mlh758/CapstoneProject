@@ -13,14 +13,22 @@ using System.Collections;
 
 namespace On_Call_Assistant.Group_Code
 {
-    public static class Behavior
+    public class Scheduler
     {
+        private DateTime rotationBegin, rotationEnd;
+        private List<EmployeeAndRotation> employees;
+        private DateTime lastFinalDateByApp;
+        private int currentEmployee;
+        private OnCallContext db;
+        private List<OnCallRotation> generatedSchedule;
 
-        public static List<OnCallRotation> generateSchedule(OnCallContext db, List<Employee> AllEmployees,
-                                                        DateTime startDate, DateTime endDate)
+        public Scheduler(OnCallContext database)
         {
-            //TODO: Refactor this function, far too long
-            List<OnCallRotation> generatedSchedule = new List<OnCallRotation>();
+            db = database;
+            generatedSchedule = new List<OnCallRotation>();
+        }
+        public List<OnCallRotation> generateSchedule(DateTime startDate, DateTime endDate)
+        {
 
             List<Application> allApplications = LinqQueries.GetApplications(db);
             allApplications = allApplications.Where((app) => app.hasOnCall).ToList();
@@ -33,45 +41,14 @@ namespace On_Call_Assistant.Group_Code
                 if (CurrentApplicationEmployees.Count == 0)
                     continue;
 
-                //Sort employee list by number of rotations each employee has done
-                List<EmployeeAndRotation> employees = employeesByPrimary(CurrentApplicationEmployees);
-           
-                //Possibly remove
-                DateTime lastFinalDateByApp = LinqQueries.GetLastRotationDateByApp(db,currentApplication.ID);
 
-                //Guard against default date
-                if (lastFinalDateByApp == default(DateTime))
-                    lastFinalDateByApp = startDate.AddDays(-1);
-                
-                int currentEmployee = 0;
+                employees = employeesByPrimary(CurrentApplicationEmployees);           
+                lastFinalDateByApp = startDate.AddDays(-1);
+                currentEmployee = 0;
 
                 while (lastFinalDateByApp < endDate)
                 {
-                    DateTime rotationBegin = lastFinalDateByApp.AddDays(1);
-                    DateTime rotationEnd = lastFinalDateByApp.AddDays((currentApplication.rotationLength * 7) - 1);
-
-                    FindValidEmployee(db, ref employees, ref currentEmployee, rotationBegin, rotationEnd);
-                    OnCallRotation primary = createRotation(rotationBegin, rotationEnd, true,
-                        employees[currentEmployee].ID);
-                    //Add to primary rotation count
-                    employees[currentEmployee] = addRotation(employees[currentEmployee]);
-                    
-                    currentEmployee = NextEmployee(employees, currentEmployee);
-                    FindValidEmployee(db, ref employees, ref currentEmployee, rotationBegin, rotationEnd);
-                    OnCallRotation secondary = createRotation(rotationBegin, rotationEnd, false,
-                        employees[currentEmployee].ID);
-
-                    currentEmployee = NextEmployee(employees, currentEmployee);
-                    //Wrapped around to first employee, sort again
-                    if (currentEmployee == 0)
-                    {
-                        employees = employeesByPrimary(employees);
-                    }
-                    //Update end date
-                    lastFinalDateByApp = rotationEnd;              
-
-                    generatedSchedule.Add(primary);
-                    generatedSchedule.Add(secondary);
+                    createNormalRotation(currentApplication);
                 } 
             }
 
@@ -79,7 +56,34 @@ namespace On_Call_Assistant.Group_Code
             return generatedSchedule;
         }
 
-        private static int NextEmployee(List<EmployeeAndRotation> employees, int currentEmployee)
+        private void createNormalRotation(Application currentApplication)
+        {
+            rotationBegin = lastFinalDateByApp.AddDays(1);
+            rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
+
+            FindValidEmployee();
+            OnCallRotation primary = createRotation(true);
+            //Add to primary rotation count
+            employees[currentEmployee] = addRotation(employees[currentEmployee]);
+
+            currentEmployee = nextEmployee();
+            FindValidEmployee();
+            OnCallRotation secondary = createRotation(false);
+
+            currentEmployee = nextEmployee();
+            //Wrapped around to first employee, sort again
+            if (currentEmployee == 0)
+            {
+                employees = employeesByPrimary(employees);
+            }
+            //Update end date
+            lastFinalDateByApp = rotationEnd;
+
+            generatedSchedule.Add(primary);
+            generatedSchedule.Add(secondary);
+        }
+
+        private int nextEmployee()
         {
             currentEmployee = (currentEmployee + 1) % employees.Count;
             return currentEmployee;
@@ -91,12 +95,12 @@ namespace On_Call_Assistant.Group_Code
         /// <returns>
         /// Void.  Alters currentEmployee and potentially the order of employees to reflect valid choice
         /// </returns>
-        private static void FindValidEmployee(OnCallContext db, ref List<EmployeeAndRotation> employees, ref int currentEmployee, DateTime rotationBegin, DateTime rotationEnd)
+        private void FindValidEmployee()
         {
             int initialEmployee = currentEmployee;
             while (LinqQueries.EmployeeOutOfOffice(db, employees[currentEmployee].ID, rotationBegin, rotationEnd))
             {
-                currentEmployee = NextEmployee(employees, currentEmployee);
+                currentEmployee = nextEmployee();
                 if (currentEmployee == initialEmployee)
                 {
                     //We've gone through the whole list and come back to the original employee
@@ -106,13 +110,13 @@ namespace On_Call_Assistant.Group_Code
                 }
             }
         }
-        private static OnCallRotation createRotation(DateTime start, DateTime end, bool isPrimary, int employeeID)
+        private OnCallRotation createRotation(bool isPrimary)
         {
             OnCallRotation result = new OnCallRotation();
-            result.employeeID = employeeID;
+            result.employeeID = employees[currentEmployee].ID;
             result.isPrimary = isPrimary;
-            result.startDate = start;
-            result.endDate = end;
+            result.startDate = rotationBegin;
+            result.endDate = rotationEnd;
             return result;
         }
 
@@ -122,7 +126,7 @@ namespace On_Call_Assistant.Group_Code
             public int rotationCount;
         }
 
-        private static List<EmployeeAndRotation> employeesByPrimary(List<Employee> employees)
+        private List<EmployeeAndRotation> employeesByPrimary(List<Employee> employees)
         {
             List<EmployeeAndRotation> results = new List<EmployeeAndRotation>();
             EmployeeAndRotation temp;
@@ -135,12 +139,12 @@ namespace On_Call_Assistant.Group_Code
             results.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
             return results;
         }
-        private static List<EmployeeAndRotation> employeesByPrimary(List<EmployeeAndRotation> employees)
+        private List<EmployeeAndRotation> employeesByPrimary(List<EmployeeAndRotation> employees)
         {
             employees.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
             return employees;
         }
-        private static EmployeeAndRotation addRotation(EmployeeAndRotation employee)
+        private EmployeeAndRotation addRotation(EmployeeAndRotation employee)
         {
             EmployeeAndRotation result;
             result.ID = employee.ID;

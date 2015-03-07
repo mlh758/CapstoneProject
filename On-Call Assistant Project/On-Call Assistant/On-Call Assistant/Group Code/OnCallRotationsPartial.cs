@@ -19,23 +19,29 @@ namespace On_Call_Assistant.Controllers
         
         public ActionResult generateSchedule()
         {
+            Scheduler generator = new Scheduler(db);
             DateTime start, end, last;
-            start = DateTime.Today;
+            start = getFutureDay(DateTime.Today, DayOfWeek.Wednesday);
             last = LinqQueries.LastRotation(db);
             if (last > start)
             {
-                start = last;
+                start = last.AddDays(1);
             }
-            end = start.AddDays(40);
-            List<OnCallRotation> schedule = Behavior.generateSchedule(db, LinqQueries.GetEmployees(db), start, end);
+            end = start.AddMonths(4);
+            List<OnCallRotation> schedule = generator.generateSchedule(start, end);
             LinqQueries.SaveRotations(db, schedule);
             return View(db.onCallRotations.ToList());
         }
 
         public ActionResult DownloadSchedule()
         {
-            Behavior.CreateCSVFile(db.onCallRotations.ToList(), path);
+            Scheduler.CreateCSVFile(db.onCallRotations.ToList(), path);
             return File(path, "text/plain", "EmployeeSchedule.csv");
+        }
+        private DateTime getFutureDay(DateTime start, DayOfWeek day)
+        {
+            int daysToAdd = (day - start.DayOfWeek + 7) % 7;
+            return start.AddDays(daysToAdd);
         }
     }
 }

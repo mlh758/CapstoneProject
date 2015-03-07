@@ -125,6 +125,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\ExperienceLevelsController.cs" />
+    <Compile Include="Controllers\HasPaidHolidaysController.cs" />
     <Compile Include="Controllers\HomeController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -191,18 +192,11 @@
     <Compile Include="Migrations\201503072050554_HasPaidHolidayKey.Designer.cs">
       <DependentUpon>201503072050554_HasPaidHolidayKey.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201503072132562_InitialMigrations.cs" />
-    <Compile Include="Migrations\201503072132562_InitialMigrations.Designer.cs">
-      <DependentUpon>201503072132562_InitialMigrations.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503072134596_HasPaidHolidayFix.cs" />
-    <Compile Include="Migrations\201503072134596_HasPaidHolidayFix.Designer.cs">
-      <DependentUpon>201503072134596_HasPaidHolidayFix.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\ExperienceLevel.cs" />
+    <Compile Include="Models\HasPaidHoliday.cs" />
     <Compile Include="Models\Holiday.cs" />
     <Compile Include="Models\OnCallRotation.cs" />
     <Compile Include="Models\OutOfOffice.cs" />
@@ -293,6 +287,11 @@
     <Content Include="Views\ExperienceLevels\Edit.cshtml" />
     <Content Include="Views\ExperienceLevels\Index.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\HasPaidHolidays\Create.cshtml" />
+    <Content Include="Views\HasPaidHolidays\Delete.cshtml" />
+    <Content Include="Views\HasPaidHolidays\Details.cshtml" />
+    <Content Include="Views\HasPaidHolidays\Edit.cshtml" />
+    <Content Include="Views\HasPaidHolidays\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -337,12 +336,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503072050554_HasPaidHolidayKey.resx">
       <DependentUpon>201503072050554_HasPaidHolidayKey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503072132562_InitialMigrations.resx">
-      <DependentUpon>201503072132562_InitialMigrations.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503072134596_HasPaidHolidayFix.resx">
-      <DependentUpon>201503072134596_HasPaidHolidayFix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

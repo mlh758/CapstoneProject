@@ -43,6 +43,16 @@ namespace On_Call_Assistant.DAL
 
             outOfOfficeReasons.ForEach(s => context.outOfOfficeReasons.Add(s));
             context.SaveChanges();
+
+
+            var Employee = new List<Employee>
+            {
+                new Employee{firstName = "Adam", lastName = "Smith", alottedVacationHours =120,
+                             Application = 0, birthday = new DateTime (1989, 5,25), email = "adam@domain.com",
+                             Experience = 0, hiredDate = new DateTime (2013,5,25)}
+            };
+            Employee.ForEach(s => context.employees.Add(s));
+            context.SaveChanges();
         }
     }
 }

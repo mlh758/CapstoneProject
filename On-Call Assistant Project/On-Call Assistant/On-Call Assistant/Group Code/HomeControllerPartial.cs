@@ -18,6 +18,7 @@ namespace On_Call_Assistant.Controllers
         {
             IList<CalendarObject> rotationList = new List<CalendarObject>();
             var onCallRotations = db.onCallRotations.Include(o => o.employee);
+            System.Collections.Hashtable applicationColors = getApplicationColors();
             foreach (var rotation in onCallRotations)
             {
                 rotationList.Add(new CalendarObject
@@ -25,11 +26,20 @@ namespace On_Call_Assistant.Controllers
                     id = rotation.employee.Application,
                     title = rotation.employee.firstName + " " + rotation.employee.lastName,
                     start = rotation.startDate.ToString("u"),
-                    end = rotation.endDate.ToString("u")
+                    end = rotation.endDate.AddDays(1).ToString("u"),
+                    color = applicationColors[rotation.employee.Application].ToString(),
+                    url = String.Format("OnCallRotations/Details/{0}",rotation.ID)
                 });
             }
 
             return Json(rotationList, JsonRequestBehavior.AllowGet);
+        }
+        private System.Collections.Hashtable getApplicationColors()
+        {
+            System.Collections.Hashtable colors = new System.Collections.Hashtable();
+            colors.Add(3, "Cyan");
+            colors.Add(5, "DarkSeaGreen");
+            return colors;
         }
 
     }
@@ -40,6 +50,10 @@ namespace On_Call_Assistant.Controllers
         public string title { get; set; }
         public string start { get; set; }
         public string end { get; set; }
+        public string color { get; set; }
+        public string url { get; set; }
+        public string allDay { get { return "true"; } }
 
     }
+    
 }

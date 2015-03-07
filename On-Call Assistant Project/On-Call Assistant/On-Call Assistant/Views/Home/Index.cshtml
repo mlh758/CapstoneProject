@@ -12,23 +12,31 @@
     <script src="~/Scripts/fullcalendar.js"></script>
     @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
     <script type="text/javascript">
-
-
         $(document).ready(function () {
             $('#calendar').fullCalendar({
                 editable: false,
                 events: "/home/rotationdata/"
             });
+            $('#GenerateSchedule').click(function (event) {
+                event.preventDefault();
+                //probably could be refactored...
+                window.location.replace("/oncallrotations/generateSchedule");
+            });
         });
 
 
+
     </script>
+
+
+
+
 
 }
 <div class="jumbotron">
     <h1>@ViewBag.AppName</h1>
     <p class="lead">Manage your on-call rotations, employees and summaries.</p>
-    <p><a href="/oncallrotations/generateSchedule" class="btn btn-primary btn-lg">Generate Schedule &raquo;</a></p>
+    <button id="GenerateSchedule" class="btn btn-primary btn-lg" type="button" onclick='this.disabled = "disabled";'>Generate Schedule</button>
 
 </div>
    

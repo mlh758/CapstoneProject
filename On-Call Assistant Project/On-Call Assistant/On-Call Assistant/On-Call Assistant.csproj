@@ -147,6 +147,7 @@
     <Compile Include="Group Code\HomeControllerPartial.cs" />
     <Compile Include="Group Code\LinqQueries.cs" />
     <Compile Include="Group Code\OnCallRotationsPartial.cs" />
+    <Compile Include="Group Code\SchedulerSupport.cs" />
     <Compile Include="Migrations\201502121655257_InitialCreate.cs" />
     <Compile Include="Migrations\201502121655257_InitialCreate.Designer.cs">
       <DependentUpon>201502121655257_InitialCreate.cs</DependentUpon>

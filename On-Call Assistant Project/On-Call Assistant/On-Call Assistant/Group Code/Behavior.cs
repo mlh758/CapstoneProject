@@ -13,10 +13,11 @@ using System.Collections;
 
 namespace On_Call_Assistant.Group_Code
 {
-    public class Scheduler
+    public partial class Scheduler
     {
         private DateTime rotationBegin, rotationEnd;
         private List<EmployeeAndRotation> employees;
+        private List<Employee> newEmployees;
         private DateTime lastFinalDateByApp;
         private int currentEmployee;
         private OnCallContext db;
@@ -26,6 +27,7 @@ namespace On_Call_Assistant.Group_Code
         {
             db = database;
             generatedSchedule = new List<OnCallRotation>();
+            newEmployees = new List<Employee>();
         }
         public List<OnCallRotation> generateSchedule(DateTime startDate, DateTime endDate)
         {
@@ -42,13 +44,20 @@ namespace On_Call_Assistant.Group_Code
                     continue;
 
 
-                employees = employeesByPrimary(CurrentApplicationEmployees);           
+                employees = employeesByPrimary(CurrentApplicationEmployees);
+                //Remove new employees from rotation pool and place in separate storage
+                filterNewEmployees(CurrentApplicationEmployees);
+                
                 lastFinalDateByApp = startDate.AddDays(-1);
                 currentEmployee = 0;
 
                 while (lastFinalDateByApp < endDate)
                 {
-                    createNormalRotation(currentApplication);
+                    rotationBegin = lastFinalDateByApp.AddDays(1);
+                    if (hasNewEmployees() && newEmployeeEligible())
+                        createLongRotation(currentApplication, CurrentApplicationEmployees);
+                    else
+                        createNormalRotation(currentApplication);
                 } 
             }
 
@@ -57,18 +66,17 @@ namespace On_Call_Assistant.Group_Code
         }
 
         private void createNormalRotation(Application currentApplication)
-        {
-            rotationBegin = lastFinalDateByApp.AddDays(1);
+        {            
             rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
 
             FindValidEmployee();
-            OnCallRotation primary = createRotation(true);
+            OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);
             //Add to primary rotation count
             employees[currentEmployee] = addRotation(employees[currentEmployee]);
 
             currentEmployee = nextEmployee();
             FindValidEmployee();
-            OnCallRotation secondary = createRotation(false);
+            OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
 
             currentEmployee = nextEmployee();
             //Wrapped around to first employee, sort again
@@ -83,74 +91,56 @@ namespace On_Call_Assistant.Group_Code
             generatedSchedule.Add(secondary);
         }
 
-        private int nextEmployee()
+        private void createLongRotation(Application currentApplication, List<Employee> appEmployees)
         {
-            currentEmployee = (currentEmployee + 1) % employees.Count;
-            return currentEmployee;
-        }
-        /// <summary>
-        /// Takes the DB context, reference to current employee list, reference to current employee, and a date range
-        /// Will move through employee list until the function finds an employee that isn't out of the office for this rotation
-        /// </summary>
-        /// <returns>
-        /// Void.  Alters currentEmployee and potentially the order of employees to reflect valid choice
-        /// </returns>
-        private void FindValidEmployee()
-        {
-            int initialEmployee = currentEmployee;
-            while (LinqQueries.EmployeeOutOfOffice(db, employees[currentEmployee].ID, rotationBegin, rotationEnd))
+            int numRotations = (int)(5/currentApplication.rotationLength);
+            rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength*7);
+
+            //Assign new employee and get ready to add to rotation pool            
+            Employee newEmployee = getFirstNewEmployee();
+            newEmployees.Remove(newEmployee);
+            EmployeeAndRotation newEmployeeStruct;
+            newEmployeeStruct.ID = newEmployee.ID;
+            newEmployeeStruct.rotationCount = numRotations;
+            LinqQueries.bumpExperience(db, newEmployee);
+
+            //Find experienced Employee with fewest rotations to pair with the new employee
+            List<int> experiencedEmployees = (from emp in appEmployees where emp.experienceLevel.levelName == "Senior" select emp.ID).ToList();
+            FindValidEmployee(experiencedEmployees);
+            //updateExperienced(employees[currentEmployee].ID, numRotations);
+            
+            //Add appropriate number of rotations to schedule to meet 5 week obligation
+            int rotationsGenerated = 0;
+            OnCallRotation primary, secondary;
+            while (rotationsGenerated < numRotations)
             {
-                currentEmployee = nextEmployee();
-                if (currentEmployee == initialEmployee)
+                primary = createRotation(true, newEmployeeStruct.ID);
+                secondary = createRotation(false, employees[currentEmployee].ID);
+                employees[currentEmployee] = addRotation(employees[currentEmployee]);                
+                generatedSchedule.Add(primary);
+                generatedSchedule.Add(secondary);
+
+                rotationsGenerated++;
+                if (rotationsGenerated < numRotations)
                 {
-                    //We've gone through the whole list and come back to the original employee
-                    //This shouldn't happen, but avoid the infinite loop and assign someone
-                    employees = employeesByPrimary(employees);
-                    break;
+                    rotationBegin = rotationEnd.AddDays(1);
+                    rotationEnd = rotationBegin.AddDays(currentApplication.rotationLength * 7 - 1);
                 }
-            }
+
+            }            
+            
+            //Add no longer new employee to pool and reorder
+            employees = employeesByPrimary(employees);
+            employees.Add(newEmployeeStruct);
+            lastFinalDateByApp = rotationEnd;
         }
-        private OnCallRotation createRotation(bool isPrimary)
-        {
-            OnCallRotation result = new OnCallRotation();
-            result.employeeID = employees[currentEmployee].ID;
-            result.isPrimary = isPrimary;
-            result.startDate = rotationBegin;
-            result.endDate = rotationEnd;
-            return result;
-        }
+
 
         private struct EmployeeAndRotation
         {
             public int ID;
             public int rotationCount;
-        }
-
-        private List<EmployeeAndRotation> employeesByPrimary(List<Employee> employees)
-        {
-            List<EmployeeAndRotation> results = new List<EmployeeAndRotation>();
-            EmployeeAndRotation temp;
-            foreach (var emp in employees)
-            {
-                temp.ID = emp.ID;
-                temp.rotationCount = emp.primaryRotationCount;
-                results.Add(temp);
-            }
-            results.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
-            return results;
-        }
-        private List<EmployeeAndRotation> employeesByPrimary(List<EmployeeAndRotation> employees)
-        {
-            employees.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
-            return employees;
-        }
-        private EmployeeAndRotation addRotation(EmployeeAndRotation employee)
-        {
-            EmployeeAndRotation result;
-            result.ID = employee.ID;
-            result.rotationCount = employee.rotationCount + 1;
-            return result;
-        }
+        }      
 
       
         /// <summary>

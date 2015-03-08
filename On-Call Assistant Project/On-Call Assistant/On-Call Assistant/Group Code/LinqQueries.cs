@@ -106,5 +106,13 @@ namespace On_Call_Assistant.Group_Code
        {
            return (reference > start && reference < end);
        }
+
+       public static void bumpExperience(OnCallContext db, Employee employee)
+       {
+           var employeeToUpdate = (from emp in db.employees where emp.ID == employee.ID select emp).Single();
+           int expLevel = (from exp in db.experienceLevel where exp.levelName == "Junior" select exp.ID).Single();
+           employeeToUpdate.Experience = expLevel;
+           db.SaveChanges();
+       }
     }
 }

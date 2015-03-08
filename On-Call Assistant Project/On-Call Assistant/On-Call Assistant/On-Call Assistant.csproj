@@ -125,7 +125,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\ExperienceLevelsController.cs" />
-    <Compile Include="Controllers\HasPaidHolidaysController.cs" />
     <Compile Include="Controllers\HomeController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -191,6 +190,14 @@
     <Compile Include="Migrations\201503072050554_HasPaidHolidayKey.cs" />
     <Compile Include="Migrations\201503072050554_HasPaidHolidayKey.Designer.cs">
       <DependentUpon>201503072050554_HasPaidHolidayKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503080024279_HasPaidHolidayRemoval.cs" />
+    <Compile Include="Migrations\201503080024279_HasPaidHolidayRemoval.Designer.cs">
+      <DependentUpon>201503080024279_HasPaidHolidayRemoval.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503080025320_HasPaidHolidayLookUpTable.cs" />
+    <Compile Include="Migrations\201503080025320_HasPaidHolidayLookUpTable.Designer.cs">
+      <DependentUpon>201503080025320_HasPaidHolidayLookUpTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
@@ -336,6 +343,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503072050554_HasPaidHolidayKey.resx">
       <DependentUpon>201503072050554_HasPaidHolidayKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503080024279_HasPaidHolidayRemoval.resx">
+      <DependentUpon>201503080024279_HasPaidHolidayRemoval.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503080025320_HasPaidHolidayLookUpTable.resx">
+      <DependentUpon>201503080025320_HasPaidHolidayLookUpTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

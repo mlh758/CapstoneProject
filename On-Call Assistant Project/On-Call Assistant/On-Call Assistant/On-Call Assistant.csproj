@@ -295,11 +295,6 @@
     <Content Include="Views\ExperienceLevels\Edit.cshtml" />
     <Content Include="Views\ExperienceLevels\Index.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
-    <Content Include="Views\HasPaidHolidays\Create.cshtml" />
-    <Content Include="Views\HasPaidHolidays\Delete.cshtml" />
-    <Content Include="Views\HasPaidHolidays\Details.cshtml" />
-    <Content Include="Views\HasPaidHolidays\Edit.cshtml" />
-    <Content Include="Views\HasPaidHolidays\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

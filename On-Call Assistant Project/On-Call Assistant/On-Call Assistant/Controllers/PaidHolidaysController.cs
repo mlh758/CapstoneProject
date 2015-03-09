@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -16,19 +17,19 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: PaidHolidays
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(db.paidHolidays.ToList());
+            return View(await db.paidHolidays.ToListAsync());
         }
 
         // GET: PaidHolidays/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
+            PaidHoliday paidHoliday = await db.paidHolidays.FindAsync(id);
             if (paidHoliday == null)
             {
                 return HttpNotFound();
@@ -47,12 +48,12 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,holidayName,holidayDate")] PaidHoliday paidHoliday)
+        public async Task<ActionResult> Create([Bind(Include = "paidHolidayID,holidayName,holidayDate")] PaidHoliday paidHoliday)
         {
             if (ModelState.IsValid)
             {
                 db.paidHolidays.Add(paidHoliday);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -60,13 +61,13 @@ namespace On_Call_Assistant.Controllers
         }
 
         // GET: PaidHolidays/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
+            PaidHoliday paidHoliday = await db.paidHolidays.FindAsync(id);
             if (paidHoliday == null)
             {
                 return HttpNotFound();
@@ -79,25 +80,25 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,holidayName,holidayDate")] PaidHoliday paidHoliday)
+        public async Task<ActionResult> Edit([Bind(Include = "paidHolidayID,holidayName,holidayDate")] PaidHoliday paidHoliday)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(paidHoliday).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(paidHoliday);
         }
 
         // GET: PaidHolidays/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
+            PaidHoliday paidHoliday = await db.paidHolidays.FindAsync(id);
             if (paidHoliday == null)
             {
                 return HttpNotFound();
@@ -108,11 +109,11 @@ namespace On_Call_Assistant.Controllers
         // POST: PaidHolidays/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            PaidHoliday paidHoliday = db.paidHolidays.Find(id);
+            PaidHoliday paidHoliday = await db.paidHolidays.FindAsync(id);
             db.paidHolidays.Remove(paidHoliday);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

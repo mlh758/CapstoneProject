@@ -32,6 +32,11 @@ namespace On_Call_Assistant.Group_Code
             db.SaveChanges();
         }
 
+        public static List<OnCallRotation> GetRotations(OnCallContext db)
+        {
+            return db.onCallRotations.ToList();
+        }
+
         public static List<Employee> EmployeesbyProject(OnCallContext db, int appID)
         {
             var employeeList = from employee in db.employees where employee.Application == appID select employee;

@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Text;
 using On_Call_Assistant.DAL;
 using System.Collections;
+using System.Threading;
 
 
 namespace On_Call_Assistant.Group_Code
@@ -22,12 +23,20 @@ namespace On_Call_Assistant.Group_Code
         private int currentEmployee;
         private OnCallContext db;
         private List<OnCallRotation> generatedSchedule;
+        private Thread t;
 
         public Scheduler(OnCallContext database)
         {
             db = database;
             generatedSchedule = new List<OnCallRotation>();
             newEmployees = new List<Employee>();
+            TimeSpan timeToHoliday = LinqQueries.GetLastHoliday(db) - DateTime.Now;
+            if (timeToHoliday.Days < 180)
+            {
+                t = new Thread(() => GetBankHolidays((DateTime.Now.Year + 1).ToString(), new OnCallContext()));
+                t.Start();
+            }
+            
         }
         public List<OnCallRotation> generateSchedule(DateTime startDate, DateTime endDate)
         {
@@ -60,8 +69,8 @@ namespace On_Call_Assistant.Group_Code
                         createNormalRotation(currentApplication);
                 } 
             }
-
-
+            if(t != null && t.ThreadState == ThreadState.Running)
+                t.Join();
             return generatedSchedule;
         }
 

@@ -88,6 +88,17 @@ namespace On_Call_Assistant.Group_Code
 
        }
 
+       public static DateTime GetLastHoliday(OnCallContext db)
+       {
+           var holidays = from h in db.paidHolidays orderby h.holidayDate descending select h.holidayDate;
+           if (!holidays.Any())
+           {
+               return DateTime.Now;
+           }
+           else
+            return holidays.First();
+       }
+
 
 
        public static bool EmployeeOutOfOffice(OnCallContext db, int empID, DateTime start, DateTime end)

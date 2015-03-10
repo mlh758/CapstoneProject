@@ -152,7 +152,7 @@ namespace On_Call_Assistant.Group_Code
         }      
 
       
-        public void regenerateSchedule(DateTime startDate, DateTime endDate)
+        public List<OnCallRotation> regenerateSchedule(DateTime startDate, DateTime endDate)
         {
 
             List<OnCallRotation> allRotations = LinqQueries.GetRotations(db);
@@ -169,11 +169,10 @@ namespace On_Call_Assistant.Group_Code
             }
 
             DeleteOnCallRotations(listOfRotationIDs, db);
+            if (t != null && t.ThreadState == ThreadState.Running)
+                t.Join();
 
-            generateSchedule(startDate, endDate);
-
-            //if (t != null && t.ThreadState == ThreadState.Running)
-              //  t.Join();
+            return generateSchedule(startDate, endDate);           
             
         }
 

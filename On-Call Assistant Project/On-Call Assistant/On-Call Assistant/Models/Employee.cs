@@ -42,15 +42,22 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Birthday")]
         public DateTime birthday { get; set; }
 
-        [Display(Name = "Rotation Count")]
+        [Display(Name = "Total Rotations")]
         public int rotationCount
         {
             get { if (rotations != null) return rotations.Count(); else return 0; }
         }
 
+        [Display(Name = "Primary Rotations")]
         public int primaryRotationCount
         {
             get { if (rotations != null) return rotations.Where(rot => rot.isPrimary == true).ToList().Count; else return 0; }
+        }
+
+        [Display(Name = "Secondary Rotations")]
+        public int secondaryRotationCount
+        {
+            get { if (rotations != null) return rotations.Where(rot => rot.isPrimary == false).ToList().Count; else return 0; }
         }
 
         [Display(Name = "Employee Name")]

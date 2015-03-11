@@ -66,7 +66,15 @@ namespace On_Call_Assistant.Group_Code
                     if (hasNewEmployees() && newEmployeeEligible())
                         createLongRotation(currentApplication, CurrentApplicationEmployees);
                     else
-                        createNormalRotation(currentApplication);
+                        if (LinqQueries.HasHoliday(db, startDate, endDate))
+                        {
+                            createRotationWithHoliday(currentApplication, CurrentApplicationEmployees);
+                        }
+                        else
+                        {
+                            createNormalRotation(currentApplication);
+                        }
+
                 } 
             }
             if(t != null && t.ThreadState == ThreadState.Running)
@@ -144,6 +152,34 @@ namespace On_Call_Assistant.Group_Code
             lastFinalDateByApp = rotationEnd;
         }
 
+        private void createRotationWithHoliday(Application currentApplication, List<Employee> appEmployees)
+        {
+            rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
+
+            FindValidEmployee();
+
+           
+
+            OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);
+            //Add to primary rotation count
+            employees[currentEmployee] = addRotation(employees[currentEmployee]);
+
+            currentEmployee = nextEmployee();
+            FindValidEmployee();
+            OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+
+            currentEmployee = nextEmployee();
+            //Wrapped around to first employee, sort again
+            if (currentEmployee == 0)
+            {
+                employees = employeesByPrimary(employees);
+            }
+            //Update end date
+            lastFinalDateByApp = rotationEnd;
+
+            generatedSchedule.Add(primary);
+            generatedSchedule.Add(secondary);
+        }
 
         private struct EmployeeAndRotation
         {

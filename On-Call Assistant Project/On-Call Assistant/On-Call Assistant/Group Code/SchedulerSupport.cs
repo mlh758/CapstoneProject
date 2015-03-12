@@ -19,14 +19,7 @@ namespace On_Call_Assistant.Group_Code
             currentEmployee = (currentEmployee + 1) % employees.Count;
             return currentEmployee;
         }
-        private void updateExperienced(int id, int rotationCount)
-        {
-            int i = 0;
-            while (employees[i].ID != id)
-                i++;
-            employees[i] = addRotation(employees[i], rotationCount);
 
-        }
         private void FindValidEmployee(List<int> experiencedEmployees = null)
         {            
             int initialEmployee = currentEmployee;

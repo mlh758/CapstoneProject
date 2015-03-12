@@ -14,32 +14,26 @@ namespace On_Call_Assistant.Controllers
     public partial class HomeController : Controller
     {
         private OnCallContext db = new OnCallContext();
-        public ActionResult RotationData(string start, string end)
+        public ActionResult RotationData(string start, string end, int ID = -1)
         {
-            DateTime beginDate = DateTime.Parse(start);
-            DateTime endDate = DateTime.Parse(end);
-            IList<CalendarObject> rotationList = new List<CalendarObject>();
-            var onCallRotations = db.onCallRotations.Include(o => o.employee);
-            onCallRotations = onCallRotations.Where(rot => (rot.startDate >= beginDate && rot.startDate <= endDate) || (rot.endDate >= beginDate && rot.endDate <= endDate));
-            System.Collections.Hashtable applicationColors = getApplicationColors();
-            foreach (var rotation in onCallRotations)
+            if (start == null || end == null)
             {
-                rotationList.Add(new CalendarObject
-                {
-                    id = rotation.employee.Application,
-                    title = rotation.employee.firstName + " " + rotation.employee.lastName,
-                    start = rotation.startDate.ToString("u"),
-                    end = rotation.endDate.AddDays(1).ToString("u"),
-                    color = applicationColors[rotation.employee.Application].ToString(),
-                    url = String.Format("OnCallRotations/Details/{0}",rotation.rotationID),
-                    allDay = "true"
-                });
+                start = end = DateTime.Today.ToString("u");
             }
-
+            List<CalendarObject> rotationList = getRotations(start, end);
+            if (ID != -1)
+            {
+                rotationList = rotationList.Where(rot => rot.id == ID).ToList();
+            }
             return Json(rotationList, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult AbsenceData(string start, string end)
         {
+            if (start == null || end == null)
+            {
+                start = end = DateTime.Today.ToString("u");
+            }
             DateTime beginDate = DateTime.Parse(start);
             DateTime endDate = DateTime.Parse(end);
             IList<CalendarObject> absenceList = new List<CalendarObject>();
@@ -77,6 +71,31 @@ namespace On_Call_Assistant.Controllers
                 }
             }
             return results;
+        }
+
+        private List<CalendarObject> getRotations(string start, string end)
+        {
+            DateTime beginDate = DateTime.Parse(start);
+            DateTime endDate = DateTime.Parse(end);
+            List<CalendarObject> rotationList = new List<CalendarObject>();
+            var onCallRotations = db.onCallRotations.Include(o => o.employee);
+            onCallRotations = onCallRotations.Where(rot => (rot.startDate >= beginDate && rot.startDate <= endDate) || (rot.endDate >= beginDate && rot.endDate <= endDate));
+            System.Collections.Hashtable applicationColors = getApplicationColors();
+            foreach (var rotation in onCallRotations)
+            {
+                rotationList.Add(new CalendarObject
+                {
+                    id = rotation.employee.Application,
+                    title = rotation.employee.firstName + " " + rotation.employee.lastName,
+                    start = rotation.startDate.ToString("u"),
+                    end = rotation.endDate.AddDays(1).ToString("u"),
+                    color = applicationColors[rotation.employee.Application].ToString(),
+                    url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID),
+                    allDay = "true"
+                });
+            }
+
+            return rotationList;
         }
 
     }

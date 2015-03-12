@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Text;
 using On_Call_Assistant.DAL;
 using System.Collections;
+using System.Threading;
 
 
 namespace On_Call_Assistant.Group_Code
@@ -22,12 +23,20 @@ namespace On_Call_Assistant.Group_Code
         private int currentEmployee;
         private OnCallContext db;
         private List<OnCallRotation> generatedSchedule;
+        private Thread t;
 
         public Scheduler(OnCallContext database)
         {
             db = database;
             generatedSchedule = new List<OnCallRotation>();
             newEmployees = new List<Employee>();
+            TimeSpan timeToHoliday = LinqQueries.GetLastHoliday(db) - DateTime.Now;
+            if (timeToHoliday.Days < 180)
+            {
+                t = new Thread(() => GetBankHolidays((DateTime.Now.Year + 1).ToString(), new OnCallContext()));
+                t.Start();
+            }
+            
         }
         public List<OnCallRotation> generateSchedule(DateTime startDate, DateTime endDate)
         {
@@ -57,11 +66,19 @@ namespace On_Call_Assistant.Group_Code
                     if (hasNewEmployees() && newEmployeeEligible())
                         createLongRotation(currentApplication, CurrentApplicationEmployees);
                     else
-                        createNormalRotation(currentApplication);
+                        if (LinqQueries.HasHoliday(db, startDate, endDate))
+                        {
+                            createRotationWithHoliday(currentApplication, CurrentApplicationEmployees);
+                        }
+                        else
+                        {
+                            createNormalRotation(currentApplication);
+                        }
+
                 } 
             }
-
-
+            if(t != null && t.ThreadState == ThreadState.Running)
+                t.Join();
             return generatedSchedule;
         }
 
@@ -135,6 +152,34 @@ namespace On_Call_Assistant.Group_Code
             lastFinalDateByApp = rotationEnd;
         }
 
+        private void createRotationWithHoliday(Application currentApplication, List<Employee> appEmployees)
+        {
+            rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
+
+            FindValidEmployee();
+
+           
+
+            OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);
+            //Add to primary rotation count
+            employees[currentEmployee] = addRotation(employees[currentEmployee]);
+
+            currentEmployee = nextEmployee();
+            FindValidEmployee();
+            OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+
+            currentEmployee = nextEmployee();
+            //Wrapped around to first employee, sort again
+            if (currentEmployee == 0)
+            {
+                employees = employeesByPrimary(employees);
+            }
+            //Update end date
+            lastFinalDateByApp = rotationEnd;
+
+            generatedSchedule.Add(primary);
+            generatedSchedule.Add(secondary);
+        }
 
         private struct EmployeeAndRotation
         {
@@ -143,6 +188,48 @@ namespace On_Call_Assistant.Group_Code
         }      
 
       
+        public List<OnCallRotation> regenerateSchedule(DateTime startDate, DateTime endDate)
+        {
+
+            List<OnCallRotation> allRotations = LinqQueries.GetRotations(db);
+            
+            List<int> listOfRotationIDs = new List<int>();
+            
+            foreach (OnCallRotation currentRotation in allRotations)
+            {
+                if ((currentRotation.startDate >= startDate && currentRotation.endDate <= endDate))
+                {
+                    listOfRotationIDs.Add(currentRotation.rotationID);
+                }
+                
+            }
+
+            DeleteOnCallRotations(listOfRotationIDs, db);
+            if (t != null && t.ThreadState == ThreadState.Running)
+                t.Join();
+
+            return generateSchedule(startDate, endDate);           
+            
+        }
+
+
+        /// <summary>
+        /// Accepts as input a list of integers, where each integer is the 
+        /// primary key of an OnCallRotation to be deleted, and OnCallContext.
+        /// Deletes the corresponding OnCallRotations from the DB.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="path"></param>
+        /// 
+        public static void DeleteOnCallRotations(List<int> rotationIDs, OnCallContext db)
+        {
+            foreach (int rotationID in rotationIDs)
+            {
+                db.Database.ExecuteSqlCommand(String.Format("DELETE FROM OnCallRotation WHERE ID = {0}", rotationID));
+            }
+        }
+
+
         /// <summary>
         /// Accepts as string input representing a year - e.g. "2015" and an OnCallContext.
         /// Retrieves the bank holidays for that calendar year and populates the database PaidHolidays
@@ -240,21 +327,7 @@ namespace On_Call_Assistant.Group_Code
             return false;
         }
 
-        /// <summary>
-        /// Accepts as input a list of integers, where each integer is the 
-        /// primary key of an OnCallRotation to be deleted, and OnCallContext.
-        /// Deletes the corresponding OnCallRotations from the DB.
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="path"></param>
-        /// 
-        public static void DeleteOnCallRotations(List<int> rotationIDs, OnCallContext db)
-        {
-            foreach (int rotationID in rotationIDs)
-            {
-                db.Database.ExecuteSqlCommand(String.Format("DELETE FROM OnCallRotation WHERE ID = {0}", rotationID));
-            }
-        }
+
 
         public static void CreateCSVFile(List<OnCallRotation> list, string path)
         {

@@ -32,16 +32,15 @@ namespace On_Call_Assistant.Group_Code
             db.SaveChanges();
         }
 
+        public static List<OnCallRotation> GetRotations(OnCallContext db)
+        {
+            return db.onCallRotations.ToList();
+        }
+
         public static List<Employee> EmployeesbyProject(OnCallContext db, int appID)
         {
             var employeeList = from employee in db.employees where employee.Application == appID select employee;
             return employeeList.ToList();
-        }
-
-        public static int EmployeeRotationCount(OnCallContext db, int employeeID)
-        {
-            var rotations = from onCall in db.onCallRotations where onCall.employeeID == employeeID select onCall;
-            return rotations.Count();
         }
 
 
@@ -88,6 +87,17 @@ namespace On_Call_Assistant.Group_Code
 
        }
 
+       public static DateTime GetLastHoliday(OnCallContext db)
+       {
+           var holidays = from h in db.paidHolidays orderby h.holidayDate descending select h.holidayDate;
+           if (!holidays.Any())
+           {
+               return DateTime.Now;
+           }
+           else
+            return holidays.First();
+       }
+
 
 
        public static bool EmployeeOutOfOffice(OnCallContext db, int empID, DateTime start, DateTime end)
@@ -113,6 +123,15 @@ namespace On_Call_Assistant.Group_Code
            int expLevel = (from exp in db.experienceLevel where exp.levelName == "Junior" select exp.ID).Single();
            employeeToUpdate.Experience = expLevel;
            db.SaveChanges();
+       }
+
+       public static bool HasHoliday(OnCallContext db, DateTime start, DateTime end)
+       {
+           var holidays = from hol in db.paidHolidays where hol.holidayDate >= start && hol.holidayDate <= end select hol;
+           if (holidays.Any())
+               return true;
+           else
+               return false;
        }
     }
 }

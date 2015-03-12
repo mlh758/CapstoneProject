@@ -23,7 +23,7 @@ namespace On_Call_Assistant.Group_Code
         private int currentEmployee;
         private OnCallContext db;
         private List<OnCallRotation> generatedSchedule;
-        private Thread t;
+        private Thread holidayRetriever;
 
         public Scheduler(OnCallContext database)
         {
@@ -33,8 +33,8 @@ namespace On_Call_Assistant.Group_Code
             TimeSpan timeToHoliday = LinqQueries.GetLastHoliday(db) - DateTime.Now;
             if (timeToHoliday.Days < 180)
             {
-                t = new Thread(() => GetBankHolidays((DateTime.Now.Year + 1).ToString(), new OnCallContext()));
-                t.Start();
+                holidayRetriever = new Thread(() => GetBankHolidays((DateTime.Now.Year + 1).ToString(), new OnCallContext()));
+                holidayRetriever.Start();
             }
             
         }
@@ -65,20 +65,16 @@ namespace On_Call_Assistant.Group_Code
                     rotationBegin = lastFinalDateByApp.AddDays(1);
                     if (hasNewEmployees() && newEmployeeEligible())
                         createLongRotation(currentApplication, CurrentApplicationEmployees);
+                    else if (LinqQueries.HasHoliday(db, rotationBegin, rotationBegin.AddDays(currentApplication.rotationLength * 7)))                        
+                        createRotationWithHoliday(currentApplication);                        
                     else
-                        if (LinqQueries.HasHoliday(db, startDate, endDate))
-                        {
-                            createRotationWithHoliday(currentApplication, CurrentApplicationEmployees);
-                        }
-                        else
-                        {
-                            createNormalRotation(currentApplication);
-                        }
+                        createNormalRotation(currentApplication);
+                        
 
                 } 
             }
-            if(t != null && t.ThreadState == ThreadState.Running)
-                t.Join();
+            if(holidayRetriever != null && holidayRetriever.ThreadState == ThreadState.Running)
+                holidayRetriever.Join();
             return generatedSchedule;
         }
 
@@ -152,7 +148,7 @@ namespace On_Call_Assistant.Group_Code
             lastFinalDateByApp = rotationEnd;
         }
 
-        private void createRotationWithHoliday(Application currentApplication, List<Employee> appEmployees)
+        private void createRotationWithHoliday(Application currentApplication)
         {
             rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
 
@@ -205,8 +201,8 @@ namespace On_Call_Assistant.Group_Code
             }
 
             DeleteOnCallRotations(listOfRotationIDs, db);
-            if (t != null && t.ThreadState == ThreadState.Running)
-                t.Join();
+            if (holidayRetriever != null && holidayRetriever.ThreadState == ThreadState.Running)
+                holidayRetriever.Join();
 
             return generateSchedule(startDate, endDate);           
             

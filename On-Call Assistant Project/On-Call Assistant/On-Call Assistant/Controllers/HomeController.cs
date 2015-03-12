@@ -27,5 +27,10 @@ namespace On_Call_Assistant.Controllers
 
             return View();
         }
+
+        public ActionResult Printable()
+        {
+            return View();
+        }
     }
 }

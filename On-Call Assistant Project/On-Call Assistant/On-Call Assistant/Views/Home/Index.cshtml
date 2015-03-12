@@ -36,13 +36,13 @@
 }
 <div class="jumbotron">
     <h1>@ViewBag.AppName</h1>
-    <a class="btn btn-default" href="~/Views/Home/PrintableCalendar.cshtml">print &raquo;</a>
+    
     <p class="lead">Manage your on-call rotations, employees and summaries.</p>
     <button id="GenerateSchedule" class="btn btn-primary btn-lg" type="button" onclick='this.disabled = "disabled";'>Generate Schedule</button>
-
+    <a href="../Home/Printable">print &raquo;</a>
 </div>
    
-<div class="row" style="padding-top:20px">
+<div class="row" style=" padding-top:20px">
     <div class="col-md-9">
         <div id="calendar"></div>
     </div>

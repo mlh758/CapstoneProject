@@ -84,12 +84,17 @@ namespace On_Call_Assistant.Group_Code
 
             FindValidEmployee();
             OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);
-            //Add to primary rotation count
             employees[currentEmployee] = addRotation(employees[currentEmployee]);
+            generatedSchedule.Add(primary);
 
-            currentEmployee = nextEmployee();
-            FindValidEmployee();
-            OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+
+            if (currentApplication.hasSecondary)
+            {
+                currentEmployee = nextEmployee();
+                FindValidEmployee();
+                OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+                generatedSchedule.Add(secondary); 
+            }
 
             currentEmployee = nextEmployee();
             //Wrapped around to first employee, sort again
@@ -100,8 +105,8 @@ namespace On_Call_Assistant.Group_Code
             //Update end date
             lastFinalDateByApp = rotationEnd;
 
-            generatedSchedule.Add(primary);
-            generatedSchedule.Add(secondary);
+            
+            
         }
 
         private void createLongRotation(Application currentApplication, List<Employee> appEmployees)
@@ -115,6 +120,7 @@ namespace On_Call_Assistant.Group_Code
             EmployeeAndRotation newEmployeeStruct;
             newEmployeeStruct.ID = newEmployee.ID;
             newEmployeeStruct.rotationCount = numRotations;
+            newEmployeeStruct.holidayRotationCount = LinqQueries.HolidaysInRange(db, rotationBegin, rotationEnd);
             LinqQueries.bumpExperience(db, newEmployee);
 
             //Find experienced Employee with fewest rotations to pair with the new employee
@@ -151,36 +157,38 @@ namespace On_Call_Assistant.Group_Code
         private void createRotationWithHoliday(Application currentApplication)
         {
             rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
+            employees = employeesByHolidays(employees);
+            currentEmployee = 0;
+            FindValidEmployee();         
+            OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);            
+            employees[currentEmployee] = addHolidayRotation(employees[currentEmployee]);
+            generatedSchedule.Add(primary);
 
-            FindValidEmployee();
 
-           
-
-            OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);
-            //Add to primary rotation count
-            employees[currentEmployee] = addRotation(employees[currentEmployee]);
-
-            currentEmployee = nextEmployee();
-            FindValidEmployee();
-            OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
-
-            currentEmployee = nextEmployee();
-            //Wrapped around to first employee, sort again
-            if (currentEmployee == 0)
+            if (currentApplication.hasSecondary)
             {
-                employees = employeesByPrimary(employees);
+                currentEmployee = nextEmployee();
+                FindValidEmployee();
+                OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+                generatedSchedule.Add(secondary); 
             }
+
+
+            //Reset to primary rotation count and beginning of list
+            employees = employeesByPrimary(employees);
+            currentEmployee = 0;
             //Update end date
             lastFinalDateByApp = rotationEnd;
 
-            generatedSchedule.Add(primary);
-            generatedSchedule.Add(secondary);
+            
+            
         }
 
         private struct EmployeeAndRotation
         {
             public int ID;
             public int rotationCount;
+            public int holidayRotationCount;
         }      
 
       

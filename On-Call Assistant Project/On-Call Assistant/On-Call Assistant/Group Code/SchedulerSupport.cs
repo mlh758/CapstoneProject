@@ -55,6 +55,7 @@ namespace On_Call_Assistant.Group_Code
             {
                 temp.ID = emp.ID;
                 temp.rotationCount = emp.primaryRotationCount;
+                temp.holidayRotationCount = LinqQueries.GetNumPrimOnCallRotataions(db, emp.ID);
                 results.Add(temp);
             }
             results.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
@@ -65,11 +66,25 @@ namespace On_Call_Assistant.Group_Code
             employees.Sort((a, b) => a.rotationCount.CompareTo(b.rotationCount));
             return employees;
         }
+        private List<EmployeeAndRotation> employeesByHolidays(List<EmployeeAndRotation> employees)
+        {
+            employees.Sort((a, b) => a.holidayRotationCount.CompareTo(b.holidayRotationCount));
+            return employees;
+        }
         private EmployeeAndRotation addRotation(EmployeeAndRotation employee, int rotationCount = 1)
         {
             EmployeeAndRotation result;
             result.ID = employee.ID;
             result.rotationCount = employee.rotationCount + rotationCount;
+            result.holidayRotationCount = employee.holidayRotationCount;
+            return result;
+        }
+        private EmployeeAndRotation addHolidayRotation(EmployeeAndRotation employee, int rotationCount = 1)
+        {
+            EmployeeAndRotation result;
+            result.ID = employee.ID;
+            result.rotationCount = employee.rotationCount;
+            result.holidayRotationCount = employee.holidayRotationCount + 1;
             return result;
         }
         private bool hasNewEmployees()

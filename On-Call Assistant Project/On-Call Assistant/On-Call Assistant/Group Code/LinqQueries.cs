@@ -133,6 +133,14 @@ namespace On_Call_Assistant.Group_Code
            else
                return false;
        }
+       public static int HolidaysInRange(OnCallContext db, DateTime start, DateTime end)
+       {
+           var holidays = from hol in db.paidHolidays where hol.holidayDate >= start && hol.holidayDate <= end select hol;
+           if (!holidays.Any())
+               return 0;
+           else
+               return holidays.Count();
+       }
 
        /// <summary>
        /// Counts and returns the number of OnCallRotations for an employee within the current year.
@@ -140,7 +148,7 @@ namespace On_Call_Assistant.Group_Code
        /// <param name="employeeID"></param>
        /// <param name="db"></param>
        /// <returns>Returns -1 if an exception is thrown while executing the command.</returns>
-       public static int GetNumPrimOnCallRotataions(int employeeID, OnCallContext db)
+       public static int GetNumPrimOnCallRotataions(OnCallContext db, int employeeID)
        {
            try
            {

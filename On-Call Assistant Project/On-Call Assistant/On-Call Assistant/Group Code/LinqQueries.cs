@@ -133,5 +133,27 @@ namespace On_Call_Assistant.Group_Code
            else
                return false;
        }
+
+       /// <summary>
+       /// Counts and returns the number of OnCallRotations for an employee within the current year.
+       /// </summary>
+       /// <param name="employeeID"></param>
+       /// <param name="db"></param>
+       /// <returns>Returns -1 if an exception is thrown while executing the command.</returns>
+       public static int GetNumPrimOnCallRotataions(int employeeID, OnCallContext db)
+       {
+           try
+           {
+               var result = (from OCR in db.onCallRotations
+                             join E in db.employees on OCR.employeeID equals E.ID
+                             where OCR.isPrimary == true && OCR.startDate.Year == DateTime.Now.Year && E.ID == employeeID
+                             select OCR.rotationID).Count();
+               return result;
+           }
+           catch (Exception ex)
+           {
+               return -1;
+           }
+       }
     }
 }

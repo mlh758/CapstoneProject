@@ -10,10 +10,36 @@
     <script src="~/Scripts/lib/jquery.min.js"></script>
     <script src="~/Scripts/lib/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.js"></script>
-    @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
+@*<script src="~/Scripts/html2canvas.js"></script>
+    <script src="~/Scripts/jspdf.js"></script>
+    <script src="~/Scripts/jspdf.plugin.addimage.js"></script>
+        <script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
     <script type="text/javascript">
+        var thisMonth = new Date();
+        var nextMonth = new Date();
+        var thirdMonth = new Date();
+        var dd = thisMonth.getDate();
+        var mm = thisMonth.getMonth() + 1; //January is 0!
+        var mm2 = thisMonth.getMonth() + 2;
+        var mm3 = thisMonth.getMonth() + 3;
+        var yyyy = thisMonth.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+
+        thisMonth = yyyy + '-' + mm + '-' + dd;
+        nextMonth = yyyy + '-' + mm2 + '-' + dd;//what if next month is in next year
+        thirdMonth = yyyy + '-' + mm3 + '-' + dd;
+
         $(document).ready(function () {
+           // var currentDate = c.fullCalendar('getDate');
             $('#calendar1').fullCalendar({
+                defaultDate: thisMonth,
                 editable: false,
                 events: "/home/rotationdata/"
             });
@@ -25,6 +51,7 @@
         });
         $(document).ready(function () {
             $('#calendar2').fullCalendar({
+                defaultDate: nextMonth,
                 editable: false,
                 events: "/home/rotationdata/"
             });
@@ -36,6 +63,7 @@
         });
         $(document).ready(function () {
             $('#calendar3').fullCalendar({
+                defaultDate: thirdMonth,
                 editable: false,
                 events: "/home/rotationdata/"
             });
@@ -45,8 +73,9 @@
                 window.location.replace("/oncallrotations/generateSchedule");
             });
         });
-
-
+        
+        window.onload = function () { alert("Click \"Ctrl+p\" to print."); }
+       
     </script>
 
 

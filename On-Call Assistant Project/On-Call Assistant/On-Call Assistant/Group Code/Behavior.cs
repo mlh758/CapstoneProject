@@ -113,6 +113,7 @@ namespace On_Call_Assistant.Group_Code
         {
             int numRotations = (int)(5/currentApplication.rotationLength);
             rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength*7);
+            List<PaidHoliday> holidaysInRotation = LinqQueries.HolidaysInRange(db, rotationBegin, rotationEnd);
 
             //Assign new employee and get ready to add to rotation pool            
             Employee newEmployee = getFirstNewEmployee();
@@ -120,7 +121,7 @@ namespace On_Call_Assistant.Group_Code
             EmployeeAndRotation newEmployeeStruct;
             newEmployeeStruct.ID = newEmployee.ID;
             newEmployeeStruct.rotationCount = numRotations;
-            newEmployeeStruct.holidayRotationCount = LinqQueries.HolidaysInRange(db, rotationBegin, rotationEnd);
+            newEmployeeStruct.holidayRotationCount = holidaysInRotation.Count;
             LinqQueries.bumpExperience(db, newEmployee);
 
             //Find experienced Employee with fewest rotations to pair with the new employee
@@ -130,7 +131,7 @@ namespace On_Call_Assistant.Group_Code
             
             //Add appropriate number of rotations to schedule to meet 5 week obligation
             int rotationsGenerated = 0;
-            OnCallRotation primary, secondary;
+            OnCallRotation primary = new OnCallRotation(), secondary = new OnCallRotation();
             while (rotationsGenerated < numRotations)
             {
                 primary = createRotation(true, newEmployeeStruct.ID);
@@ -146,9 +147,19 @@ namespace On_Call_Assistant.Group_Code
                     rotationEnd = rotationBegin.AddDays(currentApplication.rotationLength * 7 - 1);
                 }
 
-            }            
-            
-            //Add no longer new employee to pool and reorder
+            }
+
+            foreach (var hol in holidaysInRotation)
+            {
+                if (primary.holidays == null)
+                    primary.holidays = new List<PaidHoliday>();
+                primary.holidays.Add(hol);
+                if(secondary.holidays == null)
+                    secondary.holidays = new List<PaidHoliday>();
+                secondary.holidays.Add(hol);
+
+            }
+            //Add no longer new employee to pool and reorder            
             employees = employeesByPrimary(employees);
             employees.Add(newEmployeeStruct);
             lastFinalDateByApp = rotationEnd;
@@ -156,12 +167,24 @@ namespace On_Call_Assistant.Group_Code
 
         private void createRotationWithHoliday(Application currentApplication)
         {
+            //Save previous state
+            int previousEmployee = currentEmployee;            
+            List<EmployeeAndRotation> oldEmployeeList = employees;
+
             rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
+            List<PaidHoliday> holidaysInRotation = LinqQueries.HolidaysInRange(db, rotationBegin, rotationEnd);
             employees = employeesByHolidays(employees);
             currentEmployee = 0;
             FindValidEmployee();         
             OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);            
             employees[currentEmployee] = addHolidayRotation(employees[currentEmployee]);
+            int holidayEmployeeID = employees[currentEmployee].ID;
+            foreach (var hol in holidaysInRotation)
+            {
+                if (primary.holidays == null)                
+                    primary.holidays = new List<PaidHoliday>();                
+                primary.holidays.Add(hol);
+            }
             generatedSchedule.Add(primary);
 
 
@@ -170,13 +193,22 @@ namespace On_Call_Assistant.Group_Code
                 currentEmployee = nextEmployee();
                 FindValidEmployee();
                 OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+                foreach (var hol in holidaysInRotation)
+                {
+                    if (secondary.holidays == null)                    
+                        secondary.holidays = new List<PaidHoliday>();                    
+                    secondary.holidays.Add(hol);
+                }
                 generatedSchedule.Add(secondary); 
             }
 
 
-            //Reset to primary rotation count and beginning of list
-            employees = employeesByPrimary(employees);
-            currentEmployee = 0;
+            //Reset to previous state, but advance if we're about to assign the employee from the holiday to another rotation
+            employees = oldEmployeeList;            
+            currentEmployee = previousEmployee;
+            if (employees[currentEmployee].ID == holidayEmployeeID)
+                currentEmployee = nextEmployee();
+
             //Update end date
             lastFinalDateByApp = rotationEnd;
 

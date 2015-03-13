@@ -133,13 +133,9 @@ namespace On_Call_Assistant.Group_Code
            else
                return false;
        }
-       public static int HolidaysInRange(OnCallContext db, DateTime start, DateTime end)
+       public static List<PaidHoliday> HolidaysInRange(OnCallContext db, DateTime start, DateTime end)
        {
-           var holidays = from hol in db.paidHolidays where hol.holidayDate >= start && hol.holidayDate <= end select hol;
-           if (!holidays.Any())
-               return 0;
-           else
-               return holidays.Count();
+           return (from hol in db.paidHolidays where hol.holidayDate >= start && hol.holidayDate <= end select hol).ToList();           
        }
 
        /// <summary>

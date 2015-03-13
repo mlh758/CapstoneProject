@@ -139,7 +139,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DAL\OnCallContext.cs" />
-    <Compile Include="DAL\OnCallInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -200,12 +199,14 @@
     <Compile Include="Migrations\201503080025320_HasPaidHolidayLookUpTable.Designer.cs">
       <DependentUpon>201503080025320_HasPaidHolidayLookUpTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503131416514_AppHasSecondary.cs" />
+    <Compile Include="Migrations\201503131416514_AppHasSecondary.Designer.cs">
+      <DependentUpon>201503131416514_AppHasSecondary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\ExperienceLevel.cs" />
-    <Compile Include="Models\HasPaidHoliday.cs" />
-    <Compile Include="Models\Holiday.cs" />
     <Compile Include="Models\OnCallRotation.cs" />
     <Compile Include="Models\OutOfOffice.cs" />
     <Compile Include="Models\OutOfOfficeReason.cs" />
@@ -347,6 +348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503080025320_HasPaidHolidayLookUpTable.resx">
       <DependentUpon>201503080025320_HasPaidHolidayLookUpTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503131416514_AppHasSecondary.resx">
+      <DependentUpon>201503131416514_AppHasSecondary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

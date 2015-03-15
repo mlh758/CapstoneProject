@@ -45,13 +45,13 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Total Rotations")]
         public int rotationCount
         {
-            get { return rotations.Count(); }
+            get { if (rotations != null) return rotations.Count(); else return 0; }
         }
 
         [Display(Name = "Primary Rotations")]
         public int primaryRotationCount
         {
-            get { return rotations.Where(rot => rot.isPrimary == true).ToList().Count; }
+            get { if (rotations != null) return rotations.Where(rot => rot.isPrimary == true).ToList().Count; else return 0; }
         }
 
         [Display(Name = "Secondary Rotations")]

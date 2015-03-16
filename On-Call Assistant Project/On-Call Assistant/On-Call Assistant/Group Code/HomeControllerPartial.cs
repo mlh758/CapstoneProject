@@ -27,6 +27,24 @@ namespace On_Call_Assistant.Controllers
             }
             return Json(rotationList, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult RotationsWithoutURL(string start, string end, int ID = -1)
+        {
+            if (start == null || end == null)
+            {
+                start = end = DateTime.Today.ToString("u");
+            }
+            List<CalendarObject> rotationList = getRotations(start, end);
+            if (ID != -1)
+            {
+                rotationList = rotationList.Where(rot => rot.id == ID).ToList();
+            }
+            foreach (var rot in rotationList)
+            {
+                rot.url = null;
+            }
+            return Json(rotationList, JsonRequestBehavior.AllowGet);
+
+        }
 
         public ActionResult AbsenceData(string start, string end)
         {

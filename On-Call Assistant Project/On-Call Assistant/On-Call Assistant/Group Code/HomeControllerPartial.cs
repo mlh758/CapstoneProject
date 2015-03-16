@@ -56,8 +56,8 @@ namespace On_Call_Assistant.Controllers
         private System.Collections.Hashtable getApplicationColors()
         {
             System.Collections.Hashtable colors = new System.Collections.Hashtable();
-            colors.Add(3, "Cyan");
-            colors.Add(5, "DarkSeaGreen");
+            colors.Add(3, "MediumSeaGreen");
+            colors.Add(5, "Goldenrod");
             return colors;
         }
         private List<OutOfOffice> filterAbsences(IQueryable<OutOfOffice> absences, DateTime begin, DateTime end)

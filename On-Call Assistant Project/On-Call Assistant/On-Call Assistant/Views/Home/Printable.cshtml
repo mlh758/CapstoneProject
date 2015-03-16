@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Calendar";
+    ViewBag.Title = "Calendar " + DateTime.Now;
     ViewBag.AppName = "On-Call Assistant";
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
@@ -10,10 +10,7 @@
     <script src="~/Scripts/lib/jquery.min.js"></script>
     <script src="~/Scripts/lib/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.js"></script>
-@*<script src="~/Scripts/html2canvas.js"></script>
-    <script src="~/Scripts/jspdf.js"></script>
-    <script src="~/Scripts/jspdf.plugin.addimage.js"></script>
-        <script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
+        @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
     <script type="text/javascript">
         var thisMonth = new Date();
         var nextMonth = new Date();
@@ -43,22 +40,12 @@
                 editable: false,
                 events: "/home/rotationdata/"
             });
-            $('#GenerateSchedule').click(function (event) {
-                event.preventDefault();
-                //probably could be refactored...
-                window.location.replace("/oncallrotations/generateSchedule");
-            });
         });
         $(document).ready(function () {
             $('#calendar2').fullCalendar({
                 defaultDate: nextMonth,
                 editable: false,
                 events: "/home/rotationdata/"
-            });
-            $('#GenerateSchedule').click(function (event) {
-                event.preventDefault();
-                //probably could be refactored...
-                window.location.replace("/oncallrotations/generateSchedule");
             });
         });
         $(document).ready(function () {
@@ -67,14 +54,8 @@
                 editable: false,
                 events: "/home/rotationdata/"
             });
-            $('#GenerateSchedule').click(function (event) {
-                event.preventDefault();
-                //probably could be refactored...
-                window.location.replace("/oncallrotations/generateSchedule");
-            });
         });
         
-        window.onload = function () { alert("Click \"Ctrl+p\" to print."); }
        
     </script>
 

@@ -13,17 +13,17 @@
     <script src="~/Scripts/fullcalendar.js"></script>
     @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#calendar').fullCalendar({
-                editable: false,
-                events: "/home/rotationdata/"
-            });
-            $('#GenerateSchedule').click(function (event) {
-                event.preventDefault();
-                //probably could be refactored...
-                window.location.replace("/oncallrotations/generateSchedule");
-            });
+    $(document).ready(function () {
+        $('#calendar').fullCalendar({
+            editable: false,
+            events: "/home/rotationdata/"@*for filtiring: /Home/RotationData?start=2015-03-01&end=2015-04-01&ID=5*@
         });
+        $('#GenerateSchedule').click(function (event) {
+            event.preventDefault();
+            //probably could be refactored...
+            window.location.replace("/oncallrotations/generateSchedule");
+        });
+    });
 
 
 

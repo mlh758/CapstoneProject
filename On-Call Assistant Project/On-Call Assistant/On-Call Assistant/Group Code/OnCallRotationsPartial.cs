@@ -33,6 +33,23 @@ namespace On_Call_Assistant.Controllers
             return View(db.onCallRotations.ToList());
         }
 
+        public ActionResult regenerateSchedule(string begin, string end)
+        {
+            Scheduler generator = new Scheduler(db);
+
+            //Don't run if either parameter is null
+            if (begin == null || end == null)
+                return View(db.onCallRotations.ToList());
+
+            DateTime start = DateTime.Parse(begin);
+            //Ensure start happens on Wednesday to avoid deleting the wrong rotations
+            start = getFutureDay(start, DayOfWeek.Wednesday);
+            DateTime finish = DateTime.Parse(end);
+
+            List<OnCallRotation> schedule = generator.regenerateSchedule(start, finish);
+            return View(db.onCallRotations.ToList());
+        }
+
         public ActionResult DownloadSchedule()
         {
             Scheduler.CreateCSVFile(db.onCallRotations.ToList(), path);

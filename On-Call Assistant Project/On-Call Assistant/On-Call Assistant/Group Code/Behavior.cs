@@ -151,11 +151,7 @@ namespace On_Call_Assistant.Group_Code
 
             foreach (var hol in holidaysInRotation)
             {
-                if (primary.holidays == null)
-                    primary.holidays = new List<PaidHoliday>();
                 primary.holidays.Add(hol);
-                if(secondary.holidays == null)
-                    secondary.holidays = new List<PaidHoliday>();
                 secondary.holidays.Add(hol);
 
             }
@@ -180,9 +176,7 @@ namespace On_Call_Assistant.Group_Code
             employees[currentEmployee] = addHolidayRotation(employees[currentEmployee]);
             int holidayEmployeeID = employees[currentEmployee].ID;
             foreach (var hol in holidaysInRotation)
-            {
-                if (primary.holidays == null)                
-                    primary.holidays = new List<PaidHoliday>();                
+            {           
                 primary.holidays.Add(hol);
             }
             generatedSchedule.Add(primary);
@@ -194,9 +188,7 @@ namespace On_Call_Assistant.Group_Code
                 FindValidEmployee();
                 OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
                 foreach (var hol in holidaysInRotation)
-                {
-                    if (secondary.holidays == null)                    
-                        secondary.holidays = new List<PaidHoliday>();                    
+                {                   
                     secondary.holidays.Add(hol);
                 }
                 generatedSchedule.Add(secondary); 

@@ -42,6 +42,7 @@ namespace On_Call_Assistant.Group_Code
             result.isPrimary = isPrimary;
             result.startDate = rotationBegin;
             result.endDate = rotationEnd;
+            result.holidays = new List<PaidHoliday>();
             return result;
         }
         private List<EmployeeAndRotation> employeesByPrimary(List<Employee> employees)

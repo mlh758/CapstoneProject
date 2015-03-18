@@ -23,18 +23,15 @@ namespace On_Call_Assistant.Group_Code
         private void FindValidEmployee(List<int> experiencedEmployees = null)
         {            
             int initialEmployee = currentEmployee;
-            while (LinqQueries.EmployeeOutOfOffice(db, employees[currentEmployee].ID, rotationBegin, rotationEnd))
+            while (LinqQueries.EmployeeOutOfOffice(db, employees[currentEmployee].ID, rotationBegin, rotationEnd) || (experiencedEmployees != null && !experiencedEmployees.Contains(employees[currentEmployee].ID)))
             {
-                if ((experiencedEmployees != null && !experiencedEmployees.Contains(employees[currentEmployee].ID)) || experiencedEmployees == null)
+                currentEmployee = nextEmployee();
+                if (currentEmployee == initialEmployee)
                 {
-                    currentEmployee = nextEmployee();
-                    if (currentEmployee == initialEmployee)
-                    {
-                        //We've gone through the whole list and come back to the original employee
-                        //This shouldn't happen, but avoid the infinite loop and assign someone
-                        employees = employeesByPrimary(employees);
-                        break;
-                    }
+                    //We've gone through the whole list and come back to the original employee
+                    //This shouldn't happen, but avoid the infinite loop and assign someone
+                    employees = employeesByPrimary(employees);
+                    break;
                 }
             }
         }

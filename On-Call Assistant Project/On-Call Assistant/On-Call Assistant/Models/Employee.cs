@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace On_Call_Assistant.Models
 {
     /* NOTE TO SELF: UPON RESCAFFOLDING Employee, REMEMBER TO COPY IN USER
-     * IMPLEMENTED VIEW OPTIONS IN INDEX!!!
+     * IMPLEMENTED VIEW OPTIONS!!!
      */
     public class Employee
     {
@@ -64,6 +64,72 @@ namespace On_Call_Assistant.Models
         public string employeeName
         {
             get { return lastName + ", " + firstName; }
+        }
+
+        [Display(Name = "Holiday Rotations")]
+        public int totHolidayRotations
+        {
+            get
+            {
+                int totHolidayCount = 0;
+                if (rotations != null)
+                {
+                    List<OnCallRotation> totRotations = rotations.ToList();
+                    for (int index = 0; index < totRotations.Count; index++)
+                    {
+                        totHolidayCount += totRotations[index].holidays.Count;
+                    }
+                    return totHolidayCount;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        [Display(Name = "Holiday Rotations (P)")]
+        public int primHolidayRotations
+        {
+            get 
+            {
+                int primHolidayCount = 0;
+                if (rotations != null)
+                {
+                    List<OnCallRotation> primRotations = rotations.Where(rot => rot.isPrimary == true).ToList();
+                    for (int index = 0; index < primRotations.Count; index++)
+                    {
+                        primHolidayCount += primRotations[index].holidays.Count;
+                    }
+                    return primHolidayCount;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        [Display(Name = "Holiday Rotations (S)")]
+        public int secHolidayRotations
+        {
+            get
+            {
+                int secHolidayCount = 0;
+                if (rotations != null)
+                {
+                    List<OnCallRotation> secRotations = rotations.Where(rot => rot.isPrimary == false).ToList();
+                    for (int index = 0; index < secRotations.Count; index++)
+                    {
+                        secHolidayCount += secRotations[index].holidays.Count;
+                    }
+                    return secHolidayCount;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
         }
 
         [ForeignKey("assignedApplication")]

@@ -33,17 +33,23 @@
             {
                 @:$(".dropdown-menu").prepend('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">' + '@app' + '</a></li>');
             }
+        $(".dropdown-menu").prepend('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Remove Filters</a></li>');
+            
         @*Set the onclick event for the the dropdown list items*@
         $('.dropdown').on('click', 'ul li a', function () {
             var selectedAppName = $(this).text();
-            var selectedAppID = selectedAppName.slice(selectedAppName.indexOf("-") + 1, selectedAppName.length);
-            console.log(selectedAppID);
-
-            @*Use the following code to re-render the calendar once we've figured out how to make the apporpriate query via the applicationID
-            $('#calendar').fullCalendar('removeEvents');
-            $('#calendar').fullCalendar('addEventSource', "/Home/RotationData/");
-            $('#calendar').fullCalendar('rerenderEvents');
-            *@
+            if (selectedAppName == 'Remove Filters') {
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar('addEventSource', "/Home/RotationData/" + selectedAppID);
+                $('#calendar').fullCalendar('rerenderEvents');
+            }
+            else {
+                var selectedAppID = selectedAppName.slice(selectedAppName.indexOf("-") + 1, selectedAppName.length);
+                console.log(selectedAppID);
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + selectedAppID);
+                $('#calendar').fullCalendar('rerenderEvents');
+            }
         });
     });
 

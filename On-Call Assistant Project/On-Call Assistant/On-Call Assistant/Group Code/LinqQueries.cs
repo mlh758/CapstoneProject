@@ -159,5 +159,15 @@ namespace On_Call_Assistant.Group_Code
                return -1;
            }
        }
+        //Returns a list of all apps formatted as strings as follows "AAA-#"
+        public static List<string> GetAppNamesAndIds(OnCallContext db)
+       {
+           List<string> apps = new List<string>();
+            foreach (var app in db.applications)
+            {
+                apps.Add(string.Format("{0}-{1}", app.appName, app.ID));
+            }
+            return apps;
+       }
     }
 }

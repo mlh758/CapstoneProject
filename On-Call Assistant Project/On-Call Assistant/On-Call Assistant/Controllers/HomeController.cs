@@ -11,6 +11,8 @@ namespace On_Call_Assistant.Controllers
     {
         public ActionResult Index()
         {
+            On_Call_Assistant.DAL.OnCallContext db = new DAL.OnCallContext();
+            ViewBag.applications = Group_Code.LinqQueries.GetAppNamesAndIds(db);
             return View();
         }
 

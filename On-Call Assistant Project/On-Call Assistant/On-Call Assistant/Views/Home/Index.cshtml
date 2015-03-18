@@ -11,6 +11,7 @@
     <script src="~/Scripts/lib/jquery.min.js"></script>
     <script src="~/Scripts/lib/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
     @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
     <script type="text/javascript">
     $(document).ready(function () {
@@ -18,10 +19,31 @@
             editable: false,
             events: "/home/rotationdata/"@*for filtiring: /Home/RotationData?start=2015-03-01&end=2015-04-01&ID=5*@
         });
+
         $('#GenerateSchedule').click(function (event) {
             event.preventDefault();
             //probably could be refactored...
             window.location.replace("/oncallrotations/generateSchedule");
+        });
+
+
+        @*  Code for sorting rotations on the calendar by app starts here.
+            Grab each application and dynamically create a drop-down list item*@
+            @foreach(var app in ViewBag.applications)
+            {
+                @:$(".dropdown-menu").prepend('<li role="presentation"><a role="menuitem" tabindex="-1" href="#">' + '@app' + '</a></li>');
+            }
+        @*Set the onclick event for the the dropdown list items*@
+        $('.dropdown').on('click', 'ul li a', function () {
+            var selectedAppName = $(this).text();
+            var selectedAppID = selectedAppName.slice(selectedAppName.indexOf("-") + 1, selectedAppName.length);
+            console.log(selectedAppID);
+
+            @*Use the following code to re-render the calendar once we've figured out how to make the apporpriate query via the applicationID
+            $('#calendar').fullCalendar('removeEvents');
+            $('#calendar').fullCalendar('addEventSource', "/Home/RotationData/");
+            $('#calendar').fullCalendar('rerenderEvents');
+            *@
         });
     });
 
@@ -41,7 +63,17 @@
     <button id="GenerateSchedule" class="btn btn-primary btn-lg" type="button" onclick='this.disabled = "disabled";'>Generate Schedule</button>
     <a href="../Home/Printable">print &raquo;</a>
 </div>
-   
+@*Containers for the dropdown list of Application names (for sorting rotations on the calendar by app)*@
+<div class="container">
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+            Sort By App
+            <span class="caret"></span>
+        </button>
+        <ul id="dropDownList" class="dropdown-menu" role="menu" aria-labelledby="menu1"></ul>
+    </div>
+</div>
+
 <div class="row" style=" padding-top:20px">
     <div class="col-md-9">
         <div id="calendar"></div>

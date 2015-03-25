@@ -190,6 +190,14 @@
     <Compile Include="Migrations\201503062128526_OutOfOfficeEmpFK.Designer.cs">
       <DependentUpon>201503062128526_OutOfOfficeEmpFK.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503250124173_Initial.cs" />
+    <Compile Include="Migrations\201503250124173_Initial.Designer.cs">
+      <DependentUpon>201503250124173_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503250134108_Initial1.cs" />
+    <Compile Include="Migrations\201503250134108_Initial1.Designer.cs">
+      <DependentUpon>201503250134108_Initial1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -331,6 +339,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503062128526_OutOfOfficeEmpFK.resx">
       <DependentUpon>201503062128526_OutOfOfficeEmpFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503250124173_Initial.resx">
+      <DependentUpon>201503250124173_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503250134108_Initial1.resx">
+      <DependentUpon>201503250134108_Initial1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

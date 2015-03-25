@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "Calendar " + DateTime.Now;
+    ViewBag.AppName = "On-Call Assistant";
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+    <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
+}
+
+@section scripts {
+    <script src="~/Scripts/lib/jquery.min.js"></script>
+    <script src="~/Scripts/lib/moment.min.js"></script>
+    <script src="~/Scripts/fullcalendar.js"></script>
+        @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
+    <script type="text/javascript">
+        var thisMonth = new Date();
+        var nextMonth = new Date();
+        var thirdMonth = new Date();
+        var dd = thisMonth.getDate();
+        var mm = thisMonth.getMonth() + 1; //January is 0!
+        var mm2;
+        var mm3;
+        var yyyy = thisMonth.getFullYear();
+        var yyyy2;
+        var yyyy3;
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+
+        if (mm == 11) {
+            mm2 = 12;
+            mm3 = 1;
+            yyyy2 = yyyy;
+            yyyy3 = yyyy+1;
+        } else if (mm == 12) {
+            mm2 = 1;
+            mm3 = 2;
+            yyyy2 = yyyy3 = yyyy + 1;
+        } else {
+            mm2 = thisMonth.getMonth() + 2;
+            mm3 = thisMonth.getMonth() + 3;
+            yyyy2 = yyyy3 = yyyy;
+        }
+
+        thisMonth = yyyy + '-' + mm + '-' + dd;
+        nextMonth = yyyy2 + '-' + mm2 + '-' + dd;//what if next month is in next year
+        thirdMonth = yyyy3 + '-' + mm3 + '-' + dd;
+
+        $(document).ready(function () {
+           // var currentDate = c.fullCalendar('getDate');
+            $('#calendar1').fullCalendar({
+                defaultDate: thisMonth,
+                editable: false,
+                events: "/home/RotationsWithoutURL/"
+            });
+        });
+        $(document).ready(function () {
+            $('#calendar2').fullCalendar({
+                defaultDate: nextMonth,
+                editable: false,
+                events: "/home/RotationsWithoutURL/"
+            });
+        });
+        $(document).ready(function () {
+            $('#calendar3').fullCalendar({
+                defaultDate: thirdMonth,
+                editable: false,
+                events: "/home/RotationsWithoutURL/"
+            });
+        });
+        
+       
+    </script>
+
+
+
+
+
+}
+<h2>Quarter Calendar</h2>
+<div style="padding:15px" class="row">
+    <div id="calendar1"></div>
+</div>
+<div style="padding:15px" class="row">
+    <div id="calendar2"></div>
+</div>
+<div style="padding:15px" class="row">
+    <div id="calendar3"></div>
+</div>
+

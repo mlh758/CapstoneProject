@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Index";
+    ViewBag.AppName = "On-Call Assistant";
 }
 
 <h2>Index</h2>
@@ -41,9 +42,9 @@
             @Html.DisplayFor(modelItem => item.isPrimary)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            @Html.ActionLink("Edit", "Edit", new { id=item.rotationID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.rotationID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.rotationID })
         </td>
     </tr>
 }

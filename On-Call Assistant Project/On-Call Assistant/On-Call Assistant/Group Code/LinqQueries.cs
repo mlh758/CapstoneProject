@@ -32,16 +32,15 @@ namespace On_Call_Assistant.Group_Code
             db.SaveChanges();
         }
 
+        public static List<OnCallRotation> GetRotations(OnCallContext db)
+        {
+            return db.onCallRotations.ToList();
+        }
+
         public static List<Employee> EmployeesbyProject(OnCallContext db, int appID)
         {
             var employeeList = from employee in db.employees where employee.Application == appID select employee;
             return employeeList.ToList();
-        }
-
-        public static int EmployeeRotationCount(OnCallContext db, int employeeID)
-        {
-            var rotations = from onCall in db.onCallRotations where onCall.employeeID == employeeID select onCall;
-            return rotations.Count();
         }
 
 
@@ -88,6 +87,17 @@ namespace On_Call_Assistant.Group_Code
 
        }
 
+       public static DateTime GetLastHoliday(OnCallContext db)
+       {
+           var holidays = from h in db.paidHolidays orderby h.holidayDate descending select h.holidayDate;
+           if (!holidays.Any())
+           {
+               return DateTime.Now;
+           }
+           else
+            return holidays.First();
+       }
+
 
 
        public static bool EmployeeOutOfOffice(OnCallContext db, int empID, DateTime start, DateTime end)
@@ -105,6 +115,59 @@ namespace On_Call_Assistant.Group_Code
        private static bool inRange(DateTime reference, DateTime start, DateTime end)
        {
            return (reference > start && reference < end);
+       }
+
+       public static void bumpExperience(OnCallContext db, Employee employee)
+       {
+           var employeeToUpdate = (from emp in db.employees where emp.ID == employee.ID select emp).Single();
+           int expLevel = (from exp in db.experienceLevel where exp.levelName == "Junior" select exp.ID).Single();
+           employeeToUpdate.Experience = expLevel;
+           db.SaveChanges();
+       }
+
+       public static bool HasHoliday(OnCallContext db, DateTime start, DateTime end)
+       {
+           var holidays = from hol in db.paidHolidays where hol.holidayDate >= start && hol.holidayDate <= end select hol;
+           if (holidays.Any())
+               return true;
+           else
+               return false;
+       }
+       public static List<PaidHoliday> HolidaysInRange(OnCallContext db, DateTime start, DateTime end)
+       {
+           return (from hol in db.paidHolidays where hol.holidayDate >= start && hol.holidayDate <= end select hol).ToList();           
+       }
+
+       /// <summary>
+       /// Counts and returns the number of OnCallRotations for an employee within the current year.
+       /// </summary>
+       /// <param name="employeeID"></param>
+       /// <param name="db"></param>
+       /// <returns>Returns -1 if an exception is thrown while executing the command.</returns>
+       public static int GetNumPrimOnCallRotataions(OnCallContext db, int employeeID)
+       {
+           try
+           {
+               var result = (from OCR in db.onCallRotations
+                             join E in db.employees on OCR.employeeID equals E.ID
+                             where OCR.isPrimary == true && OCR.startDate.Year == DateTime.Now.Year && E.ID == employeeID
+                             select OCR.rotationID).Count();
+               return result;
+           }
+           catch (Exception ex)
+           {
+               return -1;
+           }
+       }
+        //Returns a list of all apps formatted as strings as follows "AAA-#"
+        public static List<string> GetAppNamesAndIds(OnCallContext db)
+       {
+           List<string> apps = new List<string>();
+            foreach (var app in db.applications)
+            {
+                apps.Add(string.Format("{0}-{1}", app.appName, app.ID));
+            }
+            return apps;
        }
     }
 }

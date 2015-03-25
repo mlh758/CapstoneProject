@@ -11,7 +11,9 @@ namespace On_Call_Assistant.Models
      */
     public class OnCallRotation
     {
-        public int ID { get; set; }
+        [Key]
+        [Column("ID")]
+        public int rotationID { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
@@ -31,6 +33,7 @@ namespace On_Call_Assistant.Models
         public int employeeID { get; set; }
 
         public virtual Employee employee { get; set; }
+        public virtual ICollection<PaidHoliday> holidays { get; set; }
         //public virtual HasPaidHoliday hasHoliday { get; set; }
 
     }

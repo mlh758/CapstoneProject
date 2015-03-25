@@ -14,9 +14,6 @@
         <th>
             @Html.DisplayNameFor(model => model.rotation.ID)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.paidHolidayID)
-        </th>
         <th></th>
     </tr>
 
@@ -26,12 +23,9 @@
             @Html.DisplayFor(modelItem => item.rotation.ID)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.paidHolidayID)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
         </td>
     </tr>
 }

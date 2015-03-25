@@ -16,11 +16,14 @@ namespace On_Call_Assistant.Models
         public string appName { get; set; }
 
         [Display(Name = "Weeks On-Call")]
-        [Range(0,2)]
+        [Range(0,5)]
         public int rotationLength { get; set; }
 
         [Display(Name = "Has On-Call Rotation")]
         public bool hasOnCall { get; set; }
+
+        [Display(Name = "Has On-Call Secondary")]
+        public bool hasSecondary { get; set; }
 
         //public virtual ICollection<Employee> employees { get; set; }
     }

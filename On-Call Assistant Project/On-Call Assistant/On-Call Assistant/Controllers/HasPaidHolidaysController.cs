@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -16,20 +17,20 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: HasPaidHolidays
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var hasHolidays = db.hasHolidays.Include(h => h.rotation);
-            return View(hasHolidays.ToList());
+            return View(await hasHolidays.ToListAsync());
         }
 
         // GET: HasPaidHolidays/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HasPaidHoliday hasPaidHoliday = db.hasHolidays.Find(id);
+            HasPaidHoliday hasPaidHoliday = await db.hasHolidays.FindAsync(id);
             if (hasPaidHoliday == null)
             {
                 return HttpNotFound();
@@ -49,12 +50,12 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,paidHolidayID,onCallRotationID")] HasPaidHoliday hasPaidHoliday)
+        public async Task<ActionResult> Create([Bind(Include = "onCallRotationID,paidHolidayID")] HasPaidHoliday hasPaidHoliday)
         {
             if (ModelState.IsValid)
             {
                 db.hasHolidays.Add(hasPaidHoliday);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -63,13 +64,13 @@ namespace On_Call_Assistant.Controllers
         }
 
         // GET: HasPaidHolidays/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HasPaidHoliday hasPaidHoliday = db.hasHolidays.Find(id);
+            HasPaidHoliday hasPaidHoliday = await db.hasHolidays.FindAsync(id);
             if (hasPaidHoliday == null)
             {
                 return HttpNotFound();
@@ -83,12 +84,12 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,paidHolidayID,onCallRotationID")] HasPaidHoliday hasPaidHoliday)
+        public async Task<ActionResult> Edit([Bind(Include = "onCallRotationID,paidHolidayID")] HasPaidHoliday hasPaidHoliday)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(hasPaidHoliday).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.onCallRotationID = new SelectList(db.onCallRotations, "ID", "ID", hasPaidHoliday.onCallRotationID);
@@ -96,13 +97,13 @@ namespace On_Call_Assistant.Controllers
         }
 
         // GET: HasPaidHolidays/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HasPaidHoliday hasPaidHoliday = db.hasHolidays.Find(id);
+            HasPaidHoliday hasPaidHoliday = await db.hasHolidays.FindAsync(id);
             if (hasPaidHoliday == null)
             {
                 return HttpNotFound();
@@ -113,11 +114,11 @@ namespace On_Call_Assistant.Controllers
         // POST: HasPaidHolidays/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            HasPaidHoliday hasPaidHoliday = db.hasHolidays.Find(id);
+            HasPaidHoliday hasPaidHoliday = await db.hasHolidays.FindAsync(id);
             db.hasHolidays.Remove(hasPaidHoliday);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

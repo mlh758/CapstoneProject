@@ -76,6 +76,7 @@ namespace On_Call_Assistant.Controllers
             System.Collections.Hashtable colors = new System.Collections.Hashtable();
             colors.Add(3, "MediumSeaGreen");
             colors.Add(5, "Goldenrod");
+            colors.Add(8, "Cyan");
             return colors;
         }
         private List<OutOfOffice> filterAbsences(IQueryable<OutOfOffice> absences, DateTime begin, DateTime end)
@@ -99,18 +100,20 @@ namespace On_Call_Assistant.Controllers
             var onCallRotations = db.onCallRotations.Include(o => o.employee);
             onCallRotations = onCallRotations.Where(rot => (rot.startDate >= beginDate && rot.startDate <= endDate) || (rot.endDate >= beginDate && rot.endDate <= endDate));
             System.Collections.Hashtable applicationColors = getApplicationColors();
+            
             foreach (var rotation in onCallRotations)
             {
-                rotationList.Add(new CalendarObject
-                {
-                    id = rotation.employee.Application,
-                    title = rotation.employee.firstName + " " + rotation.employee.lastName,
-                    start = rotation.startDate.ToString("u"),
-                    end = rotation.endDate.AddDays(1).ToString("u"),
-                    color = applicationColors[rotation.employee.Application].ToString(),
-                    url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID),
-                    allDay = "true"
-                });
+                CalendarObject temp = new CalendarObject();
+                temp.id = rotation.employee.Application;
+                temp.title = rotation.employee.firstName + " " + rotation.employee.lastName;
+                if (!rotation.isPrimary)
+                    temp.title = temp.title + " as Secondary";
+                temp.start = rotation.startDate.ToString("u");
+                temp.end = rotation.endDate.AddDays(1).ToString("u");
+                temp.color = applicationColors[rotation.employee.Application].ToString();
+                temp.url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID);
+                temp.allDay = "true";
+                rotationList.Add(temp);
             }
 
             return rotationList;

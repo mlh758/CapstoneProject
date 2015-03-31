@@ -225,7 +225,7 @@ namespace On_Call_Assistant.Group_Code
             
             foreach (OnCallRotation currentRotation in allRotations)
             {
-                if ((currentRotation.startDate >= startDate && currentRotation.endDate <= endDate))
+                if ((currentRotation.startDate >= startDate && currentRotation.startDate <= endDate))
                 {
                     listOfRotationIDs.Add(currentRotation.rotationID);
                 }
@@ -233,9 +233,6 @@ namespace On_Call_Assistant.Group_Code
             }
 
             DeleteOnCallRotations(listOfRotationIDs, db);
-            if (holidayRetriever != null && holidayRetriever.ThreadState == ThreadState.Running)
-                holidayRetriever.Join();
-
             return generateSchedule(startDate, endDate);           
             
         }

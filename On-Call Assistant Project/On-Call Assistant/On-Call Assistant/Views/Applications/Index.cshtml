@@ -24,6 +24,9 @@
         <th>
             @Html.DisplayNameFor(model => model.hasSecondary)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.displayColor)
+        </th>
         <th></th>
     </tr>
 
@@ -40,6 +43,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.hasSecondary)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.displayColor)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

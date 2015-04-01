@@ -48,7 +48,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,appName,rotationLength,hasOnCall,hasSecondary")] Application application)
+        public async Task<ActionResult> Create([Bind(Include = "ID,appName,rotationLength,hasOnCall,hasSecondary,displayColor")] Application application)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace On_Call_Assistant.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,appName,rotationLength,hasOnCall,hasSecondary")] Application application)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,appName,rotationLength,hasOnCall,hasSecondary,displayColor")] Application application)
         {
             if (ModelState.IsValid)
             {

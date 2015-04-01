@@ -30,7 +30,7 @@ namespace On_Call_Assistant.Controllers
             end = start.AddMonths(4);
             List<OnCallRotation> schedule = generator.generateSchedule(start, end);
             LinqQueries.SaveRotations(db, schedule);
-            return View(db.onCallRotations.ToList());
+            return View("Index",db.onCallRotations.ToList());
         }
 
         public ActionResult regenerateSchedule(string begin, string end)
@@ -48,7 +48,7 @@ namespace On_Call_Assistant.Controllers
 
             List<OnCallRotation> schedule = generator.regenerateSchedule(start, finish);
             LinqQueries.SaveRotations(db, schedule);
-            return View("GenerateSchedule", db.onCallRotations.ToList());
+            return View("Index", db.onCallRotations.ToList());
         }
 
         public ActionResult DownloadSchedule()

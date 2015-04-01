@@ -66,7 +66,8 @@ namespace On_Call_Assistant.Controllers
                     end = absence.startDate.AddDays(absence.numHours/8).ToString("u"),
                     color = "yellow",
                     url = String.Format("OutOfOffices/Details/{0}", absence.ID),
-                    allDay = "false"
+                    allDay = "false",
+                    textColor = "black"
                 });
             }
             return Json(absenceList, JsonRequestBehavior.AllowGet);
@@ -130,6 +131,7 @@ namespace On_Call_Assistant.Controllers
         public string color { get; set; }
         public string url { get; set; }
         public string allDay { get; set; }
+        public string textColor { get; set; }
 
     }
     

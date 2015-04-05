@@ -30,25 +30,27 @@ namespace On_Call_Assistant.Controllers
             end = start.AddMonths(4);
             List<OnCallRotation> schedule = generator.generateSchedule(start, end);
             LinqQueries.SaveRotations(db, schedule);
-            return View(db.onCallRotations.ToList());
+            return View("Index",db.onCallRotations.ToList());
         }
 
         public ActionResult regenerateSchedule(string begin, string end)
         {
             Scheduler generator = new Scheduler(db);
 
-            //Don't run if either parameter is null
-            if (begin == null || end == null)
-                return View(db.onCallRotations.ToList());
+            //Don't run if either parameter is empty
+            if (begin == "" || end == "")
+                return View("Index",db.onCallRotations.ToList());
 
             DateTime start = DateTime.Parse(begin);
             //Ensure start happens on Wednesday to avoid deleting the wrong rotations
             start = getFutureDay(start, DayOfWeek.Wednesday);
             DateTime finish = DateTime.Parse(end);
+            if (finish <= start)
+                return View("Index", db.onCallRotations.ToList());
 
             List<OnCallRotation> schedule = generator.regenerateSchedule(start, finish);
             LinqQueries.SaveRotations(db, schedule);
-            return View("GenerateSchedule", db.onCallRotations.ToList());
+            return View("Index", db.onCallRotations.ToList());
         }
 
         public ActionResult DownloadSchedule()

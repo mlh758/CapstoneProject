@@ -1,14 +1,32 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.OutOfOffice>
+@section styles {
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Scripts/lib/jquery.min.js"></script>
+    <script src="~/Scripts/lib/moment.min.js"></script>
+    <script src="~/Scripts/fullcalendar.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                editable: false,
+                events: "/home/AbsenceData/"
+            });
+        });
+    </script>
+}
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Manage Absences</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<div id="calendar"></div>
 <table class="table">
     <tr>
         <th>

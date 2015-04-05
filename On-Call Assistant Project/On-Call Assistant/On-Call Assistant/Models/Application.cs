@@ -25,6 +25,9 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Has On-Call Secondary")]
         public bool hasSecondary { get; set; }
 
+        [Display(Name = "Display Color")]
+        public String displayColor { get; set; }
+
         //public virtual ICollection<Employee> employees { get; set; }
     }
 }

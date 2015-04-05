@@ -14,30 +14,21 @@ namespace On_Call_Assistant.Controllers
     public partial class HomeController : Controller
     {
         private OnCallContext db = new OnCallContext();
+        /// <summary>
+        /// Returns a JSON list of CalendarObjects. Omitting start or end will return an empty list.
+        /// </summary>
+        /// <param name="start">The starting date in any of the DateTime parsable formats</param>
+        /// <param name="end">The ending date in any of the DateTime parsable formats</param>
+        /// <param name="ID">Optional application ID parameter. Will return only rotations from this app.</param>
+        /// <returns>JSON list of CalendarObjects</returns>
         public ActionResult RotationData(string start, string end, int ID = -1)
         {
-            if (start == null || end == null)
-            {
-                start = end = DateTime.Today.ToString("u");
-            }
-            List<CalendarObject> rotationList = getRotations(start, end);
-            if (ID != -1)
-            {
-                rotationList = rotationList.Where(rot => rot.id == ID).ToList();
-            }
+            List<CalendarObject> rotationList = getEvents(ref start, ref end, ID);
             return Json(rotationList, JsonRequestBehavior.AllowGet);
         }
         public ActionResult RotationsWithoutURL(string start, string end, int ID = -1)
         {
-            if (start == null || end == null)
-            {
-                start = end = DateTime.Today.ToString("u");
-            }
-            List<CalendarObject> rotationList = getRotations(start, end);
-            if (ID != -1)
-            {
-                rotationList = rotationList.Where(rot => rot.id == ID).ToList();
-            }
+            List<CalendarObject> rotationList = getEvents(ref start, ref end, ID);
             foreach (var rot in rotationList)
             {
                 rot.url = null;
@@ -45,7 +36,32 @@ namespace On_Call_Assistant.Controllers
             return Json(rotationList, JsonRequestBehavior.AllowGet);
 
         }
-
+        /// <summary>
+        /// Provides a list of CalendarObjects from the database in the given range
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="ID"></param>
+        /// <returns>List of CalendarObject</returns>
+        private List<CalendarObject> getEvents(ref string start, ref string end, int ID)
+        {
+            if (start == null || end == null)
+            {
+                start = end = DateTime.Today.ToString("u");
+            }
+            List<CalendarObject> rotationList = getRotations(start, end);
+            if (ID != -1)
+            {
+                rotationList = rotationList.Where(rot => rot.id == ID).ToList();
+            }
+            return rotationList;
+        }
+        /// <summary>
+        /// Provides a list of absence events from the database. Omitting start or end will return an empty list.
+        /// </summary>
+        /// <param name="start">Starting date for search</param>
+        /// <param name="end">Ending date for search</param>
+        /// <returns>JSON list of CalendarObjects</returns>
         public ActionResult AbsenceData(string start, string end)
         {
             if (start == null || end == null)
@@ -66,19 +82,13 @@ namespace On_Call_Assistant.Controllers
                     end = absence.startDate.AddDays(absence.numHours/8).ToString("u"),
                     color = "yellow",
                     url = String.Format("OutOfOffices/Details/{0}", absence.ID),
-                    allDay = "false"
+                    allDay = "false",
+                    textColor = "black"
                 });
             }
             return Json(absenceList, JsonRequestBehavior.AllowGet);
         }
-        private System.Collections.Hashtable getApplicationColors()
-        {
-            System.Collections.Hashtable colors = new System.Collections.Hashtable();
-            colors.Add(3, "MediumSeaGreen");
-            colors.Add(5, "Goldenrod");
-            colors.Add(8, "Cyan");
-            return colors;
-        }
+
         private List<OutOfOffice> filterAbsences(IQueryable<OutOfOffice> absences, DateTime begin, DateTime end)
         {
             List<OutOfOffice> results = new List<OutOfOffice>();
@@ -97,9 +107,8 @@ namespace On_Call_Assistant.Controllers
             DateTime beginDate = DateTime.Parse(start);
             DateTime endDate = DateTime.Parse(end);
             List<CalendarObject> rotationList = new List<CalendarObject>();
-            var onCallRotations = db.onCallRotations.Include(o => o.employee);
+            var onCallRotations = db.onCallRotations.Include(o => o.employee.assignedApplication);
             onCallRotations = onCallRotations.Where(rot => (rot.startDate >= beginDate && rot.startDate <= endDate) || (rot.endDate >= beginDate && rot.endDate <= endDate));
-            System.Collections.Hashtable applicationColors = getApplicationColors();
             
             foreach (var rotation in onCallRotations)
             {
@@ -110,7 +119,7 @@ namespace On_Call_Assistant.Controllers
                     temp.title = temp.title + " as Secondary";
                 temp.start = rotation.startDate.ToString("u");
                 temp.end = rotation.endDate.AddDays(1).ToString("u");
-                temp.color = applicationColors[rotation.employee.Application].ToString();
+                temp.color = rotation.employee.assignedApplication.displayColor;
                 temp.url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID);
                 temp.allDay = "true";
                 rotationList.Add(temp);
@@ -130,6 +139,7 @@ namespace On_Call_Assistant.Controllers
         public string color { get; set; }
         public string url { get; set; }
         public string allDay { get; set; }
+        public string textColor { get; set; }
 
     }
     

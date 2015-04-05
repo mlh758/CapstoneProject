@@ -47,7 +47,8 @@ namespace On_Call_Assistant.Controllers
             DateTime finish = DateTime.Parse(end);
 
             List<OnCallRotation> schedule = generator.regenerateSchedule(start, finish);
-            return View(db.onCallRotations.ToList());
+            LinqQueries.SaveRotations(db, schedule);
+            return View("GenerateSchedule", db.onCallRotations.ToList());
         }
 
         public ActionResult DownloadSchedule()

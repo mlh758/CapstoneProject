@@ -210,6 +210,10 @@
     <Compile Include="Migrations\201503252225059_Initial.Designer.cs">
       <DependentUpon>201503252225059_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504012050066_AppColor.cs" />
+    <Compile Include="Migrations\201504012050066_AppColor.Designer.cs">
+      <DependentUpon>201504012050066_AppColor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -427,6 +431,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503252225059_Initial.resx">
       <DependentUpon>201503252225059_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504012050066_AppColor.resx">
+      <DependentUpon>201504012050066_AppColor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

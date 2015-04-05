@@ -25,7 +25,10 @@
             window.location.replace("/oncallrotations/generateSchedule");
         });
 
-
+        @*Containers for the dropdown list of Application names (for sorting rotations on the calendar by app)*@
+        $('.fc-right').prepend('<div class="dropdown" id="sortdropdown"><button type="button" id="menu1" data-toggle="dropdown">Filter By App<span class="caret"></span></button><ul id="dropDownList" class="dropdown-menu"></ul></div>');
+        @*Here the generate button in included within the calendar div*@
+        $('.fc-right').prepend('<button id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'>Generate Schedule</button>');
         @*  Code for sorting rotations on the calendar by app starts here.
             Grab each application and dynamically create a drop-down list item*@
             @foreach(var app in ViewBag.applications)
@@ -51,34 +54,16 @@
             }
         });
 
-        @*This part could help in bringing the Filtering button inline with the Today button
-            $('.fc-right').prepend('<div class="dropdown" id="sortdropdown"><button type="button" id="menu1" data-toggle="dropdown">Filter By App<span class="caret"></span></button><ul id="dropDownList" class="dropdown-menu"></ul></div>');*@
     });
 
 
     </script>
 
-
-
-
-
 }
-<div class="jumbotron">
-    <h1>@ViewBag.AppName</h1>
-    <p class="lead">Manage your on-call rotations, employees and summaries.</p>
-    <p>
-        <button id="GenerateSchedule" class="btn btn-primary btn-lg" type="button" onclick='this.disabled = "disabled";'>Generate Schedule</button>
 
-    </p>
-    @*Containers for the dropdown list of Application names (for sorting rotations on the calendar by app)*@
-    <div class="dropdown" id="sortdropdown">
-        <button type="button" id="menu1" data-toggle="dropdown">
-            Filter By App
-            <span class="caret"></span>
-        </button>
-        <ul id="dropDownList" class="dropdown-menu"></ul>
-    </div>
-    <div id="calendar"></div>
+<br/><br/>
+<div class="jumbotron">
+      <div id="calendar"></div>
    
 </div>
 

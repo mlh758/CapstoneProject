@@ -42,14 +42,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.alottedVacationHours)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.alottedVacationHours)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.email)
         </dt>
 
@@ -74,6 +66,23 @@
         </dd>
 
 
+    </dl>
+</div>
+<div>
+    <dl class="dl-horizontal">
+        <!--Display the vacation information-->
+        <dt>
+            @Html.DisplayNameFor(model => model.alottedVacationHours)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.alottedVacationHours)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.vacHoursTaken)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.vacHoursTaken)
+        </dd>
     </dl>
 </div>
 <div>

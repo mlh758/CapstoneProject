@@ -40,6 +40,13 @@ namespace On_Call_Assistant.Group_Code
             }
             
         }
+
+        public Scheduler()
+        {
+            db = new OnCallContext();
+            generatedSchedule = new List<OnCallRotation>();
+            newEmployees = new List<Employee>();
+        }
         public List<OnCallRotation> generateSchedule(DateTime startDate, DateTime endDate)
         {
 

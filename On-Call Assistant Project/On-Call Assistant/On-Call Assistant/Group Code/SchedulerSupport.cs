@@ -207,5 +207,26 @@ namespace On_Call_Assistant.Group_Code
             nextEmployee();
             findValidEmployee();
         }
+
+        public void alterOnEmployeeAbsence(int vacationID)
+        {
+            OutOfOffice absence = (from abs in db.outOfOffice where abs.ID == vacationID select abs).Single();
+            Employee absentEmployee = absence.employeeOut;
+            List<Employee> applicationEmployees = LinqQueries.EmployeesbyProject(db, absentEmployee.Application);
+            DateTime endDate = absence.startDate.AddDays(absence.numHours/8);
+            List<OnCallRotation> affectedRotations = LinqQueries.GetRotations(db, absence.startDate, endDate, absentEmployee.ID);
+            //Short circuit operation if no rotations are affected
+            if (affectedRotations.Count == 0)
+                return;
+            employees = employeesByPrimary(applicationEmployees);
+            currentEmployee = 0;
+            findValidEmployee();
+            foreach (var rot in affectedRotations)
+            {
+                rot.employeeID = employees[currentEmployee].ID;
+                findNextValidEmployee();
+            }
+            db.SaveChanges();
+        }
     }
 }

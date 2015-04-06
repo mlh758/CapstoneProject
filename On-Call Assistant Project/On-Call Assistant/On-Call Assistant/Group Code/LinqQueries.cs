@@ -37,6 +37,20 @@ namespace On_Call_Assistant.Group_Code
             return db.onCallRotations.ToList();
         }
 
+        public static List<OnCallRotation> GetRotations(OnCallContext db, DateTime start, DateTime end)
+        {
+            var rotations = from onCall in db.onCallRotations 
+                            where (start >= onCall.startDate && start <= onCall.endDate) || (end >= onCall.startDate && end <= onCall.endDate)
+                            select onCall;
+            return rotations.ToList();
+        }
+
+        public static List<OnCallRotation> GetRotations(OnCallContext db, DateTime start, DateTime end, int empID)
+        {
+            List<OnCallRotation> rotations = GetRotations(db, start, end);
+            return rotations.Where(rot => rot.employeeID == empID).ToList();
+        }
+
         public static List<Employee> EmployeesbyProject(OnCallContext db, int appID)
         {
             var employeeList = from employee in db.employees where employee.Application == appID select employee;

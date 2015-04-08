@@ -21,6 +21,10 @@ body .fc { /* extra precedence to overcome jqui */
 
 /* Colors
 --------------------------------------------------------------------------------------------------*/
+.fc-unthemed th,
+.fc-unthemed td {
+    background-color: #fff;
+}
 
 .fc-unthemed th,
 .fc-unthemed td,
@@ -46,7 +50,7 @@ body .fc { /* extra precedence to overcome jqui */
 }
 
 .fc-unthemed .fc-today {
-	background: #fcf8e3;
+	background: #E5F2E4;
 }
 
 .fc-highlight { /* when user is selecting cells */

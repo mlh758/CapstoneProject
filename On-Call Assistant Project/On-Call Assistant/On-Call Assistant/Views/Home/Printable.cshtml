@@ -2,14 +2,20 @@
 @{
     ViewBag.Title = "Calendar " + DateTime.Now;
     ViewBag.AppName = "On-Call Assistant";
-    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
-    <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
+    
+}
+@section styles {
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link href="~/Content/fullcalendar.css" rel="stylesheet" />
+<link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
 }
 
 @section scripts {
     <script src="~/Scripts/lib/jquery.min.js"></script>
     <script src="~/Scripts/lib/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
         @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
     <script type="text/javascript">
         var thisMonth = new Date();

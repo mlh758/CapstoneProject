@@ -17,67 +17,41 @@
     $(document).ready(function () {
         $('#calendar').fullCalendar({
             editable: false,
-            events: "/home/rotationdata/" });
+            events: "/home/rotationdata/"});
 
         $('#GenerateSchedule').click(function (event) {
             event.preventDefault();
             //probably could be refactored...
             window.location.replace("/oncallrotations/generateSchedule");
         });
+        @*Here the generate button in included within the calendar div*@
+        $('.fc-right').prepend('<button id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'>Generate Schedule</button>');
     });
     </script>
-
-
+    <script>
+        $("#apps").change(function () {
+            $('#calendar').fullCalendar('removeEvents');
+            $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + $("#apps").val());
+            $('#calendar').fullCalendar('rerenderEvents');
+        });
+        function removeFilter() {
+            $('#calendar').fullCalendar('removeEvents');
+            $('#calendar').fullCalendar('addEventSource', "/home/rotationdata/");
+            $('#calendar').fullCalendar('rerenderEvents');
+        }
+    </script>
 }
+
+<br/><br/>
 <div class="jumbotron">
-    <h1>@ViewBag.AppName</h1>
-    
-    <p class="lead">Manage your on-call rotations, employees and summaries.</p>
-    <button id="GenerateSchedule" class="btn btn-primary btn-lg" type="button" onclick='this.disabled = "disabled";'>Generate Schedule</button>
-    <a href="../Home/Printable">print &raquo;</a>
+    <div id="calendar"></div>
 </div>
 <p style="margin-left: 55px;">Filter by application: </p>
 <div style="display:inline-block; padding-left: 55px;">
     @Html.DropDownList("apps", null, htmlAttributes: new { @class = "form-control"})
 </div>
 <div style="display:inline-block; margin-left: 5px;">
-    <button id="removeFilterBtn" type="submit" class="btn btn-primary btn-default" style="display: inline; margin-bottom:3px;" onclick="removeFilter()">Remove Filter</button>
+    <button id="removeFilterBtn" type="submit" class="btn btn-primary btn-default" style="display: inline; margin-bottom:3px;" onclick="removeFilter()">Remove Filter</button>        
 </div>
-<script>
-    $("#apps").change(function () {
-        $('#calendar').fullCalendar('removeEvents');
-        $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + $("#apps").val());
-        $('#calendar').fullCalendar('rerenderEvents');
-    });
-    function removeFilter() {
-        $('#calendar').fullCalendar('removeEvents');
-        $('#calendar').fullCalendar('addEventSource', "/home/rotationdata/");
-        $('#calendar').fullCalendar('rerenderEvents');
-    }
-</script>
-
-<div class="row" style=" padding-top:20px">
-    <div class="col-md-9">
-        <div id="calendar"></div>
-    </div>
 
 
-    <div class="col-md-3">
-        <div class="row">
-            <h2>Employees</h2>
-            <p>Manage your employee data.</p>
-            <p><a class="btn btn-default" href="/employees">Go &raquo;</a></p>
-            <!-- <p><a href="/employees"><img src="~/Content/employeesButton.png"/></a></p>-->
-        </div>
-        <div class="row">
-            <h2>Manage On-Call Schedules</h2>
-            <p>View and edit the upcoming on-call rotations.</p>
-            <p><a class="btn btn-default" href="/oncallrotations">Go &raquo;</a></p>
-        </div>
-        <div class="row">
-            <h2>Manage Vacation</h2>
-            <p>Get a summary of upcoming vacation for employees and edit that time off as necessary.</p>
-            <p><a class="btn btn-default" href="/outofoffices">Go &raquo;</a></p>
-        </div>
-    </div>
-</div>

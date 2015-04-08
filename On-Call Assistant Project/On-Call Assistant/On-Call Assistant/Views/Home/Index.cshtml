@@ -12,20 +12,18 @@
     <script src="~/Scripts/lib/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
-    @*<script type="text/javascript" src="~/Scripts/lib/calendarEvents.js"></script>*@
     <script type="text/javascript">
     $(document).ready(function () {
         $('#calendar').fullCalendar({
             editable: false,
             events: "/home/rotationdata/"});
+        @*Here the generate button in included within the calendar div*@
+        $('.fc-right').prepend('<button id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'>Generate Schedule</button>');
 
         $('#GenerateSchedule').click(function (event) {
             event.preventDefault();
-            //probably could be refactored...
             window.location.replace("/oncallrotations/generateSchedule");
         });
-        @*Here the generate button in included within the calendar div*@
-        $('.fc-right').prepend('<button id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'>Generate Schedule</button>');
     });
     </script>
     <script>
@@ -34,11 +32,6 @@
             $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + $("#apps").val());
             $('#calendar').fullCalendar('rerenderEvents');
         });
-        function removeFilter() {
-            $('#calendar').fullCalendar('removeEvents');
-            $('#calendar').fullCalendar('addEventSource', "/home/rotationdata/");
-            $('#calendar').fullCalendar('rerenderEvents');
-        }
     </script>
 }
 
@@ -48,10 +41,7 @@
 </div>
 <p style="margin-left: 55px;">Filter by application: </p>
 <div style="display:inline-block; padding-left: 55px;">
-    @Html.DropDownList("apps", null, htmlAttributes: new { @class = "form-control"})
-</div>
-<div style="display:inline-block; margin-left: 5px;">
-    <button id="removeFilterBtn" type="submit" class="btn btn-primary btn-default" style="display: inline; margin-bottom:3px;" onclick="removeFilter()">Remove Filter</button>        
+    @Html.DropDownList("apps", null, "All Apps", htmlAttributes: new { @class = "form-control" })
 </div>
 
 

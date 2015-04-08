@@ -7,8 +7,8 @@
 @section styles {
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<link href="~/Content/fullcalendar.css" rel="stylesheet" />
-<link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
+    <link href="~/Content/fullcalendar.css" rel="stylesheet" />
+    <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
 }
 
 @section scripts {
@@ -63,23 +63,17 @@
                 editable: false,
                 events: "/home/RotationsWithoutURL/"
             });
-        });
-        $(document).ready(function () {
             $('#calendar2').fullCalendar({
                 defaultDate: nextMonth,
                 editable: false,
                 events: "/home/RotationsWithoutURL/"
             });
-        });
-        $(document).ready(function () {
             $('#calendar3').fullCalendar({
                 defaultDate: thirdMonth,
                 editable: false,
                 events: "/home/RotationsWithoutURL/"
             });
-        });
-        
-       
+        });       
     </script>
 
 
@@ -88,13 +82,13 @@
 
 }
 <h2>Quarter Calendar</h2>
-<div style="padding:15px" class="row">
+<div style="padding:15px; page-break-after:always" class="row">
     <div id="calendar1"></div>
 </div>
-<div style="padding:15px" class="row">
+<div style="padding:15px; page-break-after:always" class="row">
     <div id="calendar2"></div>
 </div>
-<div style="padding:15px" class="row">
+<div style="padding:15px; page-break-after:always" class="row">
     <div id="calendar3"></div>
 </div>
 

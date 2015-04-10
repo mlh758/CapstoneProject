@@ -5,22 +5,48 @@
 @section styles {
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
 }
 
 @section scripts {
-    <script src="~/Scripts/lib/jquery.min.js"></script>
-    <script src="~/Scripts/lib/moment.min.js"></script>
-    <script src="~/Scripts/fullcalendar.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script type="text/javascript">
-    $(document).ready(function () {
-        $('#calendar').fullCalendar({
-            editable: false,
-            events: "/home/rotationdata/"
-        });
+@*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
+        <script src="~/Scripts/lib/jquery.min.js"></script>
+        <script src="~/Scripts/lib/moment.min.js"></script>
+        <script src="~/Scripts/fullcalendar.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                editable: false,
+                events: "/home/rotationdata/"
+            });
 
-        @*Here the generate button included within the calendar div*@
-        $('.fc-right').prepend('<button id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'>Generate Schedule</button>');
+
+            $('.fc-right').prepend('<div id="calGroup" class="fc-button-group"></div>')
+            
+            var calGroup = $('#calGroup');
+            @*Here the printing button included within the calendar div*@
+            calGroup.prepend('<button class="fc-button fc-state-default fc-corner-right fc-custom-hover"' +
+                    'type="button" title="Print Schedule" onClick="window.location=\'../Home/Printable\'">'+
+                    '<span class="glyphicon glyphicon-print"></span></button>' +
+                    '</div>');
+
+            @*Here the regenerate button that will trigger the date picker modal*@
+            calGroup.prepend('<button class="fc-button fc-state-default fc-custom-hover"' +
+                    'type="button" data-toggle="modal" data-target="#myModal" title="Regenerate Schedule">'+
+                    '<span  style="margin-right:5px" class="glyphicon glyphicon-refresh"></span>'+
+                    '<span class="glyphicon glyphicon-calendar"></span></button>');
+
+            @*Here the generate button included within the calendar div*@
+            calGroup.prepend(
+                    '<button class="fc-button fc-state-default fc-corner-left fc-custom-hover"' +
+                    'id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\''+
+                    'title="Generate Schedule"><span class="glyphicon glyphicon-plus"></span>'+
+                    '<span style="margin-left:4px" class="glyphicon glyphicon-calendar"></span></button>');
+
         
         $('#GenerateSchedule').click(function (event) {
             event.preventDefault();
@@ -35,11 +61,64 @@
             $('#calendar').fullCalendar('rerenderEvents');
         });
     </script>
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+
+    var url = "/oncallrotations/regenerateSchedule?begin="
+    $('#ReGenerateSchedule').click(function (event) {
+        event.preventDefault();
+        var start = document.getElementById('datepickerS').value;
+        var end = document.getElementById('datepickerE').value;
+        window.location.replace(url.concat(start, "&end=", end));
+    });
+
+    $(function () {
+        $("#datepickerS").datepicker();
+    });
+    $(function () {
+        $("#datepickerE").datepicker();
+    });
+
+</script>
+
 }
 
 <br /><br />
 
 <div class="jumbotron">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Regenerate Schedule</h4>
+                </div>
+                <div class="modal-body">
+                    <!--date pickers-->
+                    <p>
+                        <table>
+                            <tr>
+                                <td>Start Date</td>
+                                <td><input type="text" id="datepickerS"></td>
+                            </tr>
+                            <tr>
+                                <td>End Date</td>
+                                <td><input type="text" id="datepickerE"></td>
+                            </tr>
+                        </table>
+                    </p><!--date pickers end-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="ReGenerateSchedule" onclick='this.disabled = "disabled";' type="button" 
+                            class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div><!--modal end-->
+    
     Filter <div style="display:inline-block;"> @Html.DropDownList("apps", null, "All Apps", htmlAttributes: new { @class = "form-control", align = "right", style = "font-size:70%;"})</div>
     <br /><br /><div id="calendar"></div>
 </div>

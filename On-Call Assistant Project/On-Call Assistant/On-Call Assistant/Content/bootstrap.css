@@ -16,6 +16,17 @@ html {
 body {
   margin: 0;
 }
+.fc-custom-hover:hover {
+    color: #333333;
+	background-color: #e6e6e6;
+
+	text-decoration: none;
+	background-position: 0 -15px;
+	-webkit-transition: background-position 0.1s linear;
+	   -moz-transition: background-position 0.1s linear;
+	     -o-transition: background-position 0.1s linear;
+	        transition: background-position 0.1s linear;
+}
 article,
 aside,
 details,
@@ -4839,12 +4850,12 @@ a.badge:focus {
 .jumbotron {
   padding: 30px 15px;
   margin-bottom: 5px;
-  color: #3e152b;
+  color: #333;
   background-color: #eeeeee;
 }
 .jumbotron h1,
 .jumbotron .h1 {
-  color: #3e152b;
+  color: #333;
 }
 .jumbotron p {
   margin-bottom: 5px;

@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Home Page";
     ViewBag.AppName = "On-Call Assistant";
+    ViewBag.Html = "Filter <div style=\"display:inline-block;\"> @Html.DropDownList(\"apps\", null, \"All Apps\", htmlAttributes: new { @class = \"form-control\", style = \"font-size:70%;\"})</div>";
 }
 @section styles {
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
@@ -18,42 +19,51 @@
         <script src="~/Scripts/fullcalendar.js"></script>
         <script src="~/Scripts/bootstrap.min.js"></script>
         <script type="text/javascript">
-        $(document).ready(function () {
-            $('#calendar').fullCalendar({
-                editable: false,
-                events: "/home/rotationdata/"
-            });
+    $(document).ready(function () {
+        $('#calendar').fullCalendar({
+            editable: false,
+            events: "/home/rotationdata/",
+            header: {
+                left: '',
+                right: 'prev,next today',
+                center: 'title'
+            }
+        });
 
 
-            $('.fc-right').prepend('<div id="calGroup" class="fc-button-group"></div>')
-            
-            var calGroup = $('#calGroup');
-            @*Here the printing button included within the calendar div*@
-            calGroup.prepend('<button class="fc-button fc-state-default fc-corner-right fc-custom-hover"' +
-                    'type="button" title="Print Schedule" onClick="window.location=\'../Home/Printable\'">'+
-                    '<span class="glyphicon glyphicon-print"></span></button>' +
-                    '</div>');
+        $('.fc-left').prepend('<div id="calGroup" class="fc-button-group"></div>')
+        var calGroup = $('#calGroup');
 
-            @*Here the regenerate button that will trigger the date picker modal*@
-            calGroup.prepend('<button class="fc-button fc-state-default fc-custom-hover"' +
-                    'type="button" data-toggle="modal" data-target="#myModal" title="Regenerate Schedule">'+
-                    '<span  style="margin-right:5px" class="glyphicon glyphicon-refresh"></span>'+
-                    '<span class="glyphicon glyphicon-calendar"></span></button>');
-
-            @*Here the generate button included within the calendar div*@
-            calGroup.prepend(
-                    '<button class="fc-button fc-state-default fc-corner-left fc-custom-hover"' +
-                    'id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\''+
-                    'title="Generate Schedule"><span class="glyphicon glyphicon-plus"></span>'+
-                    '<span style="margin-left:4px" class="glyphicon glyphicon-calendar"></span></button>');
-
+        @*view the dropdownlist inline with the calendar buttons*@
+        calGroup.append('<div id="listScript" style="display:inline-block;"> </div>');
+        $("#listScript").html($("#hiddenList").html());
         
+        @*Here the printing button included within the calendar div*@
+        calGroup.prepend('<button class="fc-button fc-state-default fc-corner-right fc-custom-hover"' +
+                'type="button" title="Print Schedule" onClick="window.location=\'../Home/Printable\'">' +
+                '<span class="glyphicon glyphicon-print"></span></button>' +
+                '</div>');
+
+        @*Here the regenerate button that will trigger the date picker modal*@
+        calGroup.prepend('<button class="fc-button fc-state-default fc-custom-hover"' +
+                'type="button" data-toggle="modal" data-target="#myModal" title="Regenerate Schedule">' +
+                '<span  style="margin-right:5px" class="glyphicon glyphicon-refresh"></span>' +
+                '<span class="glyphicon glyphicon-calendar"></span></button>');
+
+        @*Here the generate button included within the calendar div*@
+        calGroup.prepend(
+                '<button class="fc-button fc-state-default fc-corner-left fc-custom-hover"' +
+                'id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'' +
+                'title="Generate Schedule"><span class="glyphicon glyphicon-plus"></span>' +
+                '<span style="margin-left:4px" class="glyphicon glyphicon-calendar"></span></button>');
+
+
         $('#GenerateSchedule').click(function (event) {
             event.preventDefault();
             window.location.replace("/oncallrotations/generateSchedule");
         });
     });
-    </script>
+</script>
     <script>
         $("#apps").change(function () {
             $('#calendar').fullCalendar('removeEvents');
@@ -119,9 +129,8 @@
         </div>
     </div><!--modal end-->
     
-    Filter <div style="display:inline-block;"> @Html.DropDownList("apps", null, "All Apps", htmlAttributes: new { @class = "form-control", align = "right", style = "font-size:70%;"})</div>
+    <div id="hiddenList" hidden>
+     &nbsp;<div style="display:inline-block;"> @Html.DropDownList("apps", null, "All Apps", htmlAttributes: new { @class = "form-control", align = "right", style = "font-size:70%; height:30px"})</div>
+     </div>
     <br /><br /><div id="calendar"></div>
-</div>
-
-
-
+ </div>

@@ -66,8 +66,11 @@ namespace On_Call_Assistant.Group_Code
                 //Remove new employees from rotation pool and place in separate storage
                 filterNewEmployees(CurrentApplicationEmployees);
                 updateStatistics();
-                
-                lastFinalDateByApp = startDate.AddDays(-1);
+                List<OnCallRotation> overlappingRotations = LinqQueries.GetRotations(db, startDate, endDate).Where(rot => rot.employee.Application == currentApplication.ID).ToList();
+                if (overlappingRotations.Any())
+                    lastFinalDateByApp = overlappingRotations.First().endDate;
+                else
+                    lastFinalDateByApp = startDate.AddDays(-1);
                 currentEmployee = 0;
 
                 while (lastFinalDateByApp < endDate)

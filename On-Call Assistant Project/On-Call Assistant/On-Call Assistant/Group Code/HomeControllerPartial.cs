@@ -68,8 +68,18 @@ namespace On_Call_Assistant.Controllers
             {
                 start = end = DateTime.Today.ToString("u");
             }
-            DateTime beginDate = DateTime.Parse(start);
-            DateTime endDate = DateTime.Parse(end);
+            DateTime beginDate;
+            DateTime endDate;
+            try
+            {
+                beginDate = DateTime.Parse(start);
+                endDate = DateTime.Parse(end);
+            }
+            catch (FormatException)
+            {
+
+                return Json(new List<CalendarObject>(), JsonRequestBehavior.AllowGet);
+            }
             IList<CalendarObject> absenceList = new List<CalendarObject>();
             var absences = db.outOfOffice.Include(o => o.employeeOut);
             var filteredAbsences = filterAbsences(absences, beginDate, endDate);
@@ -104,8 +114,18 @@ namespace On_Call_Assistant.Controllers
 
         private List<CalendarObject> getRotations(string start, string end)
         {
-            DateTime beginDate = DateTime.Parse(start);
-            DateTime endDate = DateTime.Parse(end);
+            DateTime beginDate, endDate;
+
+            try
+            {
+                beginDate = DateTime.Parse(start);
+                endDate = DateTime.Parse(end);
+            }
+            catch (FormatException)
+            {
+                
+                return new List<CalendarObject>();
+            }
             List<CalendarObject> rotationList = new List<CalendarObject>();
             var onCallRotations = db.onCallRotations.Include(o => o.employee.assignedApplication);
             onCallRotations = onCallRotations.Where(rot => (rot.startDate >= beginDate && rot.startDate <= endDate) || (rot.endDate >= beginDate && rot.endDate <= endDate));

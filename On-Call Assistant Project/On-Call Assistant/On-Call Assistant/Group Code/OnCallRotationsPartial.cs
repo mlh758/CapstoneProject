@@ -41,15 +41,25 @@ namespace On_Call_Assistant.Controllers
             if (begin == "" || end == "")
                 return View("Index",db.onCallRotations.ToList());
 
-            DateTime start = DateTime.Parse(begin);
-            //Ensure start happens on Wednesday to avoid deleting the wrong rotations
-            start = getFutureDay(start, DayOfWeek.Wednesday);
-            DateTime finish = DateTime.Parse(end);
-            if (finish <= start)
-                return View("Index", db.onCallRotations.ToList());
+            try
+            {
+                DateTime start = DateTime.Parse(begin);
+                //Ensure start happens on Wednesday to avoid deleting the wrong rotations
+                start = getFutureDay(start, DayOfWeek.Wednesday);
+                DateTime finish = DateTime.Parse(end);
+                if (finish <= start)
+                    return View("Index", db.onCallRotations.ToList());
 
-            List<OnCallRotation> schedule = generator.regenerateSchedule(start, finish);
-            LinqQueries.SaveRotations(db, schedule);
+                List<OnCallRotation> schedule = generator.regenerateSchedule(start, finish);
+                LinqQueries.SaveRotations(db, schedule);
+            }
+            catch (FormatException)
+            {
+                
+                return View("Index",db.onCallRotations.ToList());
+            }
+            
+            
             return View("Index", db.onCallRotations.ToList());
         }
 

@@ -30,7 +30,7 @@ namespace On_Call_Assistant.Controllers
             end = start.AddMonths(4);
             List<OnCallRotation> schedule = generator.generateSchedule(start, end);
             LinqQueries.SaveRotations(db, schedule);
-            return View("Index",db.onCallRotations.ToList());
+            return Redirect("/Home/Index");
         }
 
         public ActionResult regenerateSchedule(string begin, string end)
@@ -39,7 +39,7 @@ namespace On_Call_Assistant.Controllers
 
             //Don't run if either parameter is empty
             if (begin == "" || end == "")
-                return View("Index",db.onCallRotations.ToList());
+                return Redirect("/Home/Index");
 
             try
             {
@@ -48,19 +48,19 @@ namespace On_Call_Assistant.Controllers
                 start = getFutureDay(start, DayOfWeek.Wednesday);
                 DateTime finish = DateTime.Parse(end);
                 if (finish <= start)
-                    return View("Index", db.onCallRotations.ToList());
+                    return Redirect("/Home/Index");
 
                 List<OnCallRotation> schedule = generator.regenerateSchedule(start, finish);
                 LinqQueries.SaveRotations(db, schedule);
             }
             catch (FormatException)
             {
-                
-                return View("Index",db.onCallRotations.ToList());
+
+                return Redirect("/Home/Index");
             }
-            
-            
-            return View("Index", db.onCallRotations.ToList());
+
+
+            return Redirect("/Home/Index");
         }
 
         public ActionResult DownloadSchedule()

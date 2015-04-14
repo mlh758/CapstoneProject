@@ -214,6 +214,10 @@
     <Compile Include="Migrations\201504012050066_AppColor.Designer.cs">
       <DependentUpon>201504012050066_AppColor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504062052090_EmpVacHours.cs" />
+    <Compile Include="Migrations\201504062052090_EmpVacHours.Designer.cs">
+      <DependentUpon>201504062052090_EmpVacHours.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -300,6 +304,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
@@ -434,6 +439,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504012050066_AppColor.resx">
       <DependentUpon>201504012050066_AppColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504062052090_EmpVacHours.resx">
+      <DependentUpon>201504062052090_EmpVacHours.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

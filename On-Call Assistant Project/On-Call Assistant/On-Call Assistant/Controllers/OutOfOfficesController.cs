@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
+using On_Call_Assistant.Group_Code;
 
 namespace On_Call_Assistant.Controllers
 {
@@ -41,7 +42,7 @@ namespace On_Call_Assistant.Controllers
         // GET: OutOfOffices/Create
         public ActionResult Create()
         {
-            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName");
+            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName");
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason");
             return View();
         }
@@ -57,10 +58,12 @@ namespace On_Call_Assistant.Controllers
             {
                 db.outOfOffice.Add(outOfOffice);
                 await db.SaveChangesAsync();
+                Scheduler scheduler = new Scheduler();
+                scheduler.alterOnEmployeeAbsence(outOfOffice.ID);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName", outOfOffice.Employee);
+            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }
@@ -77,7 +80,7 @@ namespace On_Call_Assistant.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName", outOfOffice.Employee);
+            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }
@@ -93,9 +96,11 @@ namespace On_Call_Assistant.Controllers
             {
                 db.Entry(outOfOffice).State = EntityState.Modified;
                 await db.SaveChangesAsync();
+                Scheduler scheduler = new Scheduler();
+                scheduler.alterOnEmployeeAbsence(outOfOffice.ID);
                 return RedirectToAction("Index");
             }
-            ViewBag.Employee = new SelectList(db.employees, "ID", "firstName", outOfOffice.Employee);
+            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }

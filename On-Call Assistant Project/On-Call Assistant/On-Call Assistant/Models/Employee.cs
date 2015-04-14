@@ -132,6 +132,24 @@ namespace On_Call_Assistant.Models
             }
         }
 
+        [Display(Name = "Vacation Hours Used")]
+        public int vacHoursTaken
+        {
+            get
+            {
+                int hours = 0;
+                List<OutOfOffice> vacation = new List<OutOfOffice>();
+                if(outOfOffices != null)
+                    vacation = outOfOffices.Where(o => o.reason.reason == "Vacation").ToList();
+
+                for (int index = 0; index < vacation.Count; index++)
+                {
+                    hours += vacation[index].numHours;
+                }
+                return hours;
+            }
+        }
+
         [ForeignKey("assignedApplication")]
         [Column("applicationID")]
         public int Application { get; set; }
@@ -143,6 +161,6 @@ namespace On_Call_Assistant.Models
         public virtual Application assignedApplication { get; set; }
         public virtual ExperienceLevel experienceLevel { get; set; }
         public virtual ICollection<OnCallRotation> rotations { get; set; }
-        //public virtual OutOfOffice outOfOffice { get; set; }
+        public virtual ICollection<OutOfOffice> outOfOffices { get; set; }
     }
 }

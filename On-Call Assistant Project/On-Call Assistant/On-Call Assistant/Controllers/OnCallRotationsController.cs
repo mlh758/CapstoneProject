@@ -41,7 +41,7 @@ namespace On_Call_Assistant.Controllers
         // GET: OnCallRotations/Create
         public ActionResult Create()
         {
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName");
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName");
             return View();
         }
 
@@ -59,7 +59,7 @@ namespace On_Call_Assistant.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -75,7 +75,7 @@ namespace On_Call_Assistant.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -92,7 +92,7 @@ namespace On_Call_Assistant.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "firstName", onCallRotation.employeeID);
+            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 

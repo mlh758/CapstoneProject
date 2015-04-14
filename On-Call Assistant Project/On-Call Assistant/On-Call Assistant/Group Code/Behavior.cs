@@ -24,6 +24,8 @@ namespace On_Call_Assistant.Group_Code
         private OnCallContext db;
         private List<OnCallRotation> generatedSchedule;
         private Thread holidayRetriever;
+        private double mean;
+        private double standardDeviation;
 
         public Scheduler(OnCallContext database)
         {
@@ -37,6 +39,13 @@ namespace On_Call_Assistant.Group_Code
                 holidayRetriever.Start();
             }
             
+        }
+
+        public Scheduler()
+        {
+            db = new OnCallContext();
+            generatedSchedule = new List<OnCallRotation>();
+            newEmployees = new List<Employee>();
         }
         public List<OnCallRotation> generateSchedule(DateTime startDate, DateTime endDate)
         {
@@ -56,8 +65,12 @@ namespace On_Call_Assistant.Group_Code
                 employees = employeesByPrimary(CurrentApplicationEmployees);
                 //Remove new employees from rotation pool and place in separate storage
                 filterNewEmployees(CurrentApplicationEmployees);
-                
-                lastFinalDateByApp = startDate.AddDays(-1);
+                updateStatistics();
+                List<OnCallRotation> overlappingRotations = LinqQueries.GetRotations(db, startDate, endDate).Where(rot => rot.employee.Application == currentApplication.ID).ToList();
+                if (overlappingRotations.Any())
+                    lastFinalDateByApp = overlappingRotations.First().endDate;
+                else
+                    lastFinalDateByApp = startDate.AddDays(-1);
                 currentEmployee = 0;
 
                 while (lastFinalDateByApp < endDate)
@@ -69,7 +82,7 @@ namespace On_Call_Assistant.Group_Code
                         createRotationWithHoliday(currentApplication);                        
                     else
                         createNormalRotation(currentApplication);
-                        
+                    updateStatistics();                       
 
                 } 
             }
@@ -82,7 +95,11 @@ namespace On_Call_Assistant.Group_Code
         {            
             rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
 
-            FindValidEmployee();
+            findValidEmployee();
+            while (employees[currentEmployee].rotationCount - mean > standardDeviation)
+            {
+                findNextValidEmployee();
+            }
             OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);
             employees[currentEmployee] = addRotation(employees[currentEmployee]);
             generatedSchedule.Add(primary);
@@ -90,13 +107,26 @@ namespace On_Call_Assistant.Group_Code
 
             if (currentApplication.hasSecondary)
             {
-                currentEmployee = nextEmployee();
-                FindValidEmployee();
+                //Save old state
+                List<EmployeeAndRotation> oldEmployees = employees;
+                int oldEmployee = currentEmployee;
+
+                currentEmployee = 0;
+                employees = employeesBySecondary(employees);
+                findValidEmployee();
+                if (employees[currentEmployee].ID == primary.employeeID)
+                    findNextValidEmployee();
                 OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+                int index = oldEmployees.FindIndex(e => e.ID == employees[currentEmployee].ID);
                 generatedSchedule.Add(secondary); 
+
+                //Restore old state and update secondary count
+                employees = oldEmployees;
+                currentEmployee = oldEmployee;
+                employees[index] = addSecondaryRotation(employees[index]);
             }
 
-            currentEmployee = nextEmployee();
+            nextEmployee();
             //Wrapped around to first employee, sort again
             if (currentEmployee == 0)
             {
@@ -120,14 +150,15 @@ namespace On_Call_Assistant.Group_Code
             newEmployees.Remove(newEmployee);
             EmployeeAndRotation newEmployeeStruct;
             newEmployeeStruct.ID = newEmployee.ID;
-            newEmployeeStruct.rotationCount = numRotations;
+            newEmployeeStruct.rotationCount = numRotations+(int)mean;
             newEmployeeStruct.holidayRotationCount = holidaysInRotation.Count;
+            newEmployeeStruct.secondaryCount = 0;
             LinqQueries.bumpExperience(db, newEmployee);
 
             //Find experienced Employee with fewest rotations to pair with the new employee
             List<int> experiencedEmployees = (from emp in appEmployees where emp.experienceLevel.levelName == "Senior" select emp.ID).ToList();
-            FindValidEmployee(experiencedEmployees);
-            //updateExperienced(employees[currentEmployee].ID, numRotations);
+            findValidEmployee(experiencedEmployees);
+            employees[currentEmployee] = addSecondaryRotation(employees[currentEmployee], numRotations);
             
             //Add appropriate number of rotations to schedule to meet 5 week obligation
             int rotationsGenerated = 0;
@@ -166,14 +197,18 @@ namespace On_Call_Assistant.Group_Code
             //Save previous state
             int previousEmployee = currentEmployee;            
             List<EmployeeAndRotation> oldEmployeeList = employees;
+            //Indices of employees that will need updating after restoring state
+            int index = 0; 
+            int secondaryIndex = 0;
 
             rotationEnd = lastFinalDateByApp.AddDays(currentApplication.rotationLength * 7);
             List<PaidHoliday> holidaysInRotation = LinqQueries.HolidaysInRange(db, rotationBegin, rotationEnd);
             employees = employeesByHolidays(employees);
             currentEmployee = 0;
-            FindValidEmployee();         
-            OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);            
-            employees[currentEmployee] = addHolidayRotation(employees[currentEmployee]);
+            findValidEmployee();         
+            OnCallRotation primary = createRotation(true, employees[currentEmployee].ID);
+            //Check where to add a holiday rotation when we restore previous state
+            index = oldEmployeeList.FindIndex(e => e.ID == employees[currentEmployee].ID);
             int holidayEmployeeID = employees[currentEmployee].ID;
             foreach (var hol in holidaysInRotation)
             {           
@@ -184,9 +219,9 @@ namespace On_Call_Assistant.Group_Code
 
             if (currentApplication.hasSecondary)
             {
-                currentEmployee = nextEmployee();
-                FindValidEmployee();
+                findNextValidEmployee();
                 OnCallRotation secondary = createRotation(false, employees[currentEmployee].ID);
+                secondaryIndex = oldEmployeeList.FindIndex(e => e.ID == employees[currentEmployee].ID);
                 foreach (var hol in holidaysInRotation)
                 {                   
                     secondary.holidays.Add(hol);
@@ -196,10 +231,13 @@ namespace On_Call_Assistant.Group_Code
 
 
             //Reset to previous state, but advance if we're about to assign the employee from the holiday to another rotation
-            employees = oldEmployeeList;            
+            employees = oldEmployeeList;
+            employees[index] = addHolidayRotation(employees[index]);
+            if (currentApplication.hasSecondary)
+                employees[secondaryIndex] = addSecondaryRotation(employees[secondaryIndex]);
             currentEmployee = previousEmployee;
             if (employees[currentEmployee].ID == holidayEmployeeID)
-                currentEmployee = nextEmployee();
+                nextEmployee();
 
             //Update end date
             lastFinalDateByApp = rotationEnd;
@@ -212,6 +250,7 @@ namespace On_Call_Assistant.Group_Code
         {
             public int ID;
             public int rotationCount;
+            public int secondaryCount;
             public int holidayRotationCount;
         }      
 

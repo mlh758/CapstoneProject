@@ -45,7 +45,8 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Back to Calendar", "../Home") |
-    @Html.ActionLink("Back to List", "Index") |
-    @Html.ActionLink("Edit", "Edit", new { id = Model.rotationID })
+    <a class="btn btn-primary btn-sm" href="/home">
+    Back to Calendar</a>&nbsp;&nbsp;
+    @Html.ActionLink("Edit", "Edit", new { id = Model.rotationID }) |
+    @Html.ActionLink("Go to List", "Index")
 </p>

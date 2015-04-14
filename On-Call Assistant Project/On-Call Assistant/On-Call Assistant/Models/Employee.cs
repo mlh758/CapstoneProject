@@ -138,7 +138,10 @@ namespace On_Call_Assistant.Models
             get
             {
                 int hours = 0;
-                List<OutOfOffice> vacation = outOfOffices.Where(o => o.reason.reason == "Vacation").ToList();
+                List<OutOfOffice> vacation = new List<OutOfOffice>();
+                if(outOfOffices != null)
+                    vacation = outOfOffices.Where(o => o.reason.reason == "Vacation").ToList();
+
                 for (int index = 0; index < vacation.Count; index++)
                 {
                     hours += vacation[index].numHours;

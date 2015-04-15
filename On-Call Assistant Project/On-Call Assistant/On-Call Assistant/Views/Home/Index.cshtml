@@ -20,13 +20,14 @@
         <script type="text/javascript">
     $(document).ready(function () {
         $('#calendar').fullCalendar({
-            editable: false,
+            editable: true,
             events: "/home/rotationdata/",
             header: {
                 left: '',
                 right: 'prev,next today',
                 center: 'title'
-            }
+            },
+            businessHours: true
         });
 
 
@@ -93,8 +94,6 @@
 </script>
 
 }
-
-<br /><br />
 
 <div class="jumbotron">
     <!-- Modal -->

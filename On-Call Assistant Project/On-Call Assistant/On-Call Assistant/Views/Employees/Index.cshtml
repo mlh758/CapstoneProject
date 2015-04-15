@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.Employee>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Employees";
     ViewBag.AppName = "On-Call Assistant";
 }
 @section styles {
@@ -11,7 +11,7 @@
 @section scripts {
     <script src="~/Scripts/bootstrap.min.js"></script>
 }
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")

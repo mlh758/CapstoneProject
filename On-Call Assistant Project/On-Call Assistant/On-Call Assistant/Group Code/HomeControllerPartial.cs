@@ -136,10 +136,14 @@ namespace On_Call_Assistant.Controllers
                 temp.id = rotation.employee.Application;
                 temp.title = rotation.employee.firstName + " " + rotation.employee.lastName;
                 if (!rotation.isPrimary)
+                {
                     temp.title = temp.title + " as Secondary";
+                    temp.color = rotation.employee.assignedApplication.secDisplayColor;
+                }
+                else
+                    temp.color = rotation.employee.assignedApplication.primDisplayColor;
                 temp.start = rotation.startDate.ToString("u");
                 temp.end = rotation.endDate.AddDays(1).ToString("u");
-                temp.color = rotation.employee.assignedApplication.displayColor;
                 temp.url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID);
                 temp.allDay = "true";
                 rotationList.Add(temp);

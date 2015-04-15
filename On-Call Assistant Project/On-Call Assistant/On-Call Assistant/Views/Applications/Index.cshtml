@@ -1,17 +1,11 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.Application>
 
 @{
-    ViewBag.Title = "Applications";
+    ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@section styles {
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-}
 
-@section scripts {
-    <script src="~/Scripts/bootstrap.min.js"></script>
-}
-<h2>@ViewBag.Title</h2>
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -31,7 +25,10 @@
             @Html.DisplayNameFor(model => model.hasSecondary)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.displayColor)
+            @Html.DisplayNameFor(model => model.primDisplayColor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.secDisplayColor)
         </th>
         <th></th>
     </tr>
@@ -51,7 +48,10 @@
             @Html.DisplayFor(modelItem => item.hasSecondary)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.displayColor)
+            @Html.DisplayFor(modelItem => item.primDisplayColor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.secDisplayColor)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

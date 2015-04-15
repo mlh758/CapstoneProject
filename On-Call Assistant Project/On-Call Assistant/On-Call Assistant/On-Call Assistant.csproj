@@ -218,6 +218,10 @@
     <Compile Include="Migrations\201504062052090_EmpVacHours.Designer.cs">
       <DependentUpon>201504062052090_EmpVacHours.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504151424590_AppSecDisplayColor.cs" />
+    <Compile Include="Migrations\201504151424590_AppSecDisplayColor.Designer.cs">
+      <DependentUpon>201504151424590_AppSecDisplayColor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -442,6 +446,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504062052090_EmpVacHours.resx">
       <DependentUpon>201504062052090_EmpVacHours.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504151424590_AppSecDisplayColor.resx">
+      <DependentUpon>201504151424590_AppSecDisplayColor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

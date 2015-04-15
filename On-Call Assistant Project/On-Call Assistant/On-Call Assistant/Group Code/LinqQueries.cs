@@ -173,5 +173,23 @@ namespace On_Call_Assistant.Group_Code
                return -1;
            }
        }
+        /// <summary>
+        /// Remove all on-call rotations and out-of-office instances greater than two years old.
+        /// </summary>
+        /// <param name="db"></param>
+       public static void DeleteOldData(OnCallContext db)
+       {
+           DateTime testDate = DateTime.Now.AddYears(-2);
+           foreach(OnCallRotation OCR in db.onCallRotations.Where(o=>o.startDate < testDate))
+           {
+               db.onCallRotations.Remove(OCR);
+           }
+
+           foreach(OutOfOffice OOO in db.outOfOffice.Where(o=>o.startDate < testDate))
+           {
+               db.outOfOffice.Remove(OOO);
+           }
+           db.SaveChanges();
+       }
     }
 }

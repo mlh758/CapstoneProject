@@ -3,6 +3,14 @@
 @{
     ViewBag.Title = "Create";
 }
+@section styles {
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Scripts/bootstrap.min.js"></script>
+}
+
 
 <h2>Create</h2>
 
@@ -59,6 +67,3 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

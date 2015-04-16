@@ -4,13 +4,17 @@
     ViewBag.Title = "Generated Schedule";
     ViewBag.AppName = "On-Call Assistant";
 }
+
+
 @section styles {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
 }
 
 @section scripts {
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
     <script>
     var url = "/oncallrotations/regenerateSchedule?begin="
     $('#ReGenerateSchedule').click(function (event) {

@@ -88,7 +88,6 @@ namespace On_Call_Assistant.Controllers
             }
             return Json(absenceList, JsonRequestBehavior.AllowGet);
         }
-        [HttpPost]
         public ActionResult UpdateRotation(int rotationID, string start, string end, int employeeID, bool isPrimary)
         {
             try
@@ -99,12 +98,10 @@ namespace On_Call_Assistant.Controllers
                 rotation.employeeID = employeeID;
                 rotation.isPrimary = isPrimary;
                 db.SaveChanges();
-                return new HttpStatusCodeResult(200);
             }
-            catch (Exception)
-            {
-                return new HttpStatusCodeResult(500);
-            }
+            catch (Exception) { }
+            return Redirect("/Home/Index");
+           
             
             
         }

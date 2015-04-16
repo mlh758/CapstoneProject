@@ -37,15 +37,9 @@
                     $('#eventPrimary').prop('checked', calEvent.isPrimary);
                     $('#emps').val(calEvent.empID);
                     $("#emps").selectmenu('refresh');
-                    calendar.fullCalendar('updateEvent', calEvent);
+                    $("#eventID").val(calEvent.rotationID);
                 }
-            });
-            $('#EditEvent').click(function (event) {
-                var start = document.getElementById('EventStart').value;
-                var end = document.getElementById('EventEnd').value;
-                var isPrimary = document.getElementById('eventPrimary').value;
-                var empID = document.getElementById('emps').value;
-            });
+            });           
 
             $('.fc-left').prepend('<div id="calGroup" class="fc-button-group"></div>')
             var calGroup = $('#calGroup');
@@ -106,6 +100,20 @@
             $("#datepickerE").datepicker();
         });
 
+    </script>
+    <script>
+        function saveEvent() {
+            var startDate = $('#EventStart').datepicker('getDate');
+            var endDate = $('#EventEnd').datepicker('getDate');
+            var startString = startDate.getMonth() + "-" + startDate.getDay() + "-" + startDate.getFullYear();
+            var endString = endDate.getMonth() + "-" + endDate.getDay() + "-" + endDate.getFullYear();
+            window.location.replace("/Home/UpdateRotation?rotationID="
+               + $('#eventID').val()
+               + "&start=" + startString
+               + "&end=" + endString
+               + "&isPrimary=" + ($('#eventPrimary').val() == "on" ? "true" : "false")
+               + "&employeeID=" + $('#emps').val());
+        }
     </script>
 
 }
@@ -188,19 +196,17 @@
                         <dd>
                             <input type="checkbox" id="eventPrimary" />
                         </dd>
+                        <dt>
+                            ID
+                        </dt>
+                        <dd><input type="text" id="eventID"></dd>
+
 
                     </dl>
                 </div>
-                <div class="modal-footer">
-                  
-                    <button id="EditEvent" type="button"
-                            class="btn btn-primary btn-sm">
-                        Save changes
-                    </button>
-                    <button id="DeleteEvent" type="button"
-                            class="btn btn-danger btn-sm">
-                        Delete
-                    </button>
+                <div class="modal-footer">                  
+                    <button id="EditEvent" type="button" class="btn btn-primary btn-sm" onclick="saveEvent()"> Save changes </button>
+                    <button id="DeleteEvent" type="button" class="btn btn-danger btn-sm"> Delete </button>
                 </div>
             </div>
         </div>

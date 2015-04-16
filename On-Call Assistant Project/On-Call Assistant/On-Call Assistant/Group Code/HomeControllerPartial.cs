@@ -135,17 +135,24 @@ namespace On_Call_Assistant.Controllers
                 CalendarObject temp = new CalendarObject();
                 temp.id = rotation.employee.Application;
                 temp.title = rotation.employee.firstName + " " + rotation.employee.lastName;
+                temp.rotationID = rotation.rotationID;
                 if (!rotation.isPrimary)
                 {
                     temp.title = temp.title + " as Secondary";
                     temp.color = rotation.employee.assignedApplication.secDisplayColor;
+                    temp.isPrimary = false;
                 }
                 else
+                { 
                     temp.color = rotation.employee.assignedApplication.primDisplayColor;
+                    temp.isPrimary = true;
+                }
+                    
                 temp.start = rotation.startDate.ToString("u");
                 temp.end = rotation.endDate.AddDays(1).ToString("u");
                 temp.url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID);
                 temp.allDay = "true";
+                temp.empID = rotation.employeeID;
                 rotationList.Add(temp);
             }
 
@@ -164,6 +171,9 @@ namespace On_Call_Assistant.Controllers
         public string url { get; set; }
         public string allDay { get; set; }
         public string textColor { get; set; }
+        public int rotationID { get; set; }
+        public bool isPrimary { get; set; }
+        public int empID { get; set; }
 
     }
     

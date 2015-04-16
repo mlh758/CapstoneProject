@@ -13,6 +13,7 @@ namespace On_Call_Assistant.Controllers
         {
             On_Call_Assistant.DAL.OnCallContext db = new DAL.OnCallContext();
             ViewBag.apps = new SelectList(db.applications, "ID", "appName");
+            ViewBag.emps = new SelectList(db.employees, "ID", "employeeName");
             return View();
         }
 

@@ -19,6 +19,8 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#eventStart').datepicker();
+            $('#eventEnd').datepicker();
             $('#calendar').fullCalendar({
                 editable: true,
                 events: "/home/RotationsWithoutURL/",
@@ -29,7 +31,12 @@
                 },
                 businessHours: true,
                 eventClick: function (event, element) {
-                    $('#eventModal').modal('show');
+                    $('#eventModal').modal('show');                    
+                    $('#eventStart').datepicker('setDate', new Date(event.start));
+                    $('#eventEnd').datepicker('setDate', new Date(event.end));
+                    $('#eventPrimary').prop('checked', event.isPrimary);
+                    $('#emps').val(event.empID);
+                    $("#emps").selectmenu('refresh');
                     calendar.fullCalendar('updateEvent', calEvent);
                 }
             });
@@ -149,7 +156,7 @@
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.employee.employeeName)
+                            @Html.DropDownList("emps", null, htmlAttributes: new { @class = "form-control", style = "font-size:70%; height:30px" })
                         </dd>
 
                         <dt>
@@ -157,7 +164,7 @@
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.startDate)
+                            <input type="text" id="eventStart">
                         </dd>
 
                         <dt>
@@ -165,7 +172,7 @@
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.endDate)
+                            <input type="text" id="eventEnd">
                         </dd>
 
                         <dt>
@@ -173,7 +180,7 @@
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.isPrimary)
+                            <input type="checkbox" id="eventPrimary" />
                         </dd>
 
                     </dl>

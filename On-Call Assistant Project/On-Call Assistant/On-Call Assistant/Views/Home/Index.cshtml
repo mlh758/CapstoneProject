@@ -23,7 +23,7 @@
             $('#eventEnd').datepicker();
             $('#calendar').fullCalendar({
                 editable: true,
-                events: "/home/RotationsWithoutURL/",
+                events: "/home/RotationData/",
                 header: {
                     left: '',
                     right: 'prev,next today',
@@ -45,7 +45,6 @@
                 var end = document.getElementById('EventEnd').value;
                 var isPrimary = document.getElementById('eventPrimary').value;
                 var empID = document.getElementById('emps').value;
-                //window.location.replace(url.concat(start, "&end=", end));
             });
 
             $('.fc-left').prepend('<div id="calGroup" class="fc-button-group"></div>')

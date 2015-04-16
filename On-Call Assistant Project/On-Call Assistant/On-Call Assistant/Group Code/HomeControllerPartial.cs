@@ -26,16 +26,6 @@ namespace On_Call_Assistant.Controllers
             List<CalendarObject> rotationList = getEvents(ref start, ref end, ID);
             return Json(rotationList, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult RotationsWithoutURL(string start, string end, int ID = -1)
-        {
-            List<CalendarObject> rotationList = getEvents(ref start, ref end, ID);
-            foreach (var rot in rotationList)
-            {
-                rot.url = null;
-            }
-            return Json(rotationList, JsonRequestBehavior.AllowGet);
-
-        }
         /// <summary>
         /// Provides a list of CalendarObjects from the database in the given range
         /// </summary>
@@ -98,6 +88,26 @@ namespace On_Call_Assistant.Controllers
             }
             return Json(absenceList, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public ActionResult UpdateRotation(int rotationID, string start, string end, int employeeID, bool isPrimary)
+        {
+            try
+            {
+                var rotation = (from rot in db.onCallRotations where rot.rotationID == rotationID select rot).Single();
+                rotation.startDate = DateTime.Parse(start);
+                rotation.endDate = DateTime.Parse(end).AddDays(-1); //Adjusting for calendar offset
+                rotation.employeeID = employeeID;
+                rotation.isPrimary = isPrimary;
+                db.SaveChanges();
+                return new HttpStatusCodeResult(200);
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            
+            
+        }
 
         private List<OutOfOffice> filterAbsences(IQueryable<OutOfOffice> absences, DateTime begin, DateTime end)
         {
@@ -150,7 +160,6 @@ namespace On_Call_Assistant.Controllers
                     
                 temp.start = rotation.startDate.ToString("u");
                 temp.end = rotation.endDate.AddDays(1).ToString("u");
-                temp.url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID);
                 temp.allDay = "true";
                 temp.empID = rotation.employeeID;
                 rotationList.Add(temp);

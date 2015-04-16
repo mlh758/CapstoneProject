@@ -40,6 +40,13 @@
                     calendar.fullCalendar('updateEvent', calEvent);
                 }
             });
+            $('#EditEvent').click(function (event) {
+                var start = document.getElementById('EventStart').value;
+                var end = document.getElementById('EventEnd').value;
+                var isPrimary = document.getElementById('eventPrimary').value;
+                var empID = document.getElementById('emps').value;
+                //window.location.replace(url.concat(start, "&end=", end));
+            });
 
             $('.fc-left').prepend('<div id="calGroup" class="fc-button-group"></div>')
             var calGroup = $('#calGroup');
@@ -92,7 +99,7 @@
             var end = document.getElementById('datepickerE').value;
             window.location.replace(url.concat(start, "&end=", end));
         });
-
+       
         $(function () {
             $("#datepickerS").datepicker();
         });
@@ -145,7 +152,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Edit Event</h4>
+                    <h4 class="modal-title" id="myModalLabel">Edit Rotation</h4>
                 </div>
                 <div class="modal-body">
                     @model On_Call_Assistant.Models.OnCallRotation
@@ -185,17 +192,16 @@
 
                     </dl>
                 </div>
-                @*<p>
-                        @Html.ActionLink("Edit", "Edit", new { id = Model.rotationID }) |
-                        @Html.ActionLink("List View", "Index")
-                    </p>*@
-
                 <div class="modal-footer">
+                  
                     <button id="EditEvent" type="button"
                             class="btn btn-primary btn-sm">
                         Save changes
                     </button>
-                    &nbsp;&nbsp;<a data-dismiss="modal">Cancel</a>
+                    <button id="DeleteEvent" type="button"
+                            class="btn btn-danger btn-sm">
+                        Delete
+                    </button>
                 </div>
             </div>
         </div>

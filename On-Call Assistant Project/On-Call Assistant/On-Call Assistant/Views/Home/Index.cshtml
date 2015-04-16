@@ -30,12 +30,12 @@
                     center: 'title'
                 },
                 businessHours: true,
-                eventClick: function (event, element) {
+                eventClick: function (calEvent) {
                     $('#eventModal').modal('show');                    
-                    $('#eventStart').datepicker('setDate', new Date(event.start));
-                    $('#eventEnd').datepicker('setDate', new Date(event.end));
-                    $('#eventPrimary').prop('checked', event.isPrimary);
-                    $('#emps').val(event.empID);
+                    $('#eventStart').datepicker('setDate', new Date(calEvent.start));
+                    $('#eventEnd').datepicker('setDate', new Date(calEvent.end));
+                    $('#eventPrimary').prop('checked', calEvent.isPrimary);
+                    $('#emps').val(calEvent.empID);
                     $("#emps").selectmenu('refresh');
                     calendar.fullCalendar('updateEvent', calEvent);
                 }

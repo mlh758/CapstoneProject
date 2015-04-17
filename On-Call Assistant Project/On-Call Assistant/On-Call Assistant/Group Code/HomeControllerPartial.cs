@@ -93,8 +93,8 @@ namespace On_Call_Assistant.Controllers
             try
             {
                 var rotation = (from rot in db.onCallRotations where rot.rotationID == rotationID select rot).Single();
-                rotation.startDate = DateTime.Parse(start);
-                rotation.endDate = DateTime.Parse(end).AddDays(-1); //Adjusting for calendar offset
+                rotation.startDate = DateTime.Parse(start).AddDays(1);
+                rotation.endDate = DateTime.Parse(end);
                 rotation.employeeID = employeeID;
                 rotation.isPrimary = isPrimary;
                 db.SaveChanges();

@@ -19,6 +19,7 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
             $('#eventStart').datepicker();
             $('#eventEnd').datepicker();
             $('#calendar').fullCalendar({
@@ -36,8 +37,8 @@
                     $('#eventEnd').datepicker('setDate', new Date(calEvent.end));
                     $('#eventPrimary').prop('checked', calEvent.isPrimary);
                     $('#emps').val(calEvent.empID);
-                    $("#emps").selectmenu('refresh');
-                    $("#eventID").val(calEvent.rotationID);
+                    //$("#emps").selectmenu('refresh');
+                    $("#eventID").val(calEvent.id);                    
                 }
             });           
 
@@ -103,16 +104,17 @@
     </script>
     <script>
         function saveEvent() {
-            var startDate = $('#EventStart').datepicker('getDate');
-            var endDate = $('#EventEnd').datepicker('getDate');
-            var startString = startDate.getMonth() + "-" + startDate.getDay() + "-" + startDate.getFullYear();
-            var endString = endDate.getMonth() + "-" + endDate.getDay() + "-" + endDate.getFullYear();
+            var startString = document.getElementById('eventStart').value.split("/").join("-");
+            var endString = document.getElementById('eventEnd').value.split("/").join("-");
+            
             window.location.replace("/Home/UpdateRotation?rotationID="
                + $('#eventID').val()
                + "&start=" + startString
                + "&end=" + endString
-               + "&isPrimary=" + ($('#eventPrimary').val() == "on" ? "true" : "false")
-               + "&employeeID=" + $('#emps').val());
+               + "&isPrimary=" +($('#eventPrimary').is(":checked"))
+               + "&employeeID=" + $('#emps').val()
+               );
+           
         }
     </script>
 

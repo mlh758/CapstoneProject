@@ -18,6 +18,11 @@
     <script src="~/Scripts/fullcalendar.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript">
+        function addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
         $(document).ready(function () {
 
             $('#eventStart').datepicker();
@@ -32,12 +37,12 @@
                 },
                 businessHours: true,
                 eventClick: function (calEvent) {
-                    $('#eventModal').modal('show');                    
-                    $('#eventStart').datepicker('setDate', new Date(calEvent.start));
+                    $('#eventModal').modal('show');
+                    var beginDate = addDays(calEvent.start, 1);
+                    $('#eventStart').datepicker('setDate', beginDate);
                     $('#eventEnd').datepicker('setDate', new Date(calEvent.end));
                     $('#eventPrimary').prop('checked', calEvent.isPrimary);
                     $('#emps').val(calEvent.empID);
-                    //$("#emps").selectmenu('refresh');
                     $("#eventID").val(calEvent.rotationID);                    
                 }
             });           
@@ -104,16 +109,21 @@
     </script>
     <script>
         function saveEvent() {
-            var startString = document.getElementById('eventStart').value.split("/").join("-");
-            var endString = document.getElementById('eventEnd').value.split("/").join("-");
+            var startString = document.getElementById('eventStart').value;
+            var endString = document.getElementById('eventEnd').value;
+            $.post("/Home/UpdateRotation", {
+                rotationID: $('#eventID').val(),
+                start: startString,
+                end: endString,
+                isPrimary: ($('#eventPrimary').is(":checked")),
+                employeeID: $('#emps').val()
+            },
+            function (data) {
+                $('#eventModal').modal('hide');
+                $('#calendar').fullCalendar('refetchEvents');
+            });
             
-            window.location.replace("/Home/UpdateRotation?rotationID="
-               + $('#eventID').val()
-               + "&start=" + startString
-               + "&end=" + endString
-               + "&isPrimary=" +($('#eventPrimary').is(":checked"))
-               + "&employeeID=" + $('#emps').val()
-               );
+            
            
         }
     </script>

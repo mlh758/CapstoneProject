@@ -93,14 +93,15 @@ namespace On_Call_Assistant.Controllers
             try
             {
                 var rotation = (from rot in db.onCallRotations where rot.rotationID == rotationID select rot).Single();
-                rotation.startDate = DateTime.Parse(start).AddDays(1);
+                rotation.startDate = DateTime.Parse(start);
                 rotation.endDate = DateTime.Parse(end);
                 rotation.employeeID = employeeID;
                 rotation.isPrimary = isPrimary;
                 db.SaveChanges();
+                return new HttpStatusCodeResult(200);
             }
             catch (Exception) { }
-            return Redirect("/Home/Index");
+            return new HttpStatusCodeResult(500);
            
             
             
@@ -155,9 +156,9 @@ namespace On_Call_Assistant.Controllers
                     temp.isPrimary = true;
                 }
                     
-                temp.start = rotation.startDate.ToString("u");
-                temp.end = rotation.endDate.AddDays(1).ToString("u");
-                temp.allDay = "true";
+                temp.start = rotation.startDate.ToString("d");
+                temp.end = rotation.endDate.AddDays(1).ToString("d");
+                temp.allDay = "false";
                 temp.empID = rotation.employeeID;
                 rotationList.Add(temp);
             }

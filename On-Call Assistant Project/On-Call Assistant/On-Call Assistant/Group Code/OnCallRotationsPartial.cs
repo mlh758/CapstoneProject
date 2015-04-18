@@ -22,6 +22,7 @@ namespace On_Call_Assistant.Controllers
             Scheduler generator = new Scheduler(db);
             DateTime start, end, last;
             start = getFutureDay(DateTime.Today, DayOfWeek.Wednesday);
+            start = start.AddHours(9); //Start at 9AM
             last = LinqQueries.LastRotation(db);
             if (last > start)
             {

@@ -32,7 +32,9 @@
         <th>
             @Html.DisplayNameFor(model => model.employee.employeeName)
         </th>
-        <th></th>
+        <th>
+            <span class="glyphicon glyphicon-erase"></span>
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -49,6 +51,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.employee.employeeName)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { id = item.rotationID })
             </td>
         </tr>
     }

@@ -2,8 +2,15 @@
 
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles {
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
 }
 
+@section scripts {
+    <script src="~/Scripts/bootstrap.min.js"></script>
+}
 <h2>Index</h2>
 
 <p>
@@ -14,6 +21,9 @@
         <th>
             @Html.DisplayNameFor(model => model.reason)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.reasonDisplayColor)
+        </th>
         <th></th>
     </tr>
 
@@ -21,6 +31,9 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.reason)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.reasonDisplayColor)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

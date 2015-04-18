@@ -80,7 +80,7 @@ namespace On_Call_Assistant.Controllers
                     title = absence.employeeOut.firstName + " " + absence.employeeOut.lastName,
                     start = absence.startDate.ToString("u"),
                     end = absence.startDate.AddDays(absence.numHours/8).ToString("u"),
-                    color = "yellow",
+                    color = absence.reason.reasonDisplayColor,
                     url = String.Format("OutOfOffices/Details/{0}", absence.ID),
                     allDay = "false",
                     textColor = "black"

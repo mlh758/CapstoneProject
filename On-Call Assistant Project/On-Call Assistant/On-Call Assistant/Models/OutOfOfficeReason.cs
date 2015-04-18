@@ -14,6 +14,9 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Reason")]
         public string reason { get; set; }
 
+        [Display(Name = "Reason Color")]
+        public String reasonDisplayColor { get; set; }
+
         //public virtual ICollection<OutOfOffice> outOutOfOffices { get; set; }
     }
 }

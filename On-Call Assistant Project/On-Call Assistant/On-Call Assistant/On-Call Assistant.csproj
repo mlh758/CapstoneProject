@@ -222,6 +222,10 @@
     <Compile Include="Migrations\201504151424590_AppSecDisplayColor.Designer.cs">
       <DependentUpon>201504151424590_AppSecDisplayColor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504172110139_OutOfOfficeColor.cs" />
+    <Compile Include="Migrations\201504172110139_OutOfOfficeColor.Designer.cs">
+      <DependentUpon>201504172110139_OutOfOfficeColor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -449,6 +453,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504151424590_AppSecDisplayColor.resx">
       <DependentUpon>201504151424590_AppSecDisplayColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504172110139_OutOfOfficeColor.resx">
+      <DependentUpon>201504172110139_OutOfOfficeColor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

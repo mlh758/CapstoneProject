@@ -1,0 +1,3 @@
+[submodule "Wiki"]
+	path = Wiki
+	url = https://github.com/cs451/Spring2015Team3.wiki.git

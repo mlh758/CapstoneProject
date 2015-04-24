@@ -22,6 +22,7 @@ namespace On_Call_Assistant.Models
         public DateTime startDate { get; set; }
 
         [ForeignKey("reason")]
+        [Display(Name = "Reason")]
         public int outOfOfficeReasonID { get; set; }
 
         [ForeignKey("employeeOut")]

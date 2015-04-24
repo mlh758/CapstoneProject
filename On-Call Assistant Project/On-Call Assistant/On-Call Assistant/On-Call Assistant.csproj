@@ -146,6 +146,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Group Code\Behavior.cs" />
+    <Compile Include="Group Code\EmployeesControllerPartial.cs" />
     <Compile Include="Group Code\HomeControllerPartial.cs" />
     <Compile Include="Group Code\LinqQueries.cs" />
     <Compile Include="Group Code\OnCallRotationsPartial.cs" />

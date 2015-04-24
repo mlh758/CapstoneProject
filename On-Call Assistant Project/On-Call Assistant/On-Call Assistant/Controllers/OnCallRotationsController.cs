@@ -17,11 +17,11 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: OnCallRotations
-        public async Task<ActionResult> Index()
+        /*public async Task<ActionResult> Index()
         {
             var onCallRotations = db.onCallRotations.Include(o => o.employee);
             return View(await onCallRotations.ToListAsync());
-        }
+        }*/
 
         // GET: OnCallRotations/Details/5
         public async Task<ActionResult> Details(int? id)

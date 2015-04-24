@@ -21,7 +21,8 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.startDate)
+            @*@Html.DisplayNameFor(model => model.startDate)*@
+            @Html.ActionLink("Start Date", "Index", new { sortOrder = ViewBag.DateSortParm })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.endDate)
@@ -30,7 +31,8 @@
             @Html.DisplayNameFor(model => model.isPrimary)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.employee.employeeName)
+            @*@Html.DisplayNameFor(model => model.employee.employeeName)*@
+            @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm })
         </th>
         <th>
             <span class="glyphicon glyphicon-erase"></span>

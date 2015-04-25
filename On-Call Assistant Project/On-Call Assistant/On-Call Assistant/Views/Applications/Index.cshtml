@@ -56,10 +56,10 @@
             @Html.DisplayFor(modelItem => item.hasSecondary)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.primDisplayColor)
+            <div style="height:25px;width:50px;background-color:@item.primDisplayColor;"></div>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.secDisplayColor)
+            <div style="height:25px;width:50px;background-color:@item.secDisplayColor;"></div>
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

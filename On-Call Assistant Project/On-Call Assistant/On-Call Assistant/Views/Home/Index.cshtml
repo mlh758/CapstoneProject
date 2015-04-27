@@ -25,7 +25,7 @@
         }
 
         $(document).ready(function () {
-
+            
             $('#eventStart').datepicker();
             $('#eventEnd').datepicker();
             $('#calendar').fullCalendar({
@@ -46,7 +46,8 @@
                     $('#emps').val(calEvent.empID);
                     $("#eventID").val(calEvent.rotationID);                    
                 }
-            });           
+            });
+
 
             $('.fc-left').prepend('<div id="calGroup" class="fc-button-group"></div>')
             var calGroup = $('#calGroup');
@@ -62,7 +63,7 @@
                 $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + $("#apps").val());
                 $('#calendar').fullCalendar('rerenderEvents');
             });
-
+            
             @*Here the printing button included within the calendar div*@
             calGroup.prepend('<button class="fc-button fc-state-default fc-corner-right fc-custom-hover"' +
                     'type="button" title="Print Schedule" onClick="window.location=\'../Home/Printable\'">' +
@@ -82,18 +83,22 @@
                     'title="Generate Schedule"><span class="glyphicon glyphicon-plus"></span>' +
                     '<span style="margin-left:4px" class="glyphicon glyphicon-calendar"></span></button>');
 
-
+            checkCookie();
+           
             $('#GenerateSchedule').click(function (event) {
+                setCookie("Update", "true", 1);
                 event.preventDefault();
                 window.location.replace("/oncallrotations/generateSchedule");
             });
         });
+
     </script>
 
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script>
         var url = "/oncallrotations/regenerateSchedule?begin="
         $('#ReGenerateSchedule').click(function (event) {
+            setCookie("Update", "true", 1);
             event.preventDefault();
             var start = document.getElementById('datepickerS').value;
             var end = document.getElementById('datepickerE').value;
@@ -107,8 +112,6 @@
             $("#datepickerE").datepicker();
         });
 
-    </script>
-    <script>
         function saveEvent() {
             var startString = document.getElementById('eventStart').value;
             var endString = document.getElementById('eventEnd').value;
@@ -125,11 +128,46 @@
             });
 
         }
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "";
+        }
+
+        function checkCookie() {
+            var isUpdate = getCookie("Update");
+            if (isUpdate == "true") {
+                var alertDiv = $('#updateAlert');
+                alertDiv.html('<div id="alert_message" class="alert alert-success">'
+                                       + '<span class="close" data-dismiss="alert">×</span>'
+                                       + '<span><strong>Success!</strong> Calendar updated successfully.</span>'
+                                       + '</div>');
+                $("#alert_message").delay(3000, 0).fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                    alertDiv.html('');
+                    });
+                setCookie("Update", "false", 1);
+            }
+        }
     </script>
 
 }
 
 <div class="jumbotron">
+    <div id="updateAlert"></div>
+ 
     <!-- Regenerate Modal -->
     <div class="modal fade" id="regenerateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -215,7 +253,7 @@
 
                     </dl>
                 </div>
-                <div class="modal-footer">                  
+                <div class="modal-footer">
                     <button id="EditEvent" type="button" class="btn btn-primary btn-sm" onclick="saveEvent()"> Save changes </button>
                     &nbsp;&nbsp;<a data-dismiss="modal">Cancel</a>
                 </div>

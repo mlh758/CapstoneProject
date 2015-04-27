@@ -64,5 +64,45 @@ namespace On_Call_Assistant.Controllers
 
             return View(await employees.ToListAsync());
         }
+
+        public async Task<ActionResult> Summary(string sortOrder)
+        {
+            ViewBag.AppSortParm = String.IsNullOrEmpty(sortOrder) ? "app_desc" : "";
+            ViewBag.NameSortParm = sortOrder == "name" ? "name_desc" : "name";
+            ViewBag.RotSortParam = sortOrder == "rot" ? "rot_desc" : "rot";
+            ViewBag.VacSortParam = sortOrder == "vac" ? "vac_desc" : "vac";
+            //ViewBag.
+            var employees = db.employees.Include(e => e.assignedApplication).Include(e => e.experienceLevel);
+
+            switch (sortOrder)
+            {
+                case "name":
+                    employees = employees.OrderBy(e => e.lastName);
+                    break;
+                case "name_desc":
+                    employees = employees.OrderByDescending(e => e.lastName);
+                    break;
+                case "app_desc":
+                    employees = employees.OrderByDescending(e => e.assignedApplication.appName);
+                    break;
+                case "rot":
+                    employees = employees.OrderBy(e => e.rotations.Count);
+                    break;
+                case "rot_desc":
+                    employees = employees.OrderByDescending(e => e.rotations.Count);
+                    break;
+                case "vac":
+                    employees = employees.OrderBy(e => e.alottedVacationHours);
+                    break;
+                case "vac_desc":
+                    employees = employees.OrderByDescending(e => e.alottedVacationHours);
+                    break;
+                default:
+                    employees = employees.OrderBy(e => e.assignedApplication.appName);
+                    break;
+            }
+
+            return View(await employees.ToListAsync());
+        }
     }
 }

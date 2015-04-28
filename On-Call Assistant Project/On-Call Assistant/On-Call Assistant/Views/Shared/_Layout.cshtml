@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link rel="shortcut icon" type="image/x-icon" href="~/Content/com.ico" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
@@ -37,6 +36,7 @@
                             <span class="glyphicon glyphicon-phone-alt"></span>  On-Call Rotation <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
+                            <li role="presentation" class="dropdown-header">On-Call Assistant</li>
                             <li>
                                 <a href="/Home">
                                     <span class="glyphicon glyphicon-calendar"></span>  Calendar View
@@ -59,11 +59,18 @@
                             <span class="glyphicon glyphicon-cog"></span>   Manage <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
+                            <li role="presentation" class="dropdown-header">Employees</li>
                             <li>
                                 <a href="/Employees">
-                                    <span class="glyphicon glyphicon-user"></span>  Employees
+                                    <span class="glyphicon glyphicon-user"></span>  Employees List
                                 </a>
                             </li>
+                            <li>
+                                <a href="/Employees/Summary">
+                                    <span class="glyphicon glyphicon-align-justify"></span> Detailed Summary
+                                </a>
+                            </li>
+                            <li role="presentation" class="divider"></li>
                             <li>
                                 <a href="/Applications">
                                     <span class="glyphicon glyphicon-file"></span>  Applications
@@ -84,7 +91,7 @@
         @RenderBody()
         @Scripts.Render("~/bundles/jquery")
         @RenderSection("scripts", required: false)
-        <hr />
+        
 
     </div>
 

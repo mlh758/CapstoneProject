@@ -1,6 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
-    ViewBag.AppName = "On-Call Assistant";
+    ViewBag.Title = "On-Call Assistant";
 }
 @section styles {
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
@@ -25,7 +24,7 @@
 
         @*when the page load, this function will render the calendar*@
         $(document).ready(function () {
-            
+             
             $('#eventStart').datepicker();
             $('#eventEnd').datepicker();
             $('#calendar').fullCalendar({
@@ -166,6 +165,8 @@
         function checkCookie() {
             var isUpdate = getCookie("Update");
             if (isUpdate == "true") {
+                 @*reset the alert indicator to false*@
+                setCookie("Update", "false", 1);
                 var alertDiv = $('#updateAlert');
                 alertDiv.html('<div id="alert_message" class="alert alert-success">'
                                        + '<span class="close" data-dismiss="alert">×</span>'
@@ -175,8 +176,7 @@
                     $(this).remove();
                     alertDiv.html('');
                 });
-                @*reset the alert indicator to false*@
-                setCookie("Update", "false", 1);
+                
             }
         }
     </script>

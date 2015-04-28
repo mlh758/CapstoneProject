@@ -17,6 +17,9 @@
         <a href="/OnCallRotations/DownloadSchedule"
        style="margin-bottom:15px">Download</a>-->
 
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
 
 <table class="table">
     <tr>
@@ -35,7 +38,7 @@
             @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm })
         </th>
         <th>
-            <span class="glyphicon glyphicon-trash"></span>
+            <span class="glyphicon glyphicon-edit"></span>
         </th>
     </tr>
 
@@ -54,9 +57,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.employee.employeeName)
             </td>
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.rotationID })
-            </td>
+            <td>               
+                 @Html.ActionLink("Edit", "Edit", new { id = item.rotationID }) |
+                 @Html.ActionLink("Details", "Details", new { id = item.rotationID }) |
+                 @Html.ActionLink("Delete", "Delete", new { id = item.rotationID })
+           </td>
         </tr>
     }
 

@@ -147,7 +147,10 @@ namespace On_Call_Assistant.Controllers
                 if (!rotation.isPrimary)
                 {
                     temp.title = temp.title + " as Secondary";
-                    temp.color = rotation.employee.assignedApplication.secDisplayColor;
+                    if (rotation.employee.assignedApplication.hasSecondary)
+                        temp.color = rotation.employee.assignedApplication.secDisplayColor;
+                    else
+                        temp.color = rotation.employee.assignedApplication.primDisplayColor;
                     temp.isPrimary = false;
                 }
                 else

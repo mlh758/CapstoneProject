@@ -43,7 +43,7 @@
             @Html.LabelFor(model => model.isPrimary, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
-                    @Html.EditorFor(model => model.isPrimary)
+                    @Html.CheckBoxFor(model => model.isPrimary, new { @checked = "checked" })
                     @Html.ValidationMessageFor(model => model.isPrimary, "", new { @class = "text-danger" })
                 </div>
             </div>

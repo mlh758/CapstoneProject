@@ -5,25 +5,25 @@
 @section styles {
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
-
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
 }
 
 @section scripts {
-    @*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
     <script src="~/Scripts/lib/jquery.min.js"></script>
     <script src="~/Scripts/lib/moment.min.js"></script>
     <script src="~/Scripts/fullcalendar.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript">
+
+        @**@
         function addDays(date, days) {
             var result = new Date(date);
             result.setDate(result.getDate() + days);
             return result;
         }
 
+        @*when the page load, this function will render the calendar*@
         $(document).ready(function () {
             
             $('#eventStart').datepicker();
@@ -37,6 +37,7 @@
                     center: 'title'
                 },
                 businessHours: true,
+                @*this function will envok the rotation edit modal and feed it with the porper rotation information*@
                 eventClick: function (calEvent) {
                     $('#eventModal').modal('show');
                     var beginDate = addDays(calEvent.start, 1);
@@ -58,6 +59,7 @@
             $("#listScript").html(list.html());
             list.html("");
 
+            @*filter rotations according to application on the calendar*@
             $("#apps").change(function () {
                 $('#calendar').fullCalendar('removeEvents');
                 $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + $("#apps").val());
@@ -83,9 +85,12 @@
                     'title="Generate Schedule"><span class="glyphicon glyphicon-plus"></span>' +
                     '<span style="margin-left:4px" class="glyphicon glyphicon-calendar"></span></button>');
 
+            @*after the page loads check if the page load was caused by clicking 'generate' or 'regenerate' button*@
             checkCookie();
            
+            @*when button 'generate' is clicked, this function is called*@
             $('#GenerateSchedule').click(function (event) {
+                @*indicate that the refresh was caused by clicking on 'generate calendar'*@
                 setCookie("Update", "true", 1);
                 event.preventDefault();
                 window.location.replace("/oncallrotations/generateSchedule");
@@ -96,23 +101,30 @@
 
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script>
-        var url = "/oncallrotations/regenerateSchedule?begin="
-        $('#ReGenerateSchedule').click(function (event) {
-            setCookie("Update", "true", 1);
-            event.preventDefault();
-            var start = document.getElementById('datepickerS').value;
-            var end = document.getElementById('datepickerE').value;
-            window.location.replace(url.concat(start, "&end=", end));
-        });
-       
-        $(function () {
-            $("#datepickerS").datepicker();
-        });
-        $(function () {
-            $("#datepickerE").datepicker();
-        });
 
+        @*when 'regenerate' button is clicked, this function will be called*@
+    var url = "/oncallrotations/regenerateSchedule?begin="
+    $('#ReGenerateSchedule').click(function (event) {
+        @*indicate that the refresh was caused by clicking on 'regenerate calendar'*@
+        setCookie("Update", "true", 1);
+        event.preventDefault();
+        @*retrieve start and end date provided by user via date pickers*@
+        var start = document.getElementById('datepickerS').value;
+        var end = document.getElementById('datepickerE').value;
+        window.location.replace(url.concat(start, "&end=", end));
+    });
+
+    $(function () {
+        $("#datepickerS").datepicker();
+    });
+    $(function () {
+        $("#datepickerE").datepicker();
+    });
+
+        @*this function is envoked when the button 'save changes' in the event modal is clicked*@
         function saveEvent() {
+            @*indicate that the refresh was caused by clicking on 'save changes'*@
+            setCookie("Update", "true", 1);
             var startString = document.getElementById('eventStart').value;
             var endString = document.getElementById('eventEnd').value;
             $.post("/Home/UpdateRotation", {
@@ -126,8 +138,10 @@
                 $('#eventModal').modal('hide');
                 $('#calendar').fullCalendar('refetchEvents');
             });
-
+            checkCookie();
         }
+
+        @*this function sets a variable and its value on the cookie document*@
         function setCookie(cname, cvalue, exdays) {
             var d = new Date();
             d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -135,6 +149,7 @@
             document.cookie = cname + "=" + cvalue + "; " + expires;
         }
 
+        @*this function retrieves a value from the cookie document knowing it's variable name*@
         function getCookie(cname) {
             var name = cname + "=";
             var ca = document.cookie.split(';');
@@ -146,6 +161,8 @@
             return "";
         }
 
+        @*this fuction checks the cookie to check the reason of the page load
+            if the reason is a click on 'generate' or 'regenerate', the alert is displayed*@
         function checkCookie() {
             var isUpdate = getCookie("Update");
             if (isUpdate == "true") {
@@ -157,7 +174,8 @@
                 $("#alert_message").delay(3000, 0).fadeTo(500, 0).slideUp(500, function () {
                     $(this).remove();
                     alertDiv.html('');
-                    });
+                });
+                @*reset the alert indicator to false*@
                 setCookie("Update", "false", 1);
             }
         }

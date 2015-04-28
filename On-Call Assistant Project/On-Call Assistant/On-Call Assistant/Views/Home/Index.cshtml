@@ -15,12 +15,30 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript">
 
-        @**@
+        @*Add given number of days to a date, return a new date*@
         function addDays(date, days) {
             var result = new Date(date);
             result.setDate(result.getDate() + days);
             return result;
         }
+        var primarySource = {
+            url: "/Home/RotationData/",
+            type: "GET",
+            data: { ID: $("#apps").val() }
+        };
+        @*Apply drop down value to filter events*@
+        function updateFilter() {
+            $('#calendar').fullCalendar('removeEventSource', primarySource);
+            $('#calendar').fullCalendar('removeEvents');
+            primarySource = {
+                url: "/Home/RotationData/",
+                type: "GET",
+                data: { ID: $("#apps").val() }
+            }
+            $('#calendar').fullCalendar('addEventSource', primarySource);
+            $('#calendar').fullCalendar('refetchEvents');
+        }
+
 
         @*when the page load, this function will render the calendar*@
         $(document).ready(function () {
@@ -28,9 +46,11 @@
             $('#eventStart').datepicker();
             $('#eventEnd').datepicker();
             $('#calendar').fullCalendar({
+                eventSources: [
+                    primarySource
+                ],
                 editable: true,
-                events: "/home/RotationData/",
-                header: {
+                    header: {
                     left: '',
                     right: 'prev,next today',
                     center: 'title'
@@ -59,11 +79,7 @@
             list.html("");
 
             @*filter rotations according to application on the calendar*@
-            $("#apps").change(function () {
-                $('#calendar').fullCalendar('removeEvents');
-                $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + $("#apps").val());
-                $('#calendar').fullCalendar('rerenderEvents');
-            });
+            $("#apps").change(updateFilter);
             
             @*Here the printing button included within the calendar div*@
             calGroup.prepend('<button class="fc-button fc-state-default fc-corner-right fc-custom-hover"' +
@@ -94,6 +110,7 @@
                 event.preventDefault();
                 window.location.replace("/oncallrotations/generateSchedule");
             });
+
         });
 
     </script>

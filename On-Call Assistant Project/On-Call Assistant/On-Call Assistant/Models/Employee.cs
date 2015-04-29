@@ -25,7 +25,7 @@ namespace On_Call_Assistant.Models
         public string lastName { get; set; }
 
         [Display(Name = "Vacation Hours")]
-        [Range(0,150)]
+        [Range(0,300)]
         public int alottedVacationHours { get; set; }
 
         [DataType(DataType.EmailAddress)]

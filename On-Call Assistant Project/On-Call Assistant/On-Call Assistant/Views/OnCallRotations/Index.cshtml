@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.OnCallRotation>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Rotaions List";
     ViewBag.AppName = "On-Call Assistant";
 }
 @section styles {
@@ -17,11 +17,15 @@
         <a href="/OnCallRotations/DownloadSchedule"
        style="margin-bottom:15px">Download</a>-->
 
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
 
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.startDate)
+            @*@Html.DisplayNameFor(model => model.startDate)*@
+            @Html.ActionLink("Start Date", "Index", new { sortOrder = ViewBag.DateSortParm })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.endDate)
@@ -30,9 +34,12 @@
             @Html.DisplayNameFor(model => model.isPrimary)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.employee.employeeName)
+            @*@Html.DisplayNameFor(model => model.employee.employeeName)*@
+            @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm })
         </th>
-        <th></th>
+        <th>
+            <span class="glyphicon glyphicon-edit"></span>
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -50,6 +57,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.employee.employeeName)
             </td>
+            <td>               
+                 @Html.ActionLink("Edit", "Edit", new { id = item.rotationID }) |
+                 @Html.ActionLink("Details", "Details", new { id = item.rotationID }) |
+                 @Html.ActionLink("Delete", "Delete", new { id = item.rotationID })
+           </td>
         </tr>
     }
 

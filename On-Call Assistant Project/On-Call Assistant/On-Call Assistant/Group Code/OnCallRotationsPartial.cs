@@ -15,6 +15,32 @@ namespace On_Call_Assistant.Controllers
 {
     public partial class OnCallRotationsController : Controller
     {
+        public async Task<ActionResult> Index(string sortOrder)
+        {
+            ViewBag.DateSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewBag.EmpSortParm = sortOrder == "emp" ? "emp_desc" : "emp";
+
+            var onCallRotations = db.onCallRotations.Include(o => o.employee);
+
+            switch (sortOrder)
+            {
+                case "date_desc":
+                    onCallRotations = onCallRotations.OrderByDescending(r => r.startDate);
+                    break;
+                case "emp":
+                    onCallRotations = onCallRotations.OrderBy(r => r.employee.lastName);
+                    break;
+                case "emp_desc":
+                    onCallRotations = onCallRotations.OrderByDescending(r => r.employee.lastName);
+                    break;
+                default:
+                    onCallRotations = onCallRotations.OrderBy(r => r.startDate);
+                    break;
+            }
+
+            return View(await onCallRotations.ToListAsync());
+        }
+
         private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";
         
         public ActionResult generateSchedule()
@@ -22,6 +48,7 @@ namespace On_Call_Assistant.Controllers
             Scheduler generator = new Scheduler(db);
             DateTime start, end, last;
             start = getFutureDay(DateTime.Today, DayOfWeek.Wednesday);
+            start = start.AddHours(9); //Start at 9AM
             last = LinqQueries.LastRotation(db);
             if (last > start)
             {

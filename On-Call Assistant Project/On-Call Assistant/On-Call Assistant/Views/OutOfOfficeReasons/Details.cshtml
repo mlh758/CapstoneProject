@@ -2,8 +2,15 @@
 
 @{
     ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles {
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
 }
 
+@section scripts {
+    <script src="~/Scripts/bootstrap.min.js"></script>
+}
 <h2>Details</h2>
 
 <div>
@@ -16,6 +23,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.reason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.reasonDisplayColor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.reasonDisplayColor)
         </dd>
 
     </dl>

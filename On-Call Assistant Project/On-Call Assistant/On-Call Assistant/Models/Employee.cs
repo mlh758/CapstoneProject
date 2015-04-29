@@ -150,6 +150,22 @@ namespace On_Call_Assistant.Models
             }
         }
 
+        [Display(Name = "Personal Days Taken")]
+        public decimal personalDaysTaken
+        {
+            get
+            {
+                decimal hours = 0;
+                List<OutOfOffice> personalDays = new List<OutOfOffice>();
+                if (outOfOffices != null)
+                    personalDays = outOfOffices.Where(o => o.reason.reason == "Personal Day").ToList();
+
+                foreach (OutOfOffice day in personalDays)
+                    hours += day.numHours;
+                return hours / 8;
+            }
+        }
+
         [ForeignKey("assignedApplication")]
         [Column("applicationID")]
         public int Application { get; set; }

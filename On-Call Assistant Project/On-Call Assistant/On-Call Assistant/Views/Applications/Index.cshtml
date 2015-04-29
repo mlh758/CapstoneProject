@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.Application>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Applications";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section styles {
@@ -11,7 +11,9 @@
 @section scripts {
     <script src="~/Scripts/bootstrap.min.js"></script>
 }
-<h2>Index</h2>
+
+
+<h2>Applications</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -31,9 +33,14 @@
             @Html.DisplayNameFor(model => model.hasSecondary)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.displayColor)
+            @Html.DisplayNameFor(model => model.primDisplayColor)
         </th>
-        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.secDisplayColor)
+        </th>
+        <th>
+            <span class="glyphicon glyphicon-edit"></span>
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -51,7 +58,10 @@
             @Html.DisplayFor(modelItem => item.hasSecondary)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.displayColor)
+            <div style="height:25px;width:50px;background-color:@item.primDisplayColor;"></div>
+        </td>
+        <td>
+            <div style="height:25px;width:50px;background-color:@item.secDisplayColor;"></div>
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

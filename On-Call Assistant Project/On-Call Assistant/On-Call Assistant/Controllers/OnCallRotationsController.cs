@@ -17,11 +17,11 @@ namespace On_Call_Assistant.Controllers
         private OnCallContext db = new OnCallContext();
 
         // GET: OnCallRotations
-        public async Task<ActionResult> Index()
+        /*public async Task<ActionResult> Index()
         {
             var onCallRotations = db.onCallRotations.Include(o => o.employee);
             return View(await onCallRotations.ToListAsync());
-        }
+        }*/
 
         // GET: OnCallRotations/Details/5
         public async Task<ActionResult> Details(int? id)
@@ -41,7 +41,7 @@ namespace On_Call_Assistant.Controllers
         // GET: OnCallRotations/Create
         public ActionResult Create()
         {
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName");
+            ViewBag.employeeID = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName");
             return View();
         }
 
@@ -59,7 +59,7 @@ namespace On_Call_Assistant.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName", onCallRotation.employeeID);
+            ViewBag.employeeID = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -75,7 +75,7 @@ namespace On_Call_Assistant.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName", onCallRotation.employeeID);
+            ViewBag.employeeID = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 
@@ -92,7 +92,7 @@ namespace On_Call_Assistant.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.employeeID = new SelectList(db.employees, "ID", "employeeName", onCallRotation.employeeID);
+            ViewBag.employeeID = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName", onCallRotation.employeeID);
             return View(onCallRotation);
         }
 

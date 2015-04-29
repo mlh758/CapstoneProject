@@ -363,7 +363,7 @@ namespace On_Call_Assistant.Group_Code
                         throw new Exception("HTTPWebResponse was not OK.");
                     }
                 }
-                catch (Exception ex) //something went wrong with httpRequest or JSON deserialization
+                catch (Exception) //something went wrong with httpRequest or JSON deserialization
                 {
                     //Not sure how we want to handle exceptions
                 }

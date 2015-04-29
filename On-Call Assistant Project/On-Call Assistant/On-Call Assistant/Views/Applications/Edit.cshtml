@@ -4,7 +4,54 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section styles {
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+}
 
+@section scripts {
+    <script src="~/Scripts/bootstrap.min.js"></script>
+}
+
+<script>
+    $(document).ready(function () {
+        //If application doesn't have primary and/or secondary rotations, hide and disable the color pickers
+        if("@Model.hasOnCall" == "False")
+        {
+            $("#primColorPicker").prop("disabled", true);
+            $("#primColorPicker").prop("hidden", true);
+        }
+        if("@Model.hasSecondary" == "False")
+        {
+            $("#secColorPicker").prop("disabled", true);
+            $("#secColorPicker").prop("hidden", true);
+        }
+
+        //If user checks or unchecks the primary/secondary rotation fields
+        //hide/disable or show/endable their color selectors accordingly
+        $("#hasOnCall").click(function () {
+            if ($("#hasOnCall").prop('checked') == false) {
+                $("#primColorPicker").prop("hidden", true);
+                $("#primColorPicker").prop("disabled", true);
+            }
+            else {
+                $("#primColorPicker").prop("hidden", false);
+                $("#primColorPicker").prop("disabled", false);
+            }
+        });
+
+        $("#hasSecondary").click(function () {
+            if ($("#hasSecondary").prop('checked') == false) {
+                $("#secColorPicker").prop('hidden', true);
+                $("#secColorPicker").prop("disabled", true);
+            }
+            else {
+                $("#secColorPicker").prop('hidden', false);
+                $("#secColorPicker").prop("disabled", false);
+            }
+        });
+    });
+
+</script>
 <h2>Edit</h2>
 
 
@@ -55,10 +102,16 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.displayColor, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.primDisplayColor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.displayColor, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.displayColor, "", new { @class = "text-danger" })
+                <input type="color" id="primColorPicker" name="primDisplayColor" value="@Model.primDisplayColor" style="margin-top:10px;" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.secDisplayColor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="color" id="secColorPicker" name="secDisplayColor" value="@Model.secDisplayColor" style="margin-top:10px;"/>
             </div>
         </div>
 
@@ -74,6 +127,3 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

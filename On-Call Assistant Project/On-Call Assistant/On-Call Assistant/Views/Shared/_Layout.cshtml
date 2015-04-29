@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.AppName - @ViewBag.Title</title>
-    <link rel="shortcut icon" type="image/x-icon" href="~/Content/com.ico" />
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
@@ -34,26 +33,52 @@
                     <li><a href="/Home"><span class="glyphicon glyphicon-home"></span>  Home</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <span class="glyphicon glyphicon-calendar"></span>   Calendar <span class="caret"></span></a>
+                            <span class="glyphicon glyphicon-phone-alt"></span>  On-Call Rotation <span class="caret"></span>
+                        </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="/OnCallRotations">
-                                    <span class="glyphicon glyphicon-list-alt"></span>   Manage Rotations</a></li>
-                            <li><a href="../Home/Printable">
-                                    <span class="glyphicon glyphicon-print"></span>   Print Calendar</a></li>
+                            <li role="presentation" class="dropdown-header">On-Call Assistant</li>
+                            <li>
+                                <a href="/Home">
+                                    <span class="glyphicon glyphicon-calendar"></span>  Calendar View
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/OnCallRotations">
+                                    <span class="glyphicon glyphicon-list-alt"></span>   List View
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../Home/Printable">
+                                    <span class="glyphicon glyphicon-print"></span>   Print/PDF View
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <span class="glyphicon glyphicon-edit"></span>   Edit <span class="caret"></span>
+                            <span class="glyphicon glyphicon-cog"></span>   Manage <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="/Employees">
-                                    <span class="glyphicon glyphicon-user"></span>  Employees</a></li>
-                            <li><a href="/Applications">
-                                    <span class="glyphicon glyphicon-file"></span>  Applications</a></li>
+                            <li role="presentation" class="dropdown-header">Employees</li>
+                            <li>
+                                <a href="/Employees">
+                                    <span class="glyphicon glyphicon-user"></span>  Employees List
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Employees/Summary">
+                                    <span class="glyphicon glyphicon-align-justify"></span> Detailed Summary
+                                </a>
+                            </li>
+                            <li role="presentation" class="divider"></li>
+                            <li>
+                                <a href="/Applications">
+                                    <span class="glyphicon glyphicon-file"></span>  Applications
+                                </a>
+                            </li>
                             <li>
                                 <a href="/outofoffices">
-                                    <span class="glyphicon glyphicon-road"></span>  Absences
+                                    <span class="glyphicon glyphicon-tent"></span>  Absences/Vacations
                                 </a>
                             </li>
                         </ul>
@@ -66,10 +91,8 @@
         @RenderBody()
         @Scripts.Render("~/bundles/jquery")
         @RenderSection("scripts", required: false)
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Commerce Bank (On-Call Assistant)</p>
-        </footer>
+        
+
     </div>
 
 </body>

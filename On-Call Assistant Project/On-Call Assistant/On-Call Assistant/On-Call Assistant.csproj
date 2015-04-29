@@ -146,6 +146,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Group Code\Behavior.cs" />
+    <Compile Include="Group Code\EmployeesControllerPartial.cs" />
     <Compile Include="Group Code\HomeControllerPartial.cs" />
     <Compile Include="Group Code\LinqQueries.cs" />
     <Compile Include="Group Code\OnCallRotationsPartial.cs" />
@@ -217,6 +218,14 @@
     <Compile Include="Migrations\201504062052090_EmpVacHours.cs" />
     <Compile Include="Migrations\201504062052090_EmpVacHours.Designer.cs">
       <DependentUpon>201504062052090_EmpVacHours.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504151424590_AppSecDisplayColor.cs" />
+    <Compile Include="Migrations\201504151424590_AppSecDisplayColor.Designer.cs">
+      <DependentUpon>201504151424590_AppSecDisplayColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504172110139_OutOfOfficeColor.cs" />
+    <Compile Include="Migrations\201504172110139_OutOfOfficeColor.Designer.cs">
+      <DependentUpon>201504172110139_OutOfOfficeColor.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Application.cs" />
@@ -380,6 +389,7 @@
     <Content Include="Views\ExperienceLevels\Index.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Home\Printable.cshtml" />
+    <Content Include="Views\Employees\Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -442,6 +452,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504062052090_EmpVacHours.resx">
       <DependentUpon>201504062052090_EmpVacHours.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504151424590_AppSecDisplayColor.resx">
+      <DependentUpon>201504151424590_AppSecDisplayColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504172110139_OutOfOfficeColor.resx">
+      <DependentUpon>201504172110139_OutOfOfficeColor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

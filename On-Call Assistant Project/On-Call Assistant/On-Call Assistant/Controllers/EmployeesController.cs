@@ -12,16 +12,16 @@ using On_Call_Assistant.Models;
 
 namespace On_Call_Assistant.Controllers
 {
-    public class EmployeesController : Controller
+    public partial class EmployeesController : Controller
     {
         private OnCallContext db = new OnCallContext();
 
         // GET: Employees
-        public async Task<ActionResult> Index()
+        /*public async Task<ActionResult> Index()
         {
             var employees = db.employees.Include(e => e.assignedApplication).Include(e => e.experienceLevel);
             return View(await employees.ToListAsync());
-        }
+        }*/
 
         // GET: Employees/Details/5
         public async Task<ActionResult> Details(int? id)

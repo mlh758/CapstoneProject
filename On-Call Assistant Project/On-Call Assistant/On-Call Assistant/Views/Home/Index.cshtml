@@ -1,83 +1,130 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
-    ViewBag.AppName = "On-Call Assistant";
- }
+    ViewBag.Title = "On-Call Assistant";
+}
 @section styles {
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
     <link href="~/Content/fullcalendar.print.css" rel="stylesheet" media='print' />
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
-<link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
 }
 
 @section scripts {
-@*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
-        <script src="~/Scripts/lib/jquery.min.js"></script>
-        <script src="~/Scripts/lib/moment.min.js"></script>
-        <script src="~/Scripts/fullcalendar.js"></script>
-        <script src="~/Scripts/bootstrap.min.js"></script>
-        <script type="text/javascript">
-    $(document).ready(function () {
-        $('#calendar').fullCalendar({
-            editable: false,
-            events: "/home/rotationdata/",
-            header: {
-                left: '',
-                right: 'prev,next today',
-                center: 'title'
-            }
-        });
+    <script src="~/Scripts/lib/jquery.min.js"></script>
+    <script src="~/Scripts/lib/moment.min.js"></script>
+    <script src="~/Scripts/fullcalendar.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
 
-
-        $('.fc-left').prepend('<div id="calGroup" class="fc-button-group"></div>')
-        var calGroup = $('#calGroup');
-
-        @*view the dropdownlist inline with the calendar buttons*@
-        calGroup.append('<div id="listScript" style="display:inline-block;"></div>');
-        var list = $("#hiddenList");
-        $("#listScript").html(list.html());
-        list.html("");
-
-        $("#apps").change(function () {
+        @*Add given number of days to a date, return a new date*@
+        function addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+        var primarySource = {
+            url: "/Home/RotationData/",
+            type: "GET",
+            data: { ID: $("#apps").val() }
+        };
+        @*Apply drop down value to filter events*@
+        function updateFilter() {
+            $('#calendar').fullCalendar('removeEventSource', primarySource);
             $('#calendar').fullCalendar('removeEvents');
-            $('#calendar').fullCalendar('addEventSource', "/Home/RotationData?ID=" + $("#apps").val());
-            $('#calendar').fullCalendar('rerenderEvents');
+            primarySource = {
+                url: "/Home/RotationData/",
+                type: "GET",
+                data: { ID: $("#apps").val() }
+            }
+            $('#calendar').fullCalendar('addEventSource', primarySource);
+            $('#calendar').fullCalendar('refetchEvents');
+        }
+
+
+        @*when the page load, this function will render the calendar*@
+        $(document).ready(function () {
+             
+            $('#eventStart').datepicker();
+            $('#eventEnd').datepicker();
+            $('#calendar').fullCalendar({
+                eventSources: [
+                    primarySource
+                ],
+                editable: true,
+                    header: {
+                    left: '',
+                    right: 'prev,next today',
+                    center: 'title'
+                },
+                businessHours: true,
+                @*this function will envok the rotation edit modal and feed it with the porper rotation information*@
+                eventClick: function (calEvent) {
+                    $('#eventModal').modal('show');
+                    var beginDate = addDays(calEvent.start, 1);
+                    $('#eventStart').datepicker('setDate', beginDate);
+                    $('#eventEnd').datepicker('setDate', new Date(calEvent.end));
+                    $('#eventPrimary').prop('checked', calEvent.isPrimary);
+                    $('#emps').val(calEvent.empID);
+                    $("#eventID").val(calEvent.rotationID);                    
+                }
+            });
+
+
+            $('.fc-left').prepend('<div id="calGroup" class="fc-button-group"></div>')
+            var calGroup = $('#calGroup');
+
+            @*view the dropdownlist inline with the calendar buttons*@
+            calGroup.append('<div id="listScript" style="display:inline-block;"></div>');
+            var list = $("#hiddenList");
+            $("#listScript").html(list.html());
+            list.html("");
+
+            @*filter rotations according to application on the calendar*@
+            $("#apps").change(updateFilter);
+            
+            @*Here the printing button included within the calendar div*@
+            calGroup.prepend('<button class="fc-button fc-state-default fc-corner-right fc-custom-hover"' +
+                    'type="button" title="Print Schedule" onClick="window.location=\'../Home/Printable\'">' +
+                    '<span class="glyphicon glyphicon-print"></span></button>' +
+                    '</div>');
+
+            @*Here the regenerate button that will trigger the date picker modal*@
+            calGroup.prepend('<button class="fc-button fc-state-default fc-custom-hover"' +
+                    'type="button" data-toggle="modal" data-target="#regenerateModal" title="Regenerate Schedule">' +
+                    '<span  style="margin-right:5px" class="glyphicon glyphicon-refresh"></span>' +
+                    '<span class="glyphicon glyphicon-calendar"></span></button>');
+
+            @*Here the generate button included within the calendar div*@
+            calGroup.prepend(
+                    '<button class="fc-button fc-state-default fc-corner-left fc-custom-hover"' +
+                    'id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'' +
+                    'title="Generate Schedule"><span class="glyphicon glyphicon-plus"></span>' +
+                    '<span style="margin-left:4px" class="glyphicon glyphicon-calendar"></span></button>');
+
+            @*after the page loads check if the page load was caused by clicking 'generate' or 'regenerate' button*@
+            checkCookie();
+           
+            @*when button 'generate' is clicked, this function is called*@
+            $('#GenerateSchedule').click(function (event) {
+                @*indicate that the refresh was caused by clicking on 'generate calendar'*@
+                setCookie("Update", "true", 1);
+                event.preventDefault();
+                window.location.replace("/oncallrotations/generateSchedule");
+            });
+
         });
 
-        @*Here the printing button included within the calendar div*@
-        calGroup.prepend('<button class="fc-button fc-state-default fc-corner-right fc-custom-hover"' +
-                'type="button" title="Print Schedule" onClick="window.location=\'../Home/Printable\'">' +
-                '<span class="glyphicon glyphicon-print"></span></button>' +
-                '</div>');
+    </script>
 
-        @*Here the regenerate button that will trigger the date picker modal*@
-        calGroup.prepend('<button class="fc-button fc-state-default fc-custom-hover"' +
-                'type="button" data-toggle="modal" data-target="#myModal" title="Regenerate Schedule">' +
-                '<span  style="margin-right:5px" class="glyphicon glyphicon-refresh"></span>' +
-                '<span class="glyphicon glyphicon-calendar"></span></button>');
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
 
-        @*Here the generate button included within the calendar div*@
-        calGroup.prepend(
-                '<button class="fc-button fc-state-default fc-corner-left fc-custom-hover"' +
-                'id="GenerateSchedule" type="button" onclick=\'this.disabled = "disabled";\'' +
-                'title="Generate Schedule"><span class="glyphicon glyphicon-plus"></span>' +
-                '<span style="margin-left:4px" class="glyphicon glyphicon-calendar"></span></button>');
-
-
-        $('#GenerateSchedule').click(function (event) {
-            event.preventDefault();
-            window.location.replace("/oncallrotations/generateSchedule");
-        });
-    });
-</script>
-
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script>
-
+        @*when 'regenerate' button is clicked, this function will be called*@
     var url = "/oncallrotations/regenerateSchedule?begin="
     $('#ReGenerateSchedule').click(function (event) {
+        @*indicate that the refresh was caused by clicking on 'regenerate calendar'*@
+        setCookie("Update", "true", 1);
         event.preventDefault();
+        @*retrieve start and end date provided by user via date pickers*@
         var start = document.getElementById('datepickerS').value;
         var end = document.getElementById('datepickerE').value;
         window.location.replace(url.concat(start, "&end=", end));
@@ -90,15 +137,74 @@
         $("#datepickerE").datepicker();
     });
 
-</script>
+        @*this function is envoked when the button 'save changes' in the event modal is clicked*@
+        function saveEvent() {
+            @*indicate that the refresh was caused by clicking on 'save changes'*@
+            setCookie("Update", "true", 1);
+            var startString = document.getElementById('eventStart').value;
+            var endString = document.getElementById('eventEnd').value;
+            $.post("/Home/UpdateRotation", {
+                rotationID: $('#eventID').val(),
+                start: startString,
+                end: endString,
+                isPrimary: ($('#eventPrimary').is(":checked")),
+                employeeID: $('#emps').val()
+            },
+            function (data) {
+                $('#eventModal').modal('hide');
+                $('#calendar').fullCalendar('refetchEvents');
+            });
+            checkCookie();
+        }
+
+        @*this function sets a variable and its value on the cookie document*@
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+
+        @*this function retrieves a value from the cookie document knowing it's variable name*@
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "";
+        }
+
+        @*this fuction checks the cookie to check the reason of the page load
+            if the reason is a click on 'generate' or 'regenerate', the alert is displayed*@
+        function checkCookie() {
+            var isUpdate = getCookie("Update");
+            if (isUpdate == "true") {
+                 @*reset the alert indicator to false*@
+                setCookie("Update", "false", 1);
+                var alertDiv = $('#updateAlert');
+                alertDiv.html('<div id="alert_message" class="alert alert-success">'
+                                       + '<span class="close" data-dismiss="alert">×</span>'
+                                       + '<span><strong>Success!</strong> Calendar updated successfully.</span>'
+                                       + '</div>');
+                $("#alert_message").delay(3000, 0).fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                    alertDiv.html('');
+                });
+                
+            }
+        }
+    </script>
 
 }
 
-<br /><br />
-
 <div class="jumbotron">
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="updateAlert"></div>
+ 
+    <!-- Regenerate Modal -->
+    <div class="modal fade" id="regenerateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -121,17 +227,81 @@
                     </p><!--date pickers end-->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button id="ReGenerateSchedule" onclick='this.disabled = "disabled";' type="button" 
-                            class="btn btn-primary">Save changes</button>
+                    <button id="ReGenerateSchedule" onclick='this.disabled = "disabled";' type="button"
+                            class="btn btn-primary btn-sm">
+                        Save changes
+                    </button>
+                    &nbsp;&nbsp;<a data-dismiss="modal">Cancel</a>
+
                 </div>
             </div>
         </div>
     </div><!--modal end-->
-    
-    <div id="hiddenList" hidden >
-     &nbsp;<div style="display:inline-block;"> @Html.DropDownList("apps", null, "All Apps", htmlAttributes: new { @class = "form-control",style = "font-size:70%; height:30px" })</div>
-     </div>
+    <!-- Event Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Rotation</h4>
+                </div>
+                <div class="modal-body">
+                    @model On_Call_Assistant.Models.OnCallRotation
+
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.employee.employeeName)
+                        </dt>
+
+                        <dd>
+                            @Html.DropDownList("emps", null, htmlAttributes: new { @class = "form-control", style = "font-size:70%; height:30px" })
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.startDate)
+                        </dt>
+
+                        <dd>
+                            <input type="text" id="eventStart">
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.endDate)
+                        </dt>
+
+                        <dd>
+                            <input type="text" id="eventEnd">
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.isPrimary)
+                        </dt>
+
+                        <dd>
+                            <input type="checkbox" id="eventPrimary" />
+                        </dd>
+                        <dt>
+                            ID
+                        </dt>
+                        <dd><input type="text" id="eventID" readonly></dd>
+
+
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <button id="EditEvent" type="button" class="btn btn-primary btn-sm" onclick="saveEvent()"> Save changes </button>
+                    &nbsp;&nbsp;<a data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal end-->
+
+
+
+    <div id="hiddenList" hidden>
+        &nbsp;<div style="display:inline-block;"> @Html.DropDownList("apps", null, "All Apps", htmlAttributes: new { @class = "form-control", style = "font-size:70%; height:30px" })</div>
+    </div>
     <br /><br />
     <div id="calendar"></div>
- </div>
+</div>

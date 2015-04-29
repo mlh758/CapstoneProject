@@ -1,0 +1,139 @@
+﻿@model IEnumerable<On_Call_Assistant.Models.Employee>
+
+@{
+    ViewBag.Title = "Employee Summary";
+    ViewBag.AppName = "On-Call Assistant";
+}
+@section styles {
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Scripts/bootstrap.min.js"></script>
+}
+<h1>@ViewBag.Title</h1>
+
+<p>
+    @Html.ActionLink("Employee List", "Index")
+</p>
+
+<h2>Rotation Details</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.assignedApplication.appName)*@
+            @Html.ActionLink("Application", "Summary", new { sortOrder = ViewBag.AppSortParm })
+        </th>
+        <!--Display full employee name. Added into View-->
+        <th>
+            @*@Html.DisplayNameFor(model => model.employeeName)*@
+            @Html.ActionLink("Employee", "Summary", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <!--Display the rotation count information-->
+        <th>
+            @*@Html.DisplayNameFor(model => model.rotationCount)*@
+            @Html.ActionLink("Total Rotations", "Summary", new { sortOrder = ViewBag.RotSortParam })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.primaryRotationCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.secondaryRotationCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.totHolidayRotations)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.primHolidayRotations)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.secHolidayRotations)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.assignedApplication.appName)
+            </td>
+            <!--Display full employee name. Added into View-->
+            <td>
+                @Html.DisplayFor(modelItem => item.employeeName)
+            </td>
+            <!--Display the rotation count information-->
+            <td>
+                @Html.DisplayFor(modelItem => item.rotationCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.primaryRotationCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.secondaryRotationCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totHolidayRotations)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.primHolidayRotations)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.secHolidayRotations)
+            </td>
+        </tr>
+    }
+
+</table>
+
+<h2>Vacation Details</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.assignedApplication.appName)*@
+            @Html.ActionLink("Application", "Summary", new { sortOrder = ViewBag.AppSortParm })
+        </th>
+        <!--Display full employee name. Added into View-->
+        <th>
+            @*@Html.DisplayNameFor(model => model.employeeName)*@
+            @Html.ActionLink("Employee", "Summary", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.alottedVacationHours)*@
+            @Html.ActionLink("Vacation Hours", "Summary", new { sortOrder = ViewBag.VacSortParam })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.vacHoursTaken)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.personalDaysTaken)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.assignedApplication.appName)
+            </td>
+            <!--Display full employee name. Added into View-->
+            <td>
+                @Html.DisplayFor(modelItem => item.employeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.alottedVacationHours)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.vacHoursTaken)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.personalDaysTaken)
+            </td>
+        </tr>
+    }
+
+</table>
+

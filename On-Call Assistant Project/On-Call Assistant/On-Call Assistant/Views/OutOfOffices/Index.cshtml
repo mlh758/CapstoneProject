@@ -20,15 +20,18 @@
 }
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Manage Absences";
 }
 
-<h2>Manage Absences</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<div id="calendar"></div>
+
+<div class="jumbotron">
+    <div id="calendar"></div>
+</div>
 <table class="table">
     <tr>
         <th>
@@ -43,7 +46,9 @@
         <th>
             @Html.DisplayNameFor(model => model.numHours)
         </th>
-        <th></th>
+        <th>
+            <span class="glyphicon glyphicon-edit"></span>
+        </th>
     </tr>
 
 @foreach (var item in Model) {

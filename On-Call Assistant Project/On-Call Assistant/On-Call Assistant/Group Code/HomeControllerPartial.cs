@@ -26,16 +26,6 @@ namespace On_Call_Assistant.Controllers
             List<CalendarObject> rotationList = getEvents(ref start, ref end, ID);
             return Json(rotationList, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult RotationsWithoutURL(string start, string end, int ID = -1)
-        {
-            List<CalendarObject> rotationList = getEvents(ref start, ref end, ID);
-            foreach (var rot in rotationList)
-            {
-                rot.url = null;
-            }
-            return Json(rotationList, JsonRequestBehavior.AllowGet);
-
-        }
         /// <summary>
         /// Provides a list of CalendarObjects from the database in the given range
         /// </summary>
@@ -90,13 +80,31 @@ namespace On_Call_Assistant.Controllers
                     title = absence.employeeOut.firstName + " " + absence.employeeOut.lastName,
                     start = absence.startDate.ToString("u"),
                     end = absence.startDate.AddDays(absence.numHours/8).ToString("u"),
-                    color = "yellow",
+                    color = absence.reason.reasonDisplayColor,
                     url = String.Format("OutOfOffices/Details/{0}", absence.ID),
                     allDay = "false",
                     textColor = "black"
                 });
             }
             return Json(absenceList, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult UpdateRotation(int rotationID, string start, string end, int employeeID, bool isPrimary)
+        {
+            try
+            {
+                var rotation = (from rot in db.onCallRotations where rot.rotationID == rotationID select rot).Single();
+                rotation.startDate = DateTime.Parse(start);
+                rotation.endDate = DateTime.Parse(end);
+                rotation.employeeID = employeeID;
+                rotation.isPrimary = isPrimary;
+                db.SaveChanges();
+                return new HttpStatusCodeResult(200);
+            }
+            catch (Exception) { }
+            return new HttpStatusCodeResult(500);
+           
+            
+            
         }
 
         private List<OutOfOffice> filterAbsences(IQueryable<OutOfOffice> absences, DateTime begin, DateTime end)
@@ -135,13 +143,26 @@ namespace On_Call_Assistant.Controllers
                 CalendarObject temp = new CalendarObject();
                 temp.id = rotation.employee.Application;
                 temp.title = rotation.employee.firstName + " " + rotation.employee.lastName;
+                temp.rotationID = rotation.rotationID;
                 if (!rotation.isPrimary)
+                {
                     temp.title = temp.title + " as Secondary";
-                temp.start = rotation.startDate.ToString("u");
-                temp.end = rotation.endDate.AddDays(1).ToString("u");
-                temp.color = rotation.employee.assignedApplication.displayColor;
-                temp.url = String.Format("OnCallRotations/Details/{0}", rotation.rotationID);
-                temp.allDay = "true";
+                    if (rotation.employee.assignedApplication.hasSecondary)
+                        temp.color = rotation.employee.assignedApplication.secDisplayColor;
+                    else
+                        temp.color = rotation.employee.assignedApplication.primDisplayColor;
+                    temp.isPrimary = false;
+                }
+                else
+                { 
+                    temp.color = rotation.employee.assignedApplication.primDisplayColor;
+                    temp.isPrimary = true;
+                }
+                    
+                temp.start = rotation.startDate.ToString("d");
+                temp.end = rotation.endDate.AddDays(1).ToString("d");
+                temp.allDay = "false";
+                temp.empID = rotation.employeeID;
                 rotationList.Add(temp);
             }
 
@@ -160,6 +181,9 @@ namespace On_Call_Assistant.Controllers
         public string url { get; set; }
         public string allDay { get; set; }
         public string textColor { get; set; }
+        public int rotationID { get; set; }
+        public bool isPrimary { get; set; }
+        public int empID { get; set; }
 
     }
     

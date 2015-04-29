@@ -42,7 +42,7 @@ namespace On_Call_Assistant.Controllers
         // GET: OutOfOffices/Create
         public ActionResult Create()
         {
-            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName");
+            ViewBag.Employee = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName");
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason");
             return View();
         }
@@ -63,7 +63,7 @@ namespace On_Call_Assistant.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName", outOfOffice.Employee);
+            ViewBag.Employee = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }
@@ -80,7 +80,7 @@ namespace On_Call_Assistant.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName", outOfOffice.Employee);
+            ViewBag.Employee = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }
@@ -100,7 +100,7 @@ namespace On_Call_Assistant.Controllers
                 scheduler.alterOnEmployeeAbsence(outOfOffice.ID);
                 return RedirectToAction("Index");
             }
-            ViewBag.Employee = new SelectList(db.employees, "ID", "employeeName", outOfOffice.Employee);
+            ViewBag.Employee = new SelectList(db.employees.OrderBy(x => x.lastName), "ID", "employeeName", outOfOffice.Employee);
             ViewBag.outOfOfficeReasonID = new SelectList(db.outOfOfficeReasons, "ID", "reason", outOfOffice.outOfOfficeReasonID);
             return View(outOfOffice);
         }

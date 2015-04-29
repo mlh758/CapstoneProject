@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<On_Call_Assistant.Models.Employee>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Employees";
     ViewBag.AppName = "On-Call Assistant";
 }
 @section styles {
@@ -11,29 +11,37 @@
 @section scripts {
     <script src="~/Scripts/bootstrap.min.js"></script>
 }
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
+</p>
+<p>
+    @Html.ActionLink("Employee Detailed Summary", "Summary")
 </p>
 <table class="table">
     <tr>
         <!--Display full employee name. Added into View-->
         <th>
-            @Html.DisplayNameFor(model => model.employeeName)
+            @*@Html.DisplayNameFor(model => model.employeeName)*@
+            @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.assignedApplication.appName)
+            @*@Html.DisplayNameFor(model => model.assignedApplication.appName)*@
+            @Html.ActionLink("Application", "Index", new { sortOrder = ViewBag.AppSortParm })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.experienceLevel.levelName)
+            @*@Html.DisplayNameFor(model => model.experienceLevel.levelName)*@
+            @Html.ActionLink("Experience", "Index", new { sortOrder = ViewBag.ExpSortParam })
         </th>
         <!--Display the rotation count information-->
         <th>
-            @Html.DisplayNameFor(model => model.rotationCount)
+            @*@Html.DisplayNameFor(model => model.rotationCount)*@
+            @Html.ActionLink("Total Rotations", "Index", new { sortOrder = ViewBag.RotSortParam })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.alottedVacationHours)
+            @*@Html.DisplayNameFor(model => model.alottedVacationHours)*@
+            @Html.ActionLink("Vacation Hours", "Index", new { sortOrder = ViewBag.VacSortParam })
         </th>
         <th>
             @Html.DisplayNameFor(model => model.email)
@@ -44,7 +52,9 @@
         <th>
             @Html.DisplayNameFor(model => model.birthday)
         </th>
-        <th></th>
+        <th>
+            <span class="glyphicon glyphicon-edit"></span>
+        </th>
     </tr>
 
 @foreach (var item in Model) {

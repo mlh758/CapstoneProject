@@ -1,4 +1,6 @@
-﻿@model IEnumerable<On_Call_Assistant.Models.OnCallRotation>
+﻿@model PagedList.IPagedList<On_Call_Assistant.Models.OnCallRotation>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Rotaions List";
@@ -21,21 +23,31 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
+@using (Html.BeginForm("Index", "OnCallRotations", FormMethod.Get))
+{
+    <p>
+        Find Employee: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+
 <table class="table">
     <tr>
         <th>
             @*@Html.DisplayNameFor(model => model.startDate)*@
-            @Html.ActionLink("Start Date", "Index", new { sortOrder = ViewBag.DateSortParm })
+            @Html.ActionLink("Start Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.endDate)
+            @*@Html.DisplayNameFor(model => model.endDate)*@
+            End Date
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.isPrimary)
+            @*@Html.DisplayNameFor(model => model.isPrimary)*@
+            Primary On-Call
         </th>
         <th>
             @*@Html.DisplayNameFor(model => model.employee.employeeName)*@
-            @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm })
+            @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
             <span class="glyphicon glyphicon-edit"></span>
@@ -66,3 +78,9 @@
     }
 
 </table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

@@ -6,44 +6,15 @@
 }
 @section styles {
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/colorPicker.css" rel="stylesheet"/>
 }
 
 @section scripts {
     <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.colorPicker.js"></script>
 }
 
-<script>
-    $(document).ready(function () {
 
-        //If user checks or unchecks the primary/secondary rotation fields
-        //hide/disable or show/endable their color selectors accordingly
-        $("#hasOnCall").click(function () {
-            if($("#hasOnCall").prop('checked') == false)
-            {
-                $("#primColorPicker").prop("hidden", true);
-                $("#primColorPicker").prop("disabled", true);
-            }
-            else
-            {
-                $("#primColorPicker").prop("hidden", false);
-                $("#primColorPicker").prop("disabled", false);
-            }
-        });
-
-        $("#hasSecondary").click(function () {
-            if ($("#hasSecondary").prop('checked') == false)
-            {
-                $("#secColorPicker").prop('hidden', true);
-                $("#secColorPicker").prop("disabled", true);
-            }
-            else
-            {
-                $("#secColorPicker").prop('hidden', false);
-                $("#secColorPicker").prop("disabled", false);
-            }
-        });
-    });
-</script>
 <h2>Create</h2>
 
 
@@ -93,9 +64,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.primDisplayColor, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @*by default color selector should be hidden/disabled because hasOnCall is not checked by default*@
-                <input type="color" id="primColorPicker" name="primDisplayColor"  style="margin-top:10px;" hidden disabled/>
+            <div id="primaryColorPickerDiv" class="col-md-10">  
             </div>
         </div>
 
@@ -103,9 +72,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.secDisplayColor, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @*by default color selector should be hidden/disabled because hasSecondary is not checked by default*@
-                <input type="color" id="secColorPicker" name="secDisplayColor"  style="margin-top:10px;" hidden disabled/>
+            <div id="secondaryColorPickerDiv" class="col-md-10">          
             </div>
         </div>
 

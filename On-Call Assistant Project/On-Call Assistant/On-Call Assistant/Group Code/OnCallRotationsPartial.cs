@@ -10,17 +10,37 @@ using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
 using On_Call_Assistant.Group_Code;
+using PagedList;
 
 namespace On_Call_Assistant.Controllers
 {
     public partial class OnCallRotationsController : Controller
     {
-        public async Task<ActionResult> Index(string sortOrder)
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
             ViewBag.DateSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewBag.EmpSortParm = sortOrder == "emp" ? "emp_desc" : "emp";
 
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
             var onCallRotations = db.onCallRotations.Include(o => o.employee);
+            
+            //Narrow down the list of rotations by the searched value.
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                onCallRotations = onCallRotations.Where(r => r.employee.lastName.Contains(searchString)
+                                       || r.employee.firstName.Contains(searchString));
+            }
 
             switch (sortOrder)
             {
@@ -38,7 +58,10 @@ namespace On_Call_Assistant.Controllers
                     break;
             }
 
-            return View(await onCallRotations.ToListAsync());
+            int pageSize = 10; //Number of items to display on screen at a time.
+            int pageNumber = (page ?? 1);
+
+            return View(onCallRotations.ToPagedList(pageNumber, pageSize));
         }
 
         private string path = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\EmpSch.csv";

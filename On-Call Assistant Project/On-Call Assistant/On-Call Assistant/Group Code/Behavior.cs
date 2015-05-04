@@ -58,7 +58,7 @@ namespace On_Call_Assistant.Group_Code
             {
                 List<Employee> CurrentApplicationEmployees = LinqQueries.EmployeesbyProject(db, currentApplication.ID);
                 //Guard against empty Application
-                if (CurrentApplicationEmployees.Count == 0)
+                if (CurrentApplicationEmployees.Count == 0 || currentApplication.rotationLength < 1)
                     continue;
 
 

@@ -13,22 +13,22 @@ namespace On_Call_Assistant.DAL
         public OnCallContext() : base("OnCallContext")
         {
         }
+
         public DbSet<Application> applications { get; set; }
         public DbSet<Employee> employees { get; set; }
-        //public DbSet<HasPaidHoliday> hasHolidays { get; set; }
         public DbSet<OnCallRotation> onCallRotations { get; set; }
         public DbSet<OutOfOffice> outOfOffice { get; set; }
         public DbSet<OutOfOfficeReason> outOfOfficeReasons { get; set; }
         public DbSet<PaidHoliday> paidHolidays { get; set; }
         public DbSet<ExperienceLevel> experienceLevel { get; set; }
-        //public DbSet<IsOnRotation> isOnRotation { get; set; }
-        //public DbSet<HasReason> hasReason { get; set; }
-        //public DbSet<IsOutOfOffice> isOutOfOffice { get; set; }
 
+        /** Called when the model is initially created. Also gets called anytime
+         *  the add-migration command is used from the PM Console, only if there
+         *  is change within the method.
+         **/
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            //modelBuilder.Entity<HasPaidHoliday>().HasKey(h => new { h.onCallRotationID, h.paidHolidayID });
 
             modelBuilder.Entity<OnCallRotation>().HasMany(r => r.holidays).WithMany(h => h.rotations)
             .Map(t => t.MapLeftKey("rotationID")

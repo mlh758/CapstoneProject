@@ -23,77 +23,79 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
+
+
+
+        <div class="row" style="margin-bottom:15px">
+            <div class="col-md-6">
 @using (Html.BeginForm("Index", "OnCallRotations", FormMethod.Get))
 {
-    <p>
-        
-    </p>
-}
-
-<div class="row" style="margin-bottom:15px">
-    <div class="col-md-6">
+    <div>
         Find Employee @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
         <input class="btn btn-primary btn-sm" type="submit" value="Search" />
     </div>
-        <div class="col-md-6" align="right">
-            <!--page number-->
-            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-        </div>
+
+}
+    </div>
+<div class="col-md-6" align="right">
+    <!--page number-->
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+</div>
     </div>
 
-   
 
-       
-    <table class="table">
+
+
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.startDate)*@
+            @Html.ActionLink("Start Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.endDate)*@
+            End Date
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.isPrimary)*@
+            Primary On-Call
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.employee.employeeName)*@
+            @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            <span class="glyphicon glyphicon-edit"></span>
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
         <tr>
-            <th>
-                @*@Html.DisplayNameFor(model => model.startDate)*@
-                @Html.ActionLink("Start Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.endDate)*@
-                End Date
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.isPrimary)*@
-                Primary On-Call
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.employee.employeeName)*@
-                @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm, currentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th>
-                <span class="glyphicon glyphicon-edit"></span>
-            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.startDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.endDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isPrimary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.employee.employeeName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.rotationID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.rotationID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.rotationID })
+            </td>
         </tr>
+    }
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.startDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.endDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.isPrimary)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.employee.employeeName)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.rotationID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.rotationID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.rotationID })
-                </td>
-            </tr>
-        }
-
-    </table>
+</table>
 <div align="center">
     <!--page navigation-->
     @Html.PagedListPager(Model, page => Url.Action("Index",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 </div>
-    <br />
+<br />

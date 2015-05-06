@@ -27,17 +27,20 @@
             $('#calendar1').fullCalendar({
                 defaultDate: thisMonth,
                 editable: false,
+                firstDay: 3,
                 events: "/home/RotationData/"
 
             });
             $('#calendar2').fullCalendar({
                 defaultDate: nextMonth,
                 editable: false,
+                firstDay: 3,
                 events: "/home/RotationData/"
             });
             $('#calendar3').fullCalendar({
                 defaultDate: thirdMonth,
                 editable: false,
+                firstDay: 3,
                 events: "/home/RotationData/"
             });
             $('.fc-other-month').html('');

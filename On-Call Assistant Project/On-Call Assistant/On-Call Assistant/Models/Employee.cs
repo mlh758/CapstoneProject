@@ -42,30 +42,49 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Birthday")]
         public DateTime birthday { get; set; }
 
+        /** Returns the total number of rotations the employee has worked.
+         *  @Return - The number of rotations worked by the employee, information
+         *  is obtained from the databse.
+         **/
         [Display(Name = "Total Rotations")]
         public int rotationCount
         {
             get { if (rotations != null) return rotations.Count(); else return 0; }
         }
 
+        /** Returns the total number of primary rotations the employee has worked.
+         *  @Return - The number of primary rotations worked by the employee,
+         *   information is obtained from the databse.
+         **/
         [Display(Name = "Primary Rotations")]
         public int primaryRotationCount
         {
             get { if (rotations != null) return rotations.Where(rot => rot.isPrimary == true).ToList().Count; else return 0; }
         }
 
+        /** Returns the total number of secondary rotations the employee has worked.
+         *  @Return - The number of secondary rotations worked by the employee,
+         *   information is obtained from the databse.
+         **/
         [Display(Name = "Secondary Rotations")]
         public int secondaryRotationCount
         {
             get { if (rotations != null) return rotations.Where(rot => rot.isPrimary == false).ToList().Count; else return 0; }
         }
 
+        /** @Return - The concatenated last, first names for the employee.
+         **/
         [Display(Name = "Employee Name")]
         public string employeeName
         {
             get { return lastName + ", " + firstName; }
         }
 
+        /** Returns the total number of rotations the employee has worked
+         *  on holidays.
+         *  @Return - The number of rotations worked by the employee on holidays,
+         *  information is obtained from the databse.
+         **/
         [Display(Name = "Holiday Rotations")]
         public int totHolidayRotations
         {
@@ -88,6 +107,11 @@ namespace On_Call_Assistant.Models
             }
         }
 
+        /** Returns the total number of primary rotations the employee has 
+         *  worked on holidays.
+         *  @Return - The number of primary rotations worked by the employee
+         *  on holidays, information is obtained from the databse.
+         **/
         [Display(Name = "Holiday Rotations (P)")]
         public int primHolidayRotations
         {
@@ -110,6 +134,11 @@ namespace On_Call_Assistant.Models
             }
         }
 
+        /** Returns the total number of secondary rotations the employee has 
+         *  worked on holidays.
+         *  @Return - The number of secondary rotations worked by the employee
+         *  on holidays, information is obtained from the databse.
+         **/
         [Display(Name = "Holiday Rotations (S)")]
         public int secHolidayRotations
         {
@@ -132,6 +161,10 @@ namespace On_Call_Assistant.Models
             }
         }
 
+        /** Returns the number of vacation hours used by the employee.
+         *  @Returns - Number of vaction hours taken by the employee based upon
+         *  the database state.
+         **/
         [Display(Name = "Vacation Hours Used")]
         public int vacHoursTaken
         {
@@ -150,6 +183,10 @@ namespace On_Call_Assistant.Models
             }
         }
 
+        /** Returns the number of personal days taken by the employee.
+         *  @Returns - Number of personal days taken by the employee based upon
+         *  the database state.
+         **/
         [Display(Name = "Personal Days Taken")]
         public decimal personalDaysTaken
         {

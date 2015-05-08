@@ -15,9 +15,6 @@
 }
 
 <h2>@ViewBag.Title</h2>
-<!--We dont need this part anymore
-        <a href="/OnCallRotations/DownloadSchedule"
-       style="margin-bottom:15px">Download</a>-->
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -49,19 +46,15 @@
 <table class="table">
     <tr>
         <th>
-            @*@Html.DisplayNameFor(model => model.startDate)*@
             @Html.ActionLink("Start Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.endDate)*@
             End Date
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.isPrimary)*@
             Primary On-Call
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.employee.employeeName)*@
             @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.EmpSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>

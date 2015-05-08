@@ -22,17 +22,14 @@
 <table class="table">
     <tr>
         <th>
-            @*@Html.DisplayNameFor(model => model.assignedApplication.appName)*@
             @Html.ActionLink("Application", "Summary", new { sortOrder = ViewBag.AppSortParm })
         </th>
         <!--Display full employee name. Added into View-->
         <th>
-            @*@Html.DisplayNameFor(model => model.employeeName)*@
             @Html.ActionLink("Employee", "Summary", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <!--Display the rotation count information-->
         <th>
-            @*@Html.DisplayNameFor(model => model.rotationCount)*@
             @Html.ActionLink("Total Rotations", "Summary", new { sortOrder = ViewBag.RotSortParam })
         </th>
         <th>
@@ -92,16 +89,13 @@
 <table class="table">
     <tr>
         <th>
-            @*@Html.DisplayNameFor(model => model.assignedApplication.appName)*@
             @Html.ActionLink("Application", "Summary", new { sortOrder = ViewBag.AppSortParm })
         </th>
         <!--Display full employee name. Added into View-->
         <th>
-            @*@Html.DisplayNameFor(model => model.employeeName)*@
             @Html.ActionLink("Employee", "Summary", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.alottedVacationHours)*@
             @Html.ActionLink("Vacation Hours", "Summary", new { sortOrder = ViewBag.VacSortParam })
         </th>
         <th>

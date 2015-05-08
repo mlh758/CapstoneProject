@@ -23,24 +23,19 @@
     <tr>
         <!--Display full employee name. Added into View-->
         <th>
-            @*@Html.DisplayNameFor(model => model.employeeName)*@
             @Html.ActionLink("Employee", "Index", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.assignedApplication.appName)*@
             @Html.ActionLink("Application", "Index", new { sortOrder = ViewBag.AppSortParm })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.experienceLevel.levelName)*@
             @Html.ActionLink("Experience", "Index", new { sortOrder = ViewBag.ExpSortParam })
         </th>
         <!--Display the rotation count information-->
         <th>
-            @*@Html.DisplayNameFor(model => model.rotationCount)*@
             @Html.ActionLink("Total Rotations", "Index", new { sortOrder = ViewBag.RotSortParam })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.alottedVacationHours)*@
             @Html.ActionLink("Vacation Hours", "Index", new { sortOrder = ViewBag.VacSortParam })
         </th>
         <th>

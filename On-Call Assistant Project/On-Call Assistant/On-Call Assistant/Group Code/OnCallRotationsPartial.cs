@@ -16,6 +16,16 @@ namespace On_Call_Assistant.Controllers
 {
     public partial class OnCallRotationsController : Controller
     {
+        /** Function controls the Index view for OnCallRotations.
+         *  Sorts the rotations by the requested sortOrder, also will filter
+         *  the rotations based upon currentFilter and the supplied searchString.
+         *  @Param sortOder - URL parameter used to request the attribute to sort by.
+         *  @Param currentFilter - URL parameter used to filter the rotation list.
+         *  @Param searchString - URL parameter used to search rotations by employe name.
+         *  @Param page - URL parameter used to display the current page number of 
+         *  rotation list to be displayed.
+         *  @Return ViewResult - The view generated from the filtered list.
+         **/
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;

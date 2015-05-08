@@ -31,6 +31,5 @@ namespace On_Call_Assistant.Models
         [Display(Name = "Secondary Color")]
         public String secDisplayColor { get; set; }
 
-        //public virtual ICollection<Employee> employees { get; set; }
     }
 }

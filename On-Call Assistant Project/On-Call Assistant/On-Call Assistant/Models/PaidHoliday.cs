@@ -23,6 +23,5 @@ namespace On_Call_Assistant.Models
         public DateTime holidayDate { get; set; }
 
         public virtual ICollection<OnCallRotation> rotations { get; set; }
-        //public ICollection<HasPaidHoliday> hasHolidays { get; set; }
     }
 }

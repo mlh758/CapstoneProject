@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using On_Call_Assistant.DAL;
 using On_Call_Assistant.Models;
@@ -18,6 +14,11 @@ namespace On_Call_Assistant.Controllers
 {
     public partial class EmployeesController : Controller
     {
+        /** Function controls the Index view for Employees.
+         *  Sorts employees by the requested sortOrder parameter.
+         *  @Param sortOder - URL parameter used to request the attribute to sort by.
+         *  @Return ActionResult - The view generated sorted by the parameter.
+         **/
         public async Task<ActionResult> Index(string sortOrder)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -65,6 +66,11 @@ namespace On_Call_Assistant.Controllers
             return View(await employees.ToListAsync());
         }
 
+        /** Function controls the Summary view for Employees.
+         *  Sorts employees by the requested sortOrder parameter.
+         *  @Param sortOder - URL parameter used to request the attribute to sort by.
+         *  @Return ActionResult - The view generated sorted by the parameter.
+         **/
         public async Task<ActionResult> Summary(string sortOrder)
         {
             ViewBag.AppSortParm = String.IsNullOrEmpty(sortOrder) ? "app_desc" : "";

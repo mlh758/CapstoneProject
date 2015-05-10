@@ -347,14 +347,17 @@ namespace On_Call_Assistant.Group_Code
 
                         foreach (var item in holidays)
                         {
-                            if (BankHolidays.Contains(item.First[0]["name"].ToString()))
+                            for (int i = 0; i < item.First.Count(); i++)
                             {
-                                db.paidHolidays.Add(new PaidHoliday()
+                                if (BankHolidays.Contains(item.First[i]["name"].ToString()))
                                 {
-                                    holidayName = item.First[0]["name"].ToString(),
-                                    holidayDate = Convert.ToDateTime(item.First[0]["date"].ToString())
-                                });
-                                db.SaveChanges();
+                                    db.paidHolidays.Add(new PaidHoliday()
+                                    {
+                                        holidayName = item.First[i]["name"].ToString(),
+                                        holidayDate = Convert.ToDateTime(item.First[i]["date"].ToString())
+                                    });
+                                    db.SaveChanges();
+                                }
                             }
                         }
                     }
